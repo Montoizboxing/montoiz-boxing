@@ -1,0 +1,21 @@
+{
+  "name": "Montoiz’ Thaï Khmer Boxing",
+  "short_name": "Montoiz’ Boxing",
+  "description": "Planning, actus, photos et contact du club de boxe thaï et khmère de Montoison.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d0b09",
+  "theme_color": "#0d0b09",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Planning", "url": "./#planning", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] },
+    { "name": "Cours d’essai", "url": "./#demande", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] }
+  ]
+}

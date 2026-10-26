@@ -1,0 +1,293 @@
+{
+  "saison": "2026-2027",
+  "maj": "2026-10-22",
+  "club": {
+    "nom": "Montoiz’ Thaï Khmer Boxing",
+    "accroche": "Boxe thaï, boxe khmère et boxes d’Asie du Sud-Est à Montoison, pour les enfants comme pour les adultes.",
+    "presentation": "Montoiz’ Thaï Khmer Boxing est une jeune association sportive de la Drôme, anciennement Allex Thaï Khmer Boxing. Le club a pris son nouveau nom en septembre 2026, après une assemblée générale extraordinaire.\n\nGrâce à la mairie de Montoison, qui met gracieusement une salle dédiée à notre disposition, nous transmettons notre passion de la boxe thaïlandaise, de la boxe khmère et des sports de combat d’Asie du Sud-Est dans de bonnes conditions.\n\nNotre ambition : construire, avec les habitants, les associations et les acteurs de la commune, un club convivial, familial et ambitieux.",
+    "adresse": "2 Place de l’Église (ou Grande Rue)",
+    "ville": "26800 Montoison",
+    "acces": "Salle mise à disposition par la commune de Montoison, au centre du village.",
+    "tel": "06 58 40 32 45",
+    "whatsapp": "+33 6 58 40 32 45",
+    "email": "allexthaikhmerboxing@gmail.com",
+    "facebook": "",
+    "tiktok": "",
+    "instagram": ""
+  },
+  "planning": [
+    {
+      "id": "p1",
+      "jour": 2,
+      "debut": "18:00",
+      "fin": "19:30",
+      "cours": "Boxe thaï & khmère enfants",
+      "public": "Enfants",
+      "coach": "",
+      "exemple": false
+    },
+    {
+      "id": "p4",
+      "jour": 4,
+      "debut": "19:00",
+      "fin": "21:00",
+      "cours": "Adultes tous niveaux",
+      "public": "Adultes",
+      "coach": "",
+      "exemple": false
+    },
+    {
+      "id": "kao17h3",
+      "jour": 2,
+      "debut": "19:30",
+      "fin": "21:00",
+      "cours": "",
+      "public": "Adultes",
+      "coach": "",
+      "exemple": false
+    },
+    {
+      "id": "ftb0ggi",
+      "jour": 4,
+      "debut": "18:00",
+      "fin": "19:30",
+      "cours": "",
+      "public": "Enfants",
+      "coach": "",
+      "exemple": false
+    }
+  ],
+  "tarifs": [],
+  "documents": [
+    "Fiche d’inscription remplie et signée",
+    "Certificat médical ou questionnaire de santé",
+    "Autorisation parentale pour les mineurs",
+    "Règlement de la cotisation"
+  ],
+  "essai": "Envie d’essayer ? Contactez le club par téléphone, WhatsApp ou e-mail pour convenir d’un cours d’essai.",
+  "actus": [
+    {
+      "id": "actu-affiliation-2026",
+      "date": "2026-10-22",
+      "titre": "Le club s’affilie à la FFKMDA et à la WMO France",
+      "photo": "",
+      "texte": "Une étape importante pour Montoiz’ Thaï Khmer Boxing : cette saison, le club a décidé de s’affilier à la FFKMDA, la Fédération Française de Kick Boxing, Muay Thaï et Disciplines Associées.\n\nLa FFKMDA est la fédération reconnue et agréée par l’État pour nos disciplines. Grâce à cette affiliation, nos boxeuses et nos boxeurs pourront participer aux différentes compétitions officielles : championnats régionaux, championnats de France et rencontres interclubs.\n\nPour aller encore plus loin, le club s’affilie également à la WMO France, présidée par Madame France Bonnet. La WMO France est placée sous la tutelle de la WMO (World Muaythai Organization), présidée par Chinawut Sirisompan, plus connu sous le nom de Grand Master Woody, maître de muay thaï et de muay boran, la boxe thaïe ancienne.\n\nCette double affiliation ouvre à nos compétiteurs les portes de compétitions supplémentaires, jusqu’au niveau international.\n\nUn grand merci à tous les adhérents, parents, bénévoles et partenaires qui font grandir le club. Une nouvelle page s’écrit : à nous de la remplir de beaux combats !"
+    },
+    {
+      "id": "a3",
+      "date": "2026-10-20",
+      "titre": "La tenue officielle du club est arrivée",
+      "texte": "Tee-shirts, débardeurs, shorts de boxe, survêtements et casquettes aux couleurs du club. Une gamme fabriquée par Atelier Mirabel, entreprise drômoise basée à Valence. Une même tenue, des valeurs communes et une seule famille : celle du club."
+    },
+    {
+      "id": "a2",
+      "date": "2026-10-01",
+      "titre": "Lady Boxing – Octobre Rose",
+      "texte": "Une séance de boxe pour les femmes dans le cadre d’Octobre Rose. L’intégralité des participations est reversée à la Ligue contre le cancer (3 avenue de Romans, Valence). Accueil et échauffement dès 18h00."
+    },
+    {
+      "id": "a1",
+      "date": "2026-09-30",
+      "titre": "Allex Thaï Khmer Boxing devient Montoiz’ Thaï Khmer Boxing",
+      "texte": "Décision prise à l’unanimité du bureau lors d’une assemblée générale extraordinaire. Un immense merci à la mairie de Montoison, qui met gracieusement à notre disposition un lieu dédié à notre sport. Une nouvelle identité, un nouveau lieu, une nouvelle aventure."
+    }
+  ],
+  "coachs": [],
+  "agenda": [],
+  "annonce": {
+    "texte": "test annonce",
+    "actif": false,
+    "type": "info",
+    "jusqu": ""
+  },
+  "legal": {
+    "president": "",
+    "rna": "",
+    "siret": ""
+  },
+  "galerie": [
+    {
+      "id": "gfpnys0",
+      "type": "tiktok",
+      "url": "https://vm.tiktok.com/ZGdCpbnTc/",
+      "legende": ""
+    },
+    {
+      "id": "c1hcsme",
+      "src": "photos/2026-10-21-eucysjc.jpg",
+      "legende": ""
+    },
+    {
+      "id": "vai8qi9",
+      "src": "photos/2026-10-21-eg4cqci.jpg",
+      "legende": ""
+    },
+    {
+      "id": "hd7xmt2",
+      "src": "photos/2026-10-21-6nk50yq.jpg",
+      "legende": ""
+    },
+    {
+      "id": "ss70wp9",
+      "src": "photos/2026-10-21-09jkxrt.jpg",
+      "legende": ""
+    },
+    {
+      "id": "fdvxoxx",
+      "src": "photos/2026-10-22-03c2gxc.jpg",
+      "legende": ""
+    },
+    {
+      "id": "bpugd91",
+      "src": "photos/2026-10-22-hcd9hwp.jpg",
+      "legende": ""
+    },
+    {
+      "id": "xpocxzx",
+      "src": "photos/2026-10-22-ajca4xh.jpg",
+      "legende": ""
+    },
+    {
+      "id": "h6436w0",
+      "src": "photos/2026-10-22-sz3timw.jpg",
+      "legende": ""
+    },
+    {
+      "id": "qotlp9t",
+      "src": "photos/2026-10-22-tkhv40t.jpg",
+      "legende": ""
+    },
+    {
+      "id": "94ji84m",
+      "src": "photos/2026-10-22-ovvr9kx.jpg",
+      "legende": ""
+    },
+    {
+      "id": "z3kfceq",
+      "src": "photos/2026-10-22-wvpom8h.jpg",
+      "legende": ""
+    },
+    {
+      "id": "2p6y6tt",
+      "src": "photos/2026-10-22-b8qabe9.jpg",
+      "legende": ""
+    },
+    {
+      "id": "z76kb0d",
+      "src": "photos/2026-10-22-7gtkc1z.jpg",
+      "legende": ""
+    },
+    {
+      "id": "oe8ub1c",
+      "src": "photos/2026-10-22-t19aagy.jpg",
+      "legende": ""
+    },
+    {
+      "id": "h9jm3jo",
+      "src": "photos/2026-10-22-wng8qi3.jpg",
+      "legende": ""
+    },
+    {
+      "id": "aarrmov",
+      "src": "photos/2026-10-22-uxhsonl.jpg",
+      "legende": ""
+    },
+    {
+      "id": "pmdvy4z",
+      "src": "photos/2026-10-22-osjmnzd.jpg",
+      "legende": ""
+    }
+  ],
+  "seeds": [
+    "affil-2026",
+    "boutique-2026",
+    "mirabel-2026"
+  ],
+  "affiliations": [
+    {
+      "id": "ffkmda",
+      "sigle": "FFKMDA",
+      "nom": "Fédération Française de Kick Boxing, Muay Thaï et Disciplines Associées",
+      "texte": "Fédération reconnue et agréée par l’État. Elle permet à nos boxeuses et boxeurs de participer aux compétitions officielles, jusqu’aux championnats de France.",
+      "url": "https://www.ffkmda.com",
+      "logo": ""
+    },
+    {
+      "id": "wmo-france",
+      "sigle": "WMO France",
+      "nom": "World Muaythai Organization – France",
+      "texte": "Présidée par Madame France Bonnet, sous la tutelle de la WMO de Grand Master Woody. Elle ouvre l’accès à des compétitions internationales de muay thaï et de muay boran.",
+      "url": "https://www.wmomuaythai.org",
+      "logo": ""
+    }
+  ],
+  "boutique": {
+    "actif": true,
+    "intro": "Les textiles officiels du club, fabriqués par Atelier Mirabel à Valence. Commandez en ligne et récupérez votre commande à la salle.",
+    "paiement": "Paiement au moment du retrait à la salle (espèces ou chèque à l’ordre du club).",
+    "lienPaiement": "",
+    "email": "",
+    "articles": [
+      {
+        "id": "tshirt",
+        "nom": "Tee-shirt du club",
+        "description": "Tee-shirt noir, logo du tigre brodé.",
+        "photo": "",
+        "prixAdh": "",
+        "prixPub": "",
+        "tailles": "6 ans,8 ans,10 ans,12 ans,14 ans,XS,S,M,L,XL,XXL",
+        "dispo": true
+      },
+      {
+        "id": "debardeur",
+        "nom": "Débardeur",
+        "description": "Idéal pour l’entraînement.",
+        "photo": "",
+        "prixAdh": "",
+        "prixPub": "",
+        "tailles": "XS,S,M,L,XL,XXL",
+        "dispo": true
+      },
+      {
+        "id": "short",
+        "nom": "Short de boxe",
+        "description": "Short de muay thaï aux couleurs du club.",
+        "photo": "",
+        "prixAdh": "",
+        "prixPub": "",
+        "tailles": "6 ans,8 ans,10 ans,12 ans,14 ans,XS,S,M,L,XL,XXL",
+        "dispo": true
+      },
+      {
+        "id": "survet",
+        "nom": "Survêtement",
+        "description": "Sweat à capuche brodé dans le dos et pantalon assorti.",
+        "photo": "builtin:hoodie",
+        "prixAdh": "",
+        "prixPub": "",
+        "tailles": "6 ans,8 ans,10 ans,12 ans,14 ans,XS,S,M,L,XL,XXL",
+        "dispo": true
+      },
+      {
+        "id": "casquette",
+        "nom": "Casquette brodée",
+        "description": "Casquette noire, logo brodé.",
+        "photo": "builtin:cap",
+        "prixAdh": "",
+        "prixPub": "",
+        "tailles": "Taille unique",
+        "dispo": true
+      }
+    ],
+    "atelier": {
+      "nom": "Atelier Mirabel",
+      "logo": "builtin:mirabel",
+      "texte": "Les textiles du club sont fabriqués par Atelier Mirabel, atelier drômois installé à Valence. Un choix fait pour soutenir le savoir-faire local.",
+      "tel": "04 65 84 43 48",
+      "email": "contact@ateliermirabel.fr",
+      "adresse": "2 rue Mirabel Chambaud, 26000 Valence",
+      "horaires": "Lundi–vendredi, 8h–18h sur rendez-vous",
+      "url": ""
+    }
+  }
+}
