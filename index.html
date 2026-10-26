@@ -589,10 +589,11 @@ async function sendForm(){
   if(document.getElementById("fm-hp")?.value) return;
   FORM.status="sending";refreshForm();
   const to=DATA.club.formEmail||DATA.club.email;
+  const cc=String(DATA.club.formCc||"").split(/[,;\s]+/).filter(x=>/^\S+@\S+\.\S+$/.test(x)).join(",");
   const t=TYPES.find(x=>x[0]===FORM.type)[1];
   try{
     const r=await fetch("https://formsubmit.co/ajax/"+encodeURIComponent(to),{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
-      body:JSON.stringify({_subject:`[Site] ${t} – ${FORM.nom}`,_template:"table",_captcha:"false",...(FORM.email?{_replyto:FORM.email}:{}),"Type de demande":t,"Nom":FORM.nom,"Téléphone":FORM.tel,"E-mail":FORM.email,"Pour":FORM.type==="essai"||FORM.type==="inscription"?FORM.pour+(FORM.age?` (${FORM.age} ans)`:""):"","Cours souhaité":FORM.cours,"Message":FORM.message})});
+      body:JSON.stringify({...(cc?{_cc:cc}:{}),_subject:`[Site] ${t} – ${FORM.nom}`,_template:"table",_captcha:"false",...(FORM.email?{_replyto:FORM.email}:{}),"Type de demande":t,"Nom":FORM.nom,"Téléphone":FORM.tel,"E-mail":FORM.email,"Pour":FORM.type==="essai"||FORM.type==="inscription"?FORM.pour+(FORM.age?` (${FORM.age} ans)`:""):"","Cours souhaité":FORM.cours,"Message":FORM.message})});
     const j=await r.json().catch(()=>({}));
     if(r.ok&&String(j.success)==="true"){FORM.status="sent"}
     else{FORM.status="idle";FORM.err="La demande n’a pas pu être envoyée pour le moment. Utilisez WhatsApp ou l’e-mail ci-dessous.";}
@@ -855,9 +856,10 @@ async function sendOrder(){
   const recap=L.map(l=>`${l.qty} × ${l.a.nom}${l.taille?" ("+l.taille+")":""} — ${l.t!=null?eur(l.t):"prix à confirmer"}`).join("\n");
   ORDER.status="sending";refreshCart();
   const to=B.email||D.club.formEmail||D.club.email;
+  const cc=String(B.cc||"").split(/[,;\s]+/).filter(x=>/^\S+@\S+\.\S+$/.test(x)).join(",");
   try{
     const r=await fetch("https://formsubmit.co/ajax/"+encodeURIComponent(to),{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
-      body:JSON.stringify({_subject:`[Boutique] Commande ${numero} – ${ORDER.nom} – ${eur(tot)}`,_template:"table",_captcha:"false",...(ORDER.email?{_replyto:ORDER.email}:{}),
+      body:JSON.stringify({...(cc?{_cc:cc}:{}),_subject:`[Boutique] Commande ${numero} – ${ORDER.nom} – ${eur(tot)}`,_template:"table",_captcha:"false",...(ORDER.email?{_replyto:ORDER.email}:{}),
         "N° de commande":numero,"Statut":ORDER.statut==="adherent"?"Adhérent du club":"Client","Nom":ORDER.nom,"Téléphone":ORDER.tel,"E-mail":ORDER.email,"Articles":recap,"Total":eur(tot),"Précisions":ORDER.message})});
     const j=await r.json().catch(()=>({}));
     if(r.ok&&String(j.success)==="true"){Object.assign(ORDER,{status:"sent",num:numero,recap,total:tot});CART=[];saveCart();refreshCart();document.getElementById("panier")?.scrollIntoView({behavior:"smooth"});return}
@@ -1121,7 +1123,7 @@ function adminTab(){
     ${field("Adresse","club.adresse",c.adresse)}${field("Code postal et ville","club.ville",c.ville)}
     ${field("Accès / stationnement","club.acces",c.acces,{full:1})}
     ${field("Téléphone","club.tel",c.tel)}${field("WhatsApp","club.whatsapp",c.whatsapp)}
-    ${field("E-mail","club.email",c.email,{type:"email"})}${field("E-mail qui reçoit les demandes du formulaire","club.formEmail",c.formEmail||c.email,{type:"email"})}${field("Lien Facebook","club.facebook",c.facebook,{ph:"https://www.facebook.com/…"})}
+    ${field("E-mail","club.email",c.email,{type:"email"})}${field("E-mail qui reçoit les demandes du formulaire","club.formEmail",c.formEmail||c.email,{type:"email"})}${field("Copie des demandes à (facultatif, séparés par des virgules)","club.formCc",c.formCc||"",{ph:"prenom.nom@gmail.com"})}${field("Lien Facebook","club.facebook",c.facebook,{ph:"https://www.facebook.com/…"})}
     ${field("Lien TikTok","club.tiktok",c.tiktok,{ph:"https://www.tiktok.com/@…"})}${field("Lien Instagram","club.instagram",c.instagram,{ph:"https://www.instagram.com/…"})}
   </div>`;
   if(tab==="planning") return `<p class="help">Un bloc par créneau. Cochez « à confirmer » tant que l’horaire n’est pas définitif : un bandeau d’avertissement s’affiche alors sur le site.</p>
@@ -1169,7 +1171,8 @@ function adminTab(){
     ${field("Texte d’introduction","boutique.intro",B.intro,{type:"textarea",full:1})}
     ${field("Modalités de paiement et de retrait","boutique.paiement",B.paiement,{full:1})}
     ${field("Lien de paiement en ligne (facultatif)","boutique.lienPaiement",B.lienPaiement,{type:"url",ph:"https://www.helloasso.com/…"})}
-    ${field("E-mail qui reçoit les commandes (facultatif)","boutique.email",B.email,{type:"email",ph:D0().club.formEmail||D0().club.email})}</div>
+    ${field("E-mail qui reçoit les commandes (facultatif)","boutique.email",B.email,{type:"email",ph:D0().club.formEmail||D0().club.email})}
+    ${field("Recevoir aussi une copie sur (e-mails séparés par des virgules)","boutique.cc",B.cc||"",{full:1,ph:"prenom.nom@gmail.com, tresorier@…"})}</div>
     <h3 style="font-size:24px;margin:24px 0 10px">Fabricant des textiles</h3>
     ${(()=>{B.atelier=B.atelier||{nom:"",logo:"",texte:"",tel:"",email:"",adresse:"",horaires:"",url:""};const M=B.atelier;return `<div class="item"><div class="fgrid">
       ${field("Nom","boutique.atelier.nom",M.nom)}${field("Téléphone","boutique.atelier.tel",M.tel)}
