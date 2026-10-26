@@ -580,6 +580,9 @@ function formHTML(D){
     ${fallback}
   </form></div>`;
 }
+function fsWhy(j,to){const m=String((j&&j.message)||"");
+  if(/activat/i.test(m)) return ` Le service d’envoi n’est pas encore activé : un e-mail « Activate Form » a été envoyé à ${to}. Ouvrez-le (pensez aux spams), cliquez sur « Activate Form », puis réessayez.`;
+  return m?` (Détail : ${m})`:"";}
 async function sendForm(){
   FORM.err="";
   if(!FORM.nom.trim()) FORM.err="Indiquez votre nom.";
@@ -596,7 +599,7 @@ async function sendForm(){
       body:JSON.stringify({...(cc?{_cc:cc}:{}),_subject:`[Site] ${t} – ${FORM.nom}`,_template:"table",_captcha:"false",...(FORM.email?{_replyto:FORM.email}:{}),"Type de demande":t,"Nom":FORM.nom,"Téléphone":FORM.tel,"E-mail":FORM.email,"Pour":FORM.type==="essai"||FORM.type==="inscription"?FORM.pour+(FORM.age?` (${FORM.age} ans)`:""):"","Cours souhaité":FORM.cours,"Message":FORM.message})});
     const j=await r.json().catch(()=>({}));
     if(r.ok&&String(j.success)==="true"){FORM.status="sent"}
-    else{FORM.status="idle";FORM.err="La demande n’a pas pu être envoyée pour le moment. Utilisez WhatsApp ou l’e-mail ci-dessous.";}
+    else{FORM.status="idle";FORM.err="La demande n’a pas pu être envoyée pour le moment. Utilisez WhatsApp ou l’e-mail ci-dessous."+fsWhy(j,to);}
   }catch(_){FORM.status="idle";FORM.err="Pas de connexion. Réessayez, ou utilisez WhatsApp ou l’e-mail ci-dessous.";}
   refreshForm();
 }
@@ -863,11 +866,11 @@ async function sendOrder(){
         "N° de commande":numero,"Statut":ORDER.statut==="adherent"?"Adhérent du club":"Client","Nom":ORDER.nom,"Téléphone":ORDER.tel,"E-mail":ORDER.email,"Articles":recap,"Total":eur(tot),"Précisions":ORDER.message})});
     const j=await r.json().catch(()=>({}));
     if(r.ok&&String(j.success)==="true"){Object.assign(ORDER,{status:"sent",num:numero,recap,total:tot});CART=[];saveCart();refreshCart();document.getElementById("panier")?.scrollIntoView({behavior:"smooth"});return}
-    throw 0;
-  }catch(_){
+    throw {why:fsWhy(j,to)};
+  }catch(ex){
     ORDER.status="idle";
     const wa=waHref(D.club.whatsapp||D.club.tel)+"?text="+encodeURIComponent(`Bonjour, je souhaite commander (${ORDER.statut==="adherent"?"adhérent":"client"}) :\n${recap}\nTotal : ${eur(tot)}\n${ORDER.nom} – ${ORDER.tel}`);
-    ORDER.err="La commande n’a pas pu être envoyée. Réessayez, ou envoyez-la sur WhatsApp avec le lien ci-dessous.";refreshCart();
+    ORDER.err="La commande n’a pas pu être envoyée. Réessayez, ou envoyez-la sur WhatsApp avec le lien ci-dessous."+((ex&&ex.why)||"");refreshCart();
     const e=document.querySelector("#order-form .form-err");if(e)e.insertAdjacentHTML("beforeend",` <a href="${wa}" target="_blank" rel="noopener">Envoyer sur WhatsApp</a>`);
   }
 }
@@ -1071,7 +1074,7 @@ ${showAn?`<div class="annonce${an.type==="alerte"?" alerte":""}" role="status"><
   ${(D.affiliations||[]).length?`<span class="foot-affil">Club affilié : ${D.affiliations.map(a=>a.url?`<a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.sigle||a.nom)}</a>`:esc(a.sigle||a.nom)).join(" · ")}</span>`:""}
   <span class="flags">France · Thaïlande · Cambodge</span><a href="#mentions">Mentions légales &amp; confidentialité</a>
   <button class="btn ghost sm install-btn" data-install${isStandalone()?" hidden":""}>📲 Installer l’appli</button>
-  <span>Mis à jour le ${esc(fmtDate(D.maj))} · <a href="#bureau">Espace bureau</a></span>
+  <span>Mis à jour le ${esc(fmtDate(D.maj))}</span>
 </div></footer>
 ${canWrite?`<button class="btn fab" id="open-admin">Gérer le site</button>`:""}
 <div id="admin-root"></div>`;
@@ -1216,6 +1219,7 @@ function adminTab(){
     <button class="btn ghost" data-add="coachs">+ Ajouter une personne</button>`;
 }
 function renderAdmin(){
+  if(draft&&!GH.token) tab="connexion";
   const root=document.getElementById("admin-root"); if(!root) return;
   if(!draft){root.innerHTML="";document.body.style.overflow="";return}
   document.body.style.overflow="hidden";
@@ -1224,7 +1228,7 @@ function renderAdmin(){
     <div class="admin-bar"><h2>Gestion du site</h2>${dirty?'<span class="dirty">Modifications non enregistrées</span>':""}
       <button class="btn ghost sm" id="close-admin">${dirty?"Annuler":"Fermer"}</button>
       <button class="btn sm" id="save-admin" ${dirty&&!saving&&!uploading&&GH.token?"":"disabled"} title="${GH.token?"":"Connectez-vous d’abord (onglet Connexion)"}">${saving?"Enregistrement…":"Enregistrer et publier"}</button></div>
-    <div class="admin-tabs" role="tablist">${TABS.map(([k,l])=>`<button role="tab" data-tab="${k}" aria-selected="${k===tab}">${l}</button>`).join("")}</div>
+    <div class="admin-tabs" role="tablist">${(GH.token?TABS:TABS.filter(t=>t[0]==="connexion")).map(([k,l])=>`<button role="tab" data-tab="${k}" aria-selected="${k===tab}">${l}</button>`).join("")}</div>
     <div class="admin-body"><div class="wrap">${adminTab()}</div></div></div>`;
   root.querySelector(".admin-body").scrollTop=scroll;
 }
