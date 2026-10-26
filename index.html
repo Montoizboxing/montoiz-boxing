@@ -9,8 +9,8 @@
 <meta property="og:description" content="Club de boxe thaï et khmère à Montoison (26800), pour les enfants comme pour les adultes.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
-<meta property="og:url" content="https://ayron26.github.io/montoiz-boxing.github.io/">
-<meta property="og:image" content="https://ayron26.github.io/montoiz-boxing.github.io/partage.jpg">
+<meta property="og:url" content="https://montoizboxing.github.io/montoiz-boxing/">
+<meta property="og:image" content="https://montoizboxing.github.io/montoiz-boxing/partage.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -1234,8 +1234,8 @@ function toast(msg){const t=document.createElement("div");t.className="toast";t.
 
 const GH=(()=>{let s={};try{s=JSON.parse(localStorage.getItem("mtkb-gh")||"{}")}catch(_){}
   const host=location.hostname, seg=location.pathname.split("/").filter(Boolean)[0]||"";
-  const owner=host.endsWith(".github.io")?host.split(".")[0]:"";
-  const repo=host.endsWith(".github.io")?(seg||host):"";
+  const owner=host.endsWith(".github.io")?host.split(".")[0]:"montoizboxing";
+  const repo=host.endsWith(".github.io")?(seg||host):"montoiz-boxing";
   return {owner:s.owner||owner,repo:s.repo||repo,token:s.token||""}})();
 function storeGH(){try{localStorage.setItem("mtkb-gh",JSON.stringify(GH))}catch(_){}}
 const b64=s=>{const b=new TextEncoder().encode(s);let x="";for(let i=0;i<b.length;i+=0x8000)x+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000));return btoa(x)};
