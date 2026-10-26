@@ -1,6 +1,6 @@
 {
   "saison": "2026-2027",
-  "maj": "2026-10-22",
+  "maj": "2026-10-26",
   "club": {
     "nom": "Montoiz’ Thaï Khmer Boxing",
     "accroche": "Boxe thaï, boxe khmère et boxes d’Asie du Sud-Est à Montoison, pour les enfants comme pour les adultes.",
@@ -226,7 +226,7 @@
     "intro": "Les textiles officiels du club, fabriqués par Atelier Mirabel à Valence. Commandez en ligne et récupérez votre commande à la salle.",
     "paiement": "Paiement au moment du retrait à la salle (espèces ou chèque à l’ordre du club).",
     "lienPaiement": "",
-    "email": "",
+    "email": "allexthaikhmerboxing@gmail.com",
     "articles": [
       {
         "id": "tshirt",
