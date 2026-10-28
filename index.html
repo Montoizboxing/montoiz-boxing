@@ -436,6 +436,11 @@ nav.links a[aria-current="page"]::after{transform:scaleX(1)}
 .maker-mini .mlogo img{width:100%;display:block}
 .maker-mini span{color:var(--muted);font-size:14px}
 @media (max-width:900px){.maker{grid-template-columns:1fr;gap:16px}}
+.review{display:flex;flex-wrap:wrap;align-items:center;gap:14px 20px;margin-top:20px;padding:18px 20px;border:1px solid color-mix(in srgb,var(--gold) 50%,var(--line));border-radius:var(--r);background:linear-gradient(100deg,rgba(224,176,74,.10),transparent 70%),var(--bg)}
+.review .stars{font-size:22px;letter-spacing:2px;color:var(--gold)}
+.review div{flex:1 1 260px;min-width:0}
+.review b{display:block;font-family:var(--f-display);font-weight:800;font-size:24px;text-transform:uppercase;line-height:1.05}
+.review span{color:var(--muted);font-size:14px}
 /* Demande */
 .ask{margin-top:28px;display:grid;grid-template-columns:1fr 1.6fr;gap:28px;background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:24px;scroll-margin-top:80px}
 .ask h3{font-size:clamp(30px,4vw,42px);font-weight:800;margin:8px 0 12px}
@@ -534,6 +539,7 @@ SEEDS.push({id:"mirabel-2026",run(D){
   D.boutique.atelier={nom:"Atelier Mirabel",logo:"builtin:mirabel",texte:"Les textiles du club sont fabriqués par Atelier Mirabel, atelier drômois installé à Valence. Un choix fait pour soutenir le savoir-faire local.",
     tel:"04 65 84 43 48",email:"contact@ateliermirabel.fr",adresse:"2 rue Mirabel Chambaud, 26000 Valence",horaires:"Lundi–vendredi, 8h–18h sur rendez-vous",url:""};
 }});
+SEEDS.push({id:"avis-google-2026b",run(D){const L="https://g.page/r/CbJWYjPgNm_UEAE/review";if(!D.club.avisGoogle||/share\.google/.test(D.club.avisGoogle))D.club.avisGoogle=L;}});
 function applySeeds(D){D.seeds=D.seeds||[];for(const s of SEEDS){if(!D.seeds.includes(s.id)){s.run(D);D.seeds.push(s.id)}}return D}
 applySeeds(DATA);
 let filter="Tous";
@@ -584,6 +590,11 @@ function formHTML(D){
     ${fallback}
   </form></div>`;
 }
+function fsPost(to,payload){
+  const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),20000);
+  return fetch("https://formsubmit.co/ajax/"+encodeURIComponent(to),{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify(payload),signal:ctl.signal}).finally(()=>clearTimeout(t));
+}
+const okMail=m=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(m||"").trim());
 function fsWhy(j,to){const m=String((j&&j.message)||"");
   if(/activat/i.test(m)) return ` Le service d’envoi n’est pas encore activé : un e-mail « Activate Form » a été envoyé à ${to}. Ouvrez-le (pensez aux spams), cliquez sur « Activate Form », puis réessayez.`;
   return m?` (Détail : ${m})`:"";}
@@ -591,6 +602,7 @@ async function sendForm(){
   FORM.err="";
   if(!FORM.nom.trim()) FORM.err="Indiquez votre nom.";
   else if(!FORM.tel.trim()&&!/^\S+@\S+\.\S+$/.test(FORM.email)) FORM.err="Indiquez un téléphone ou un e-mail valide pour que le club puisse vous répondre.";
+  else if(FORM.email.trim()&&!okMail(FORM.email)) FORM.err="L’adresse e-mail n’est pas valide. Corrigez-la ou laissez le champ vide.";
   else if(!FORM.ok) FORM.err="Cochez la case d’accord pour que le club puisse vous recontacter.";
   if(FORM.err){refreshForm();return}
   if(document.getElementById("fm-hp")?.value) return;
@@ -599,12 +611,11 @@ async function sendForm(){
   const cc=String(DATA.club.formCc||"").split(/[,;\s]+/).filter(x=>/^\S+@\S+\.\S+$/.test(x)).join(",");
   const t=TYPES.find(x=>x[0]===FORM.type)[1];
   try{
-    const r=await fetch("https://formsubmit.co/ajax/"+encodeURIComponent(to),{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
-      body:JSON.stringify({...(cc?{_cc:cc}:{}),_subject:`[Site] ${t} – ${FORM.nom}`,_template:"table",_captcha:"false",...(FORM.email?{_replyto:FORM.email}:{}),"Type de demande":t,"Nom":FORM.nom,"Téléphone":FORM.tel,"E-mail":FORM.email,"Pour":FORM.type==="essai"||FORM.type==="inscription"?FORM.pour+(FORM.age?` (${FORM.age} ans)`:""):"","Cours souhaité":FORM.cours,"Message":FORM.message})});
+    const r=await fsPost(to,{...(cc?{_cc:cc}:{}),_subject:`[Site] ${t} – ${FORM.nom}`,_template:"table",_captcha:"false",...(okMail(FORM.email)?{_replyto:FORM.email.trim()}:{}),"Type de demande":t,"Nom":FORM.nom,"Téléphone":FORM.tel,"E-mail":FORM.email,"Pour":FORM.type==="essai"||FORM.type==="inscription"?FORM.pour+(FORM.age?` (${FORM.age} ans)`:""):"","Cours souhaité":FORM.cours,"Message":FORM.message});
     const j=await r.json().catch(()=>({}));
     if(r.ok&&String(j.success)==="true"){FORM.status="sent"}
     else{FORM.status="idle";FORM.err="La demande n’a pas pu être envoyée pour le moment. Utilisez WhatsApp ou l’e-mail ci-dessous."+fsWhy(j,to);}
-  }catch(_){FORM.status="idle";FORM.err="Pas de connexion. Réessayez, ou utilisez WhatsApp ou l’e-mail ci-dessous.";}
+  }catch(ex){FORM.status="idle";FORM.err=ex&&ex.name==="AbortError"?"Le service d’envoi ne répond pas pour le moment. Réessayez dans un instant, ou utilisez WhatsApp ou l’e-mail ci-dessous.":"Pas de connexion. Réessayez, ou utilisez WhatsApp ou l’e-mail ci-dessous.";}
   refreshForm();
 }
 function refreshForm(){const el=document.getElementById("demande");if(!el)return;const tmp=document.createElement("div");tmp.innerHTML=formHTML(DATA);el.replaceWith(tmp.firstElementChild)}
@@ -854,6 +865,7 @@ async function sendOrder(){
   const D=DATA,B=D.boutique,L=cartLines(D);ORDER.err="";
   if(!L.length) ORDER.err="Votre panier est vide.";
   else if(!ORDER.nom.trim()) ORDER.err="Indiquez votre nom.";
+  else if(ORDER.email.trim()&&!okMail(ORDER.email)) ORDER.err="L’adresse e-mail n’est pas valide. Corrigez-la ou laissez le champ vide.";
   else if(!ORDER.tel.trim()) ORDER.err="Indiquez un téléphone pour que le club vous prévienne quand la commande est prête.";
   else if(!ORDER.ok) ORDER.err="Cochez la case d’accord pour que le club puisse traiter la commande.";
   if(ORDER.err){refreshCart();return}
@@ -865,16 +877,15 @@ async function sendOrder(){
   const to=B.email||D.club.formEmail||D.club.email;
   const cc=String(B.cc||"").split(/[,;\s]+/).filter(x=>/^\S+@\S+\.\S+$/.test(x)).join(",");
   try{
-    const r=await fetch("https://formsubmit.co/ajax/"+encodeURIComponent(to),{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},
-      body:JSON.stringify({...(cc?{_cc:cc}:{}),_subject:`[Boutique] Commande ${numero} – ${ORDER.nom} – ${eur(tot)}`,_template:"table",_captcha:"false",...(ORDER.email?{_replyto:ORDER.email}:{}),
-        "N° de commande":numero,"Statut":ORDER.statut==="adherent"?"Adhérent du club":"Client","Nom":ORDER.nom,"Téléphone":ORDER.tel,"E-mail":ORDER.email,"Articles":recap,"Total":eur(tot),"Précisions":ORDER.message})});
+    const r=await fsPost(to,{...(cc?{_cc:cc}:{}),_subject:`[Boutique] Commande ${numero} – ${ORDER.nom} – ${eur(tot)}`,_template:"table",_captcha:"false",...(okMail(ORDER.email)?{_replyto:ORDER.email.trim()}:{}),
+        "N° de commande":numero,"Statut":ORDER.statut==="adherent"?"Adhérent du club":"Client","Nom":ORDER.nom,"Téléphone":ORDER.tel,"E-mail":ORDER.email,"Articles":recap,"Total":eur(tot),"Précisions":ORDER.message});
     const j=await r.json().catch(()=>({}));
     if(r.ok&&String(j.success)==="true"){Object.assign(ORDER,{status:"sent",num:numero,recap,total:tot});CART=[];saveCart();refreshCart();document.getElementById("panier")?.scrollIntoView({behavior:"smooth"});return}
     throw {why:fsWhy(j,to)};
   }catch(ex){
     ORDER.status="idle";
     const wa=waHref(D.club.whatsapp||D.club.tel)+"?text="+encodeURIComponent(`Bonjour, je souhaite commander (${ORDER.statut==="adherent"?"adhérent":"client"}) :\n${recap}\nTotal : ${eur(tot)}\n${ORDER.nom} – ${ORDER.tel}`);
-    ORDER.err="La commande n’a pas pu être envoyée. Réessayez, ou envoyez-la sur WhatsApp avec le lien ci-dessous."+((ex&&ex.why)||"");refreshCart();
+    ORDER.err=(ex&&ex.name==="AbortError"?"Le service d’envoi ne répond pas pour le moment. Réessayez dans un instant, ou envoyez la commande sur WhatsApp avec le lien ci-dessous.":"La commande n’a pas pu être envoyée. Réessayez, ou envoyez-la sur WhatsApp avec le lien ci-dessous.")+((ex&&ex.why)||"");refreshCart();
     const e=document.querySelector("#order-form .form-err");if(e)e.insertAdjacentHTML("beforeend",` <a href="${wa}" target="_blank" rel="noopener">Envoyer sur WhatsApp</a>`);
   }
 }
@@ -1045,9 +1056,10 @@ ${affilSection(D,false)}`,
       <h3>${esc(c.ville)}</h3>
       <address>${esc(c.adresse)}<br>${esc(c.ville)}</address>
       <p>${esc(c.acces)}</p>
-      <div><a class="btn" href="${mapHref(c)}" target="_blank" rel="noopener">Itinéraire</a></div>
+      <div class="cta"><a class="btn" href="${mapHref(c)}" target="_blank" rel="noopener">Itinéraire</a>${c.avisGoogle?`<a class="btn ghost" href="${esc(c.avisGoogle)}" target="_blank" rel="noopener">Voir sur Google</a>`:""}</div>
     </div>
   </div>
+  ${c.avisGoogle?`<div class="review"><span class="stars" aria-hidden="true">★★★★★</span><div><b>Vous aimez le club ?</b><span>Un avis Google aide les nouveaux à nous trouver. Ça prend 30 secondes.</span></div><a class="btn" href="${esc(c.avisGoogle)}" target="_blank" rel="noopener">Laisser un avis Google</a></div>`:""}
   ${formHTML(D)}
 </div></section>`
   };
@@ -1076,7 +1088,7 @@ ${showAn?`<div class="annonce${an.type==="alerte"?" alerte":""}" role="status"><
 <footer><div class="wrap">
   <span>© ${new Date().getFullYear()} ${esc(c.nom)} · Association sportive · ${esc(c.ville)}</span>
   ${(D.affiliations||[]).length?`<span class="foot-affil">Club affilié : ${D.affiliations.map(a=>a.url?`<a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.sigle||a.nom)}</a>`:esc(a.sigle||a.nom)).join(" · ")}</span>`:""}
-  <span class="flags">France · Thaïlande · Cambodge</span><a href="#mentions">Mentions légales &amp; confidentialité</a>
+  <span class="flags">France · Thaïlande · Cambodge</span>${D.club.avisGoogle?`<a href="${esc(D.club.avisGoogle)}" target="_blank" rel="noopener">★ Laisser un avis Google</a>`:""}<a href="#mentions">Mentions légales &amp; confidentialité</a>
   <button class="btn ghost sm install-btn" data-install${isStandalone()?" hidden":""}>📲 Installer l’appli</button>
   <span>Mis à jour le ${esc(fmtDate(D.maj))}</span>
 </div></footer>
@@ -1131,7 +1143,7 @@ function adminTab(){
     ${field("Accès / stationnement","club.acces",c.acces,{full:1})}
     ${field("Téléphone","club.tel",c.tel)}${field("WhatsApp","club.whatsapp",c.whatsapp)}
     ${field("E-mail","club.email",c.email,{type:"email"})}${field("E-mail qui reçoit les demandes du formulaire","club.formEmail",c.formEmail||c.email,{type:"email"})}${field("Copie des demandes à (facultatif, séparés par des virgules)","club.formCc",c.formCc||"",{ph:"prenom.nom@gmail.com"})}${field("Lien Facebook","club.facebook",c.facebook,{ph:"https://www.facebook.com/…"})}
-    ${field("Lien TikTok","club.tiktok",c.tiktok,{ph:"https://www.tiktok.com/@…"})}${field("Lien Instagram","club.instagram",c.instagram,{ph:"https://www.instagram.com/…"})}
+    ${field("Lien TikTok","club.tiktok",c.tiktok,{ph:"https://www.tiktok.com/@…"})}${field("Lien pour laisser un avis Google","club.avisGoogle",c.avisGoogle||"",{full:1,ph:"https://g.page/r/… ou https://share.google/…"})}${field("Lien Instagram","club.instagram",c.instagram,{ph:"https://www.instagram.com/…"})}
   </div>`;
   if(tab==="planning") return `<p class="help">Un bloc par créneau. Cochez « à confirmer » tant que l’horaire n’est pas définitif : un bandeau d’avertissement s’affiche alors sur le site.</p>
     ${d.planning.map((s,i)=>`<div class="item"><div class="item-head"><b>${JOURS[s.jour]} ${esc(s.debut)}</b>${delBtn("planning",i)}</div><div class="fgrid">
