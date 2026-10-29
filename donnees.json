@@ -1,6 +1,6 @@
 {
   "saison": "2026-2027",
-  "maj": "2026-10-27",
+  "maj": "2026-10-29",
   "club": {
     "nom": "Montoiz’ Thaï Khmer Boxing",
     "accroche": "Boxe thaï, boxe khmère et boxes d’Asie du Sud-Est à Montoison, pour les enfants comme pour les adultes.",
@@ -13,7 +13,8 @@
     "email": "allexthaikhmerboxing@gmail.com",
     "facebook": "https://www.facebook.com/share/19yPm2j1C6/?mibextid=wwXIfr",
     "tiktok": "",
-    "instagram": ""
+    "instagram": "",
+    "avisGoogle": "https://g.page/r/CbJWYjPgNm_UEAE/review"
   },
   "planning": [
     {
@@ -95,8 +96,8 @@
   "coachs": [],
   "agenda": [],
   "annonce": {
-    "texte": "test annonce",
-    "actif": false,
+    "texte": "La boutique sera bientôt disponible, restez en garde ",
+    "actif": true,
     "type": "info",
     "jusqu": ""
   },
@@ -200,7 +201,8 @@
   "seeds": [
     "affil-2026",
     "boutique-2026",
-    "mirabel-2026"
+    "mirabel-2026",
+    "avis-google-2026b"
   ],
   "affiliations": [
     {
@@ -221,7 +223,7 @@
     }
   ],
   "boutique": {
-    "actif": true,
+    "actif": false,
     "intro": "Les textiles officiels du club, fabriqués par Atelier Mirabel à Valence. Commandez en ligne et récupérez votre commande à la salle.",
     "paiement": "Paiement au moment du retrait à la salle (espèces ou chèque à l’ordre du club).",
     "lienPaiement": "",
