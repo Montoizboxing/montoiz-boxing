@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vérification de carte · Montoiz Thaï Khmer Boxing</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<meta name="theme-color" content="#0d0b09">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&amp;family=Barlow:wght@400;600&amp;family=Barlow+Condensed:wght@600;700&amp;display=swap">
+<style>
+:root{--bg:#0d0b09;--bg-2:#16130f;--line:#3a3125;--fg:#f3ece0;--muted:#b4a790;--gold:#e0b04a;--ok:#5cc46a;--ko:#e0524a;--red:#d2453c;--blue:#3c6fd2;
+  --f-display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;--f-body:"Barlow",system-ui,sans-serif;--f-label:"Barlow Condensed","Arial Narrow",sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 var(--f-body)}
+.mongkol{height:4px;background:linear-gradient(90deg,var(--red) 0 33.3%,#f3ece0 33.3% 66.6%,var(--blue) 66.6%)}
+header{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);background:var(--bg-2)}
+header img{width:40px;height:40px;border-radius:50%}
+header b{display:block;font:800 20px/1 var(--f-display);text-transform:uppercase}
+header small{color:var(--gold);font:700 12px var(--f-label);letter-spacing:.16em;text-transform:uppercase}
+main{max-width:460px;margin:0 auto;padding:28px 16px 60px;text-align:center}
+.eyebrow{font:700 13px var(--f-label);letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.badge{width:150px;height:150px;margin:26px auto 18px;border-radius:50%;display:grid;place-items:center;position:relative}
+.badge::before{content:"";position:absolute;inset:-14px;border-radius:50%;border:2px dashed currentColor;opacity:.5}
+.badge svg{width:70px;height:70px}
+.ok .badge{background:var(--ok);color:var(--ok);box-shadow:0 0 60px #5cc46a55}
+.ko .badge{background:var(--ko);color:var(--ko);box-shadow:0 0 60px #e0524a55}
+.badge svg{stroke:#0d0b09}
+h1{font:900 clamp(44px,13vw,64px)/.95 var(--f-display);text-transform:uppercase;margin:0}
+.ok h1{color:var(--ok)} .ko h1{color:var(--ko)}
+.sub{color:var(--muted);margin:8px 0 22px}
+.rows{border:1px solid var(--line);border-radius:14px;overflow:hidden;text-align:left}
+.row{display:flex;justify-content:space-between;gap:12px;padding:13px 16px;background:var(--bg-2)}
+.row+.row{border-top:1px solid var(--line)}
+.row span{color:var(--muted)} .row b{text-align:right}
+.when{margin-top:18px;font:700 13px var(--f-label);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.foot{margin-top:28px;color:var(--muted);font-size:14px}
+.foot a{color:var(--gold)}
+.spin{display:inline-block;width:28px;height:28px;border:3px solid var(--gold);border-right-color:transparent;border-radius:50%;animation:s .7s linear infinite;margin-top:80px}
+@keyframes s{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="mongkol"></div>
+<header><img src="icon-192.png" alt=""><div><b>Montoiz’</b><small>Thaï Khmer Boxing</small></div></header>
+<main id="app"><span class="spin"></span></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"></script>
+<script>
+const SB_URL="https://omnovkheumrwturqugmk.supabase.co", SB_KEY="sb_publishable_rdk1XMA8H6xt0sX9twQXXA_3MndR78o";
+const app=document.getElementById("app");
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=d=>new Date(d+"T12:00:00").toLocaleDateString("fr-FR");
+const CHECK='<svg viewBox="0 0 24 24" fill="none" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const CROSS='<svg viewBox="0 0 24 24" fill="none" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const foot='<div class="foot">Montoiz’ Thaï Khmer Boxing · Montoison<br><a href="./">montoizthaikhmerboxing.fr</a></div>';
+const now=new Date(), when=`Vérifié le ${now.toLocaleDateString("fr-FR")} à ${now.toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})}`;
+function show(cls,title,sub,rows){
+  app.className=cls;
+  app.innerHTML=`<div class="eyebrow">Vérification de carte</div><div class="badge">${cls==="ok"?CHECK:CROSS}</div><h1>${title}</h1><p class="sub">${sub}</p>
+    ${rows?`<div class="rows">${rows.map(([k,v])=>`<div class="row"><span>${k}</span><b>${esc(v)}</b></div>`).join("")}</div>`:""}
+    <div class="when">${when}</div>${foot}`;
+}
+(async()=>{
+  const t=location.hash.slice(1).trim();
+  if(!/^[0-9a-f-]{36}$/i.test(t)){ app.className=""; app.innerHTML=`<div class="eyebrow">Vérification de carte</div><h1 style="margin-top:30px">Scannez une carte</h1><p class="sub">Scannez le QR code d’une carte de membre du club pour vérifier qu’elle est valide.</p>${foot}`; return; }
+  try{
+    const sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:false}});
+    const {data,error}=await sb.rpc("verifier_carte",{t});
+    if(error) throw error;
+    if(!data||!data.ok) return show("ko","Carte inconnue","Ce QR code ne correspond à aucune carte du club.");
+    const rows=[["Adhérent",data.nom],["Saison",String(data.saison).replace("-"," – ")],["Catégorie",data.groupe||"—"],["N° membre",data.numero]];
+    if(data.competiteur) rows.splice(3,0,["Statut","Compétiteur"]);
+    if(data.valide) show("ok","Carte valide","Cette personne est bien adhérente du club.",rows);
+    else show("ko","Carte non valide",`Cette carte n’est pas active (licence non validée ou saison terminée le ${fmt(data.fin)}).`,rows);
+  }catch(e){ app.className=""; app.innerHTML=`<div class="eyebrow">Vérification de carte</div><h1 style="margin-top:30px;font-size:40px">Vérification impossible</h1><p class="sub">Vérifiez la connexion internet et rescannez le QR code.</p>${foot}`; }
+})();
+</script>
+</body>
+</html>

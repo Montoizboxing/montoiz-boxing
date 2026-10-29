@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Espace adhérent · Montoiz Thaï Khmer Boxing</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="theme-color" content="#0d0b09">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&amp;family=Barlow:wght@400;500;600;700&amp;family=Barlow+Condensed:wght@500;600;700&amp;display=swap">
+<style>
+:root{
+  --bg:#0d0b09; --bg-2:#16130f; --bg-3:#201b15; --line:#3a3125;
+  --fg:#f3ece0; --muted:#b4a790; --gold:#e0b04a; --gold-2:#f5cf72; --gold-ink:#1a1206;
+  --red:#d2453c; --blue:#3c6fd2; --ok:#6fbf73; --warn:#e39a3b;
+  --f-display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-label:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 var(--f-body)}
+body{min-height:100vh;padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+a{color:var(--gold-2)}
+button,input,select{font:inherit;color:inherit}
+.mongkol{height:4px;background:linear-gradient(90deg,var(--red) 0 33.3%,#f3ece0 33.3% 66.6%,var(--blue) 66.6%)}
+header{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line);background:var(--bg-2)}
+header img{width:40px;height:40px;border-radius:50%}
+header .t{flex:1;min-width:0}
+header .t b{display:block;font:800 20px/1 var(--f-display);text-transform:uppercase;letter-spacing:.02em}
+header .t small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted);font:600 13px var(--f-label);letter-spacing:.08em;text-transform:uppercase}
+header a.back{font:600 14px var(--f-label);text-transform:uppercase;letter-spacing:.06em;text-decoration:none;white-space:nowrap}
+main{max-width:980px;margin:0 auto;padding:24px 16px 80px}
+h1{font:900 clamp(34px,7vw,52px)/.95 var(--f-display);text-transform:uppercase;margin:0 0 8px}
+h1 em{font-style:normal;color:var(--gold)}
+h2{font:800 26px/1 var(--f-display);text-transform:uppercase;margin:0 0 12px}
+.lead{color:var(--muted);margin:0 0 22px;max-width:56ch}
+.eyebrow{font:700 13px var(--f-label);letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.card{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:20px}
+.login{max-width:440px;margin:6vh auto 0}
+label.f{display:block;margin:0 0 14px}
+label.f span{display:block;font:600 13px var(--f-label);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+input[type=text],input[type=email],input[type=date],input[type=number],input[type=tel],input[type=search],select{
+  width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-height:46px;outline:none}
+input:focus,select:focus{border-color:var(--gold)}
+.code{font:700 26px var(--f-label);letter-spacing:.4em;text-align:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:10px;padding:12px 18px;min-height:46px;cursor:pointer;
+  background:var(--gold);color:var(--gold-ink);font:700 15px var(--f-label);letter-spacing:.08em;text-transform:uppercase;text-decoration:none}
+.btn:hover{background:var(--gold-2)}
+.btn[disabled]{opacity:.55;cursor:wait}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--gold)}
+.btn.danger{background:transparent;color:#ff8d84;border:1px solid #6b2a25}
+.btn.sm{min-height:36px;padding:7px 12px;font-size:13px}
+.btn.full{width:100%}
+.note{font-size:14px;color:var(--muted)}
+.msg{margin:12px 0 0;padding:10px 12px;border-radius:10px;font-size:14px}
+.msg.err{background:#3a1512;color:#ffb1aa}
+.msg.ok{background:#16301a;color:#b9e8bb}
+.hello{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:22px}
+.who{font-size:14px;color:var(--muted)}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.kid h3{font:800 28px/1 var(--f-display);text-transform:uppercase;margin:0}
+.kid .sub{color:var(--muted);font-size:14px;margin:4px 0 14px}
+.rows{display:grid;gap:8px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:var(--bg);border-radius:10px;font-size:15px}
+.pill{display:inline-flex;align-items:center;gap:6px;font:700 12px var(--f-label);letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:99px;white-space:nowrap}
+.pill.ok{background:#16301a;color:#9fe0a2}
+.pill.ko{background:#3a1512;color:#ffa49b}
+.pill.wait{background:#3a2a12;color:#f3c37a}
+.pill.n{background:var(--bg-3);color:var(--muted)}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin:0 0 18px;overflow-x:auto}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;cursor:pointer;color:var(--muted);
+  font:700 15px var(--f-label);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.tabs button.on{color:var(--fg);border-color:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:12px}
+.stat b{display:block;font:800 30px/1 var(--f-display)}
+.stat small{color:var(--muted);font:600 12px var(--f-label);letter-spacing:.06em;text-transform:uppercase}
+.tools{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.tools input,.tools select{flex:1 1 180px;width:auto}
+.list{display:grid;gap:8px}
+.item{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;background:var(--bg-2);border:1px solid var(--line);
+  border-radius:12px;padding:12px 14px;cursor:pointer;text-align:left;width:100%}
+.item:hover{border-color:var(--gold)}
+.item b{font-size:16px}
+.item .meta{color:var(--muted);font-size:13px;grid-column:1}
+.item .pills{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;grid-row:1/3;grid-column:2}
+.empty{padding:28px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+/* Fiche (feuille latérale) */
+.sheet-bg{position:fixed;inset:0;background:#000a;z-index:20;display:flex;justify-content:flex-end}
+.sheet{width:min(560px,100%);height:100%;overflow:auto;background:var(--bg-2);border-left:1px solid var(--line);padding:20px 18px 40px}
+.sheet .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+fieldset{border:1px solid var(--line);border-radius:12px;padding:14px 14px 2px;margin:0 0 14px}
+legend{font:700 13px var(--f-label);letter-spacing:.12em;text-transform:uppercase;color:var(--gold);padding:0 6px}
+.check{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:15px}
+.check input{width:20px;height:20px;accent-color:var(--gold)}
+.acts{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;margin-top:6px}
+.staff-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;background:var(--bg-2);border:1px solid var(--line);border-radius:12px}
+.staff-row small{color:var(--muted)}
+.center{text-align:center}
+.card-page{max-width:460px;margin:0 auto}
+.mcard{position:relative;overflow:hidden;margin:18px 0 12px;aspect-ratio:1.586;border-radius:18px;border:1px solid #8a6a2c;padding:18px 18px 22px;
+  background:linear-gradient(135deg,#2a2114 0%,#15110b 45%,#4a3916 100%);box-shadow:0 18px 50px #000a, inset 0 1px 0 #f5cf7240;display:flex;flex-direction:column;container-type:inline-size}
+.mcard::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,#ffffff06 0 2px,transparent 2px 9px);pointer-events:none}
+.mcard.off{filter:grayscale(.85) brightness(.75)}
+.mc-wm{position:absolute;right:-12%;bottom:-22%;width:62%;opacity:.13;pointer-events:none}
+.mc-top{display:flex;align-items:center;gap:10px;position:relative}
+.mc-top img{width:13cqw;height:13cqw;border-radius:50%}
+.mc-top b{display:block;font:800 5cqw/0.95 var(--f-display);text-transform:uppercase}
+.mc-top small{display:block;margin-top:3px;color:var(--gold);font:700 2.9cqw var(--f-label);letter-spacing:.18em;text-transform:uppercase}
+.mc-season{margin-left:auto;align-self:flex-start;background:linear-gradient(180deg,var(--gold-2),var(--gold));color:var(--gold-ink);font:800 3.2cqw var(--f-label);letter-spacing:.12em;padding:4px 9px;border-radius:6px;white-space:nowrap}
+.mc-name{position:relative;margin-top:auto;font:900 8.6cqw/1 var(--f-display);text-transform:uppercase;overflow-wrap:anywhere}
+.mc-tags{position:relative;display:flex;gap:6px;margin:6px 0 0;min-height:6cqw}
+.mc-tags span{font:700 3cqw var(--f-label);letter-spacing:.1em;text-transform:uppercase;border:1px solid #6b5630;color:var(--muted);border-radius:99px;padding:2px 9px}
+.mc-tags span.hl{border-color:var(--gold);color:var(--gold-2)}
+.mc-bottom{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-top:auto}
+.mc-bottom small{display:block;color:var(--muted);font:700 2.6cqw var(--f-label);letter-spacing:.14em;text-transform:uppercase}
+.mc-bottom b{display:block;font:800 4.6cqw/1.1 var(--f-label);margin-bottom:5px}
+.mc-qr{width:27cqw;height:27cqw;background:#fff;border-radius:10px;padding:2.2cqw;flex:none}
+.mc-qr svg{width:100%;height:100%;display:block}
+.mc-band{position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--red) 0 33.3%,#f3ece0 33.3% 66.6%,var(--blue) 66.6%)}
+.adv{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;background:var(--bg-2);border:1px solid var(--line);border-radius:12px}
+.adv small{display:block;color:var(--muted);font-size:14px}
+.adv>span{font:800 26px var(--f-display);color:var(--gold);white-space:nowrap}
+.spin{display:inline-block;width:18px;height:18px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:s .7s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+.loading{display:flex;justify-content:center;padding:60px;color:var(--gold)}
+@media (max-width:640px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .two{grid-template-columns:1fr}
+  .item{grid-template-columns:1fr}
+  .item .pills{grid-row:auto;grid-column:1;justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+<div class="mongkol"></div>
+<header>
+  <img src="icon-192.png" alt="">
+  <div class="t"><b>Espace adhérent</b><small>Montoiz’ Thaï Khmer Boxing</small></div>
+  <a class="back" href="./">← Le site</a>
+</header>
+<main id="app"><div class="loading"><span class="spin"></span></div></main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+/* ===== Réglages ===== */
+const SB_URL = "https://omnovkheumrwturqugmk.supabase.co";
+const SB_KEY = "sb_publishable_rdk1XMA8H6xt0sX9twQXXA_3MndR78o";
+const SAISON = "2026-2027";
+const GROUPES = ["Baby boxe","Enfants","Ados","Adultes","Compétition","Loisir"];
+
+const app = document.getElementById("app");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const okMail = e => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(e||"").trim());
+const fmtDate = d => d ? new Date(d+"T12:00:00").toLocaleDateString("fr-FR") : "";
+const euros = n => (Number(n)||0).toLocaleString("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:2});
+const age = d => { if(!d) return null; const b=new Date(d+"T12:00:00"), n=new Date(); let a=n.getFullYear()-b.getFullYear(); if(n<new Date(n.getFullYear(),b.getMonth(),b.getDate())) a--; return a; };
+
+let sb = null;
+try { sb = window.supabase.createClient(SB_URL, SB_KEY, { auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:true } }); }
+catch(e){ app.innerHTML = `<div class="card login"><h2>Connexion indisponible</h2><p class="note">Le service n’a pas pu se charger. Vérifie ta connexion internet et recharge la page.</p></div>`; }
+
+const S = { card:null, avantages:[], user:null, role:null, adh:[], staff:[], tab:"adh", q:"", groupe:"", edit:null, confirmDel:false, loginStep:"email", email:"", busy:false, msg:null };
+
+/* ===== Statuts ===== */
+function certStatus(a){
+  if(!a.certificat_date) return ["ko","Certificat à fournir"];
+  const d = new Date(a.certificat_date+"T12:00:00"), lim = new Date(d); lim.setFullYear(lim.getFullYear()+1);
+  if(lim < new Date()) return ["wait","Certificat expiré"];
+  return ["ok","Certificat ✓"];
+}
+function cotStatus(a){
+  const due = Number(a.cotisation_due)||0, paid = Number(a.cotisation_payee)||0;
+  if(due<=0) return ["n","Cotisation à définir"];
+  if(paid>=due) return ["ok","Cotisation réglée"];
+  if(paid>0) return ["wait",`Reste ${euros(due-paid)}`];
+  return ["ko","Cotisation à régler"];
+}
+/* ===== Carte de membre ===== */
+const numero = a => a.numero ? `MTKB-${String(a.saison||SAISON).slice(2,4)}-${String(a.numero).padStart(4,"0")}` : "—";
+const finSaison = a => `${String(a.saison||SAISON).split("-")[1]}-08-31`;
+const carteValide = a => !!a.licence_ok && new Date().toISOString().slice(0,10) <= finSaison(a);
+const carteURL = a => new URL("carte.html#"+a.carte_token, location.href).href;
+function qrSVG(text){
+  try{ const q=qrcode(0,"M"); q.addData(text); q.make(); return q.createSvgTag({cellSize:4,margin:0,scalable:true}); }
+  catch(e){ return ""; }
+}
+function viewCard(){
+  const a = S.adh.find(x=>x.id===S.card); if(!a){ S.card=null; return render(); }
+  const ok = carteValide(a);
+  const tags = [a.groupe, a.competiteur?"Compétiteur":null].filter(Boolean);
+  app.innerHTML = `<div class="card-page">
+    <button class="btn ghost sm" id="card-back">← Retour</button>
+    <div class="eyebrow" style="margin-top:18px">Espace adhérent</div>
+    <h1>Ma carte <em>de membre</em></h1>
+    <div class="mcard ${ok?"":"off"}">
+      <img class="mc-wm" src="icon-192.png" alt="">
+      <div class="mc-top"><img src="icon-192.png" alt=""><div><b>Montoiz’ Thaï<br>Khmer Boxing</b><small>Carte adhérent</small></div><span class="mc-season">${esc(a.saison||SAISON).replace("-"," – ")}</span></div>
+      <div class="mc-name">${esc(a.prenom)} ${esc(a.nom)}</div>
+      <div class="mc-tags">${tags.map((t,i)=>`<span class="${i?"":"hl"}">${esc(t)}</span>`).join("")}</div>
+      <div class="mc-bottom">
+        <div><small>N° membre</small><b>${esc(numero(a))}</b><small>Valable jusqu’au</small><b>${fmtDate(finSaison(a))}</b></div>
+        <div class="mc-qr">${a.carte_token?qrSVG(carteURL(a)):""}</div>
+      </div>
+      <div class="mc-band"></div>
+    </div>
+    ${ok?`<p class="note center">Montre cette carte ou fais scanner le QR code</p>`
+        :`<p class="msg err center">Carte pas encore active : la licence n’a pas encore été validée par le bureau.</p>`}
+    ${S.avantages.length?`<div class="eyebrow" style="margin-top:26px">Tes avantages adhérent</div>
+      <div class="list">${S.avantages.map(v=>`<div class="adv"><div><b>${esc(v.titre)}</b>${v.detail?`<small>${esc(v.detail)}</small>`:""}</div>${v.remise?`<span>${esc(v.remise)}</span>`:""}</div>`).join("")}</div>`:""}
+  </div>`;
+}
+
+/* ===== Avantages (bureau) ===== */
+function viewAvantages(){
+  return `<p class="lead">Les réductions affichées sous la carte de membre (boutique, commerçants partenaires…).</p>
+    <div class="list" style="margin-bottom:18px">${S.avantages.length?S.avantages.map(v=>`<div class="adv"><div><b>${esc(v.titre)}</b>${v.detail?`<small>${esc(v.detail)}</small>`:""}</div>
+      <span style="display:flex;align-items:center;gap:10px">${v.remise?esc(v.remise):""}<button class="btn danger sm" data-delav="${v.id}">Retirer</button></span></div>`).join(""):`<div class="empty">Aucun avantage pour l’instant.</div>`}</div>
+    <form class="card" id="f-av"><h2>Ajouter un avantage</h2>
+      <label class="f"><span>Nom *</span><input type="text" name="titre" required placeholder="Ex : Boutique du club"></label>
+      <label class="f"><span>Détail</span><input type="text" name="detail" placeholder="Ex : Prix adhérent sur les textiles"></label>
+      <label class="f"><span>Réduction</span><input type="text" name="remise" placeholder="Ex : −10 %"></label>
+      <button class="btn">Ajouter</button><div id="av-msg"></div></form>`;
+}
+async function addAv(form){
+  const f=new FormData(form), o={titre:String(f.get("titre")).trim(), detail:String(f.get("detail")).trim()||null, remise:String(f.get("remise")).trim()||null, ordre:S.avantages.length};
+  if(!o.titre) return;
+  const { data, error } = await sb.from("avantages").insert(o).select().single();
+  if(error){ document.getElementById("av-msg").innerHTML=`<p class="msg err">${esc(error.message)}</p>`; return; }
+  S.avantages.push(data); render(); toast("Avantage ajouté");
+}
+async function delAv(id){
+  const { error } = await sb.from("avantages").delete().eq("id",id);
+  if(error){ toast(error.message); return; }
+  S.avantages=S.avantages.filter(v=>v.id!==id); render();
+}
+
+const licStatus = a => a.licence_ok ? ["ok","Licence ✓"] : ["wait","Licence en cours"];
+const pill = ([k,t]) => `<span class="pill ${k}">${esc(t)}</span>`;
+
+/* ===== Connexion ===== */
+function viewLogin(){
+  const m = S.msg ? `<p class="msg ${S.msg[0]}">${esc(S.msg[1])}</p>` : "";
+  if(S.loginStep==="code"){
+    app.innerHTML = `<div class="card login">
+      <div class="eyebrow">Vérifie tes emails</div>
+      <h2>Lien envoyé</h2>
+      <p class="note">Un email vient de partir vers <b>${esc(S.email)}</b>. Clique sur le lien qu’il contient, <b>ou</b> tape ici le code reçu.</p>
+      <form id="f-code">
+        <label class="f"><span>Code reçu par email</span><input class="code" id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></label>
+        <button class="btn full" ${S.busy?"disabled":""}>${S.busy?'<span class="spin"></span>':"Se connecter"}</button>
+      </form>${m}
+      <p class="note" style="margin-top:16px">Rien reçu ? Regarde dans les <b>spams</b>. <a href="#" id="again">Changer d’email ou renvoyer</a></p>
+    </div>`;
+    document.getElementById("code").focus();
+    return;
+  }
+  app.innerHTML = `<div class="login">
+    <div class="eyebrow">Adhérents · Parents · Bureau</div>
+    <h1>Mon <em>espace</em></h1>
+    <p class="lead">Licence, certificat, cotisation : retrouve le dossier de ton inscription (ou celui de tes enfants).</p>
+    <div class="card">
+      <form id="f-mail">
+        <label class="f"><span>Ton email (celui donné au club)</span><input id="mail" type="email" autocomplete="email" required value="${esc(S.email)}"></label>
+        <button class="btn full" ${S.busy?"disabled":""}>${S.busy?'<span class="spin"></span>':"Recevoir mon lien de connexion"}</button>
+      </form>${m}
+      <p class="note" style="margin-top:14px">Pas de mot de passe : tu reçois un lien (et un code) par email à chaque connexion.</p>
+    </div></div>`;
+}
+
+async function sendLink(email){
+  S.busy=true; S.msg=null; viewLogin();
+  const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin + location.pathname, shouldCreateUser:true } });
+  S.busy=false;
+  if(error){
+    const t = /rate|limit|seconds/i.test(error.message) ? "Trop de demandes d’affilée. Attends une minute puis réessaie." : "L’email n’a pas pu partir : "+error.message;
+    S.msg=["err",t]; viewLogin(); return;
+  }
+  S.email=email; S.loginStep="code"; viewLogin();
+}
+async function verifyCode(code){
+  S.busy=true; S.msg=null; viewLogin();
+  const { error } = await sb.auth.verifyOtp({ email:S.email, token:code, type:"email" });
+  S.busy=false;
+  if(error){ S.msg=["err","Code incorrect ou expiré. Utilise le dernier email reçu."]; viewLogin(); }
+}
+
+/* ===== Chargement des données ===== */
+async function load(){
+  app.innerHTML = `<div class="loading"><span class="spin"></span></div>`;
+  const r = await sb.rpc("mon_role");
+  if(r.error){ return fatal("Impossible de lire ton profil ("+r.error.message+"). La base n’est peut-être pas encore installée."); }
+  S.role = r.data || "membre";
+  const q = await sb.from("adherents").select("*").order("nom").order("prenom");
+  if(q.error) return fatal(q.error.message);
+  S.adh = q.data || [];
+  if(S.role==="bureau"){
+    const s = await sb.from("staff").select("*").order("role").order("email");
+    S.staff = s.data || [];
+  }
+  const av = await sb.from("avantages").select("*").order("ordre").order("created_at");
+  S.avantages = av.data || [];
+  render();
+}
+function fatal(t){ app.innerHTML = `<div class="card login"><h2>Oups</h2><p class="note">${esc(t)}</p><button class="btn ghost" id="logout">Se déconnecter</button></div>`; }
+
+/* ===== Vue adhérent / parent ===== */
+function viewMember(){
+  const mine = S.adh;
+  const head = `<div class="hello"><div><div class="eyebrow">Saison ${esc(SAISON)}</div><h1>Bonjour<em>.</em></h1>
+    <div class="who">Connecté avec ${esc(S.user.email)}</div></div><button class="btn ghost sm" id="logout">Se déconnecter</button></div>`;
+  if(!mine.length){
+    app.innerHTML = head + `<div class="empty"><b>Aucun dossier n’est relié à cet email pour l’instant.</b><br>
+      Si tu es inscrit(e), le bureau n’a peut-être pas encore enregistré ton dossier, ou il l’a fait avec un autre email.
+      <br><br><a class="btn sm" href="./#contact">Contacter le club</a></div>`;
+    return;
+  }
+  app.innerHTML = head + `<div class="grid">${mine.map(a=>{
+    const ag = age(a.naissance), [ck] = cotStatus(a);
+    const due=Number(a.cotisation_due)||0, paid=Number(a.cotisation_payee)||0;
+    return `<article class="card kid">
+      <h3>${esc(a.prenom)} ${esc(a.nom)}</h3>
+      <div class="sub">${[a.groupe, ag!=null?ag+" ans":null, "Saison "+a.saison].filter(Boolean).map(esc).join(" · ")}</div>
+      <div class="rows">
+        <div class="row"><span>Licence${a.licence_num?` <small class="note">n° ${esc(a.licence_num)}</small>`:""}</span>${pill(licStatus(a))}</div>
+        <div class="row"><span>Certificat médical${a.certificat_date?` <small class="note">du ${fmtDate(a.certificat_date)}</small>`:""}</span>${pill(certStatus(a))}</div>
+        <div class="row"><span>Cotisation${due>0?` <small class="note">${euros(paid)} / ${euros(due)}</small>`:""}</span>${pill(cotStatus(a))}</div>
+        <div class="row"><span>Droit à l’image</span>${a.droit_image==null?pill(["n","Non renseigné"]):a.droit_image?pill(["ok","Accepté"]):pill(["ko","Refusé"])}</div>
+      </div>
+      <button class="btn full" style="margin-top:14px" data-card="${a.id}">🪪 Voir ma carte de membre</button>
+    </article>`}).join("")}</div>
+    <p class="note" style="margin-top:18px">Une info est fausse ? <a href="./#contact">Préviens le bureau</a>.</p>`;
+}
+
+/* ===== Vue bureau / coach ===== */
+function filtered(){
+  const q = S.q.trim().toLowerCase();
+  return S.adh.filter(a => (!S.groupe || a.groupe===S.groupe) &&
+    (!q || [a.nom,a.prenom,a.email,a.email2,a.licence_num].some(v=>String(v||"").toLowerCase().includes(q))));
+}
+function viewStaff(){
+  const isB = S.role==="bureau";
+  const tabs = [["adh","Adhérents"], ...(isB?[["avantages","Avantages"]]:[]), ...(isB?[["equipe","Équipe"]]:[])];
+  const head = `<div class="hello"><div><div class="eyebrow">${isB?"Espace bureau":"Espace coach"} · ${esc(SAISON)}</div><h1>${S.tab==="avantages"?"Les <em>avantages</em>":S.tab==="equipe"?"L’<em>équipe</em>":"Les <em>adhérents</em>"}</h1>
+    <div class="who">${esc(S.user.email)}</div></div><button class="btn ghost sm" id="logout">Se déconnecter</button></div>
+    <div class="tabs">${tabs.map(([k,l])=>`<button data-tab="${k}" class="${S.tab===k?"on":""}">${l}</button>`).join("")}</div>`;
+  if(S.tab==="equipe" && isB){ app.innerHTML = head + viewTeam(); return; }
+  if(S.tab==="avantages" && isB){ app.innerHTML = head + viewAvantages(); return; }
+
+  const all=S.adh, list=filtered();
+  const nLic=all.filter(a=>a.licence_ok).length, nCert=all.filter(a=>certStatus(a)[0]!=="ok").length, nCot=all.filter(a=>["ko","wait"].includes(cotStatus(a)[0])).length;
+  const groupes=[...new Set([...GROUPES, ...all.map(a=>a.groupe).filter(Boolean)])];
+  app.innerHTML = head + `
+    <div class="stats">
+      <div class="stat"><b>${all.length}</b><small>Adhérents</small></div>
+      <div class="stat"><b>${nLic}</b><small>Licences OK</small></div>
+      <div class="stat"><b>${nCert}</b><small>Certificats manquants</small></div>
+      <div class="stat"><b>${nCot}</b><small>Cotisations à régler</small></div>
+    </div>
+    <div class="tools">
+      <input type="search" id="q" placeholder="Rechercher un nom, un email…" value="${esc(S.q)}">
+      <select id="grp"><option value="">Tous les groupes</option>${groupes.map(g=>`<option ${S.groupe===g?"selected":""}>${esc(g)}</option>`).join("")}</select>
+      ${isB?`<button class="btn" id="add">+ Ajouter</button>`:""}
+    </div>
+    <div class="list" id="list">${listHTML(list)}</div>
+    ${S.edit?sheetHTML():""}`;
+}
+function listHTML(list){
+  if(!list.length) return `<div class="empty">${S.adh.length?"Aucun résultat.":"Aucun adhérent pour l’instant. Clique sur <b>+ Ajouter</b> pour créer le premier dossier."}</div>`;
+  return list.map(a=>{const ag=age(a.naissance);return `<button class="item" data-id="${a.id}">
+    <b>${esc(a.nom.toUpperCase())} ${esc(a.prenom)}</b>
+    <span class="meta">${[a.groupe, ag!=null?ag+" ans":null, a.email].filter(Boolean).map(esc).join(" · ")||"—"}</span>
+    <span class="pills">${pill(licStatus(a))}${pill(certStatus(a))}${pill(cotStatus(a))}</span></button>`}).join("");
+}
+
+function sheetHTML(){
+  const a = S.edit, isNew = !a.id, ro = S.role!=="bureau";
+  const dis = ro ? "disabled" : "";
+  const v = k => esc(a[k] ?? "");
+  const groupes=[...new Set([...GROUPES, a.groupe].filter(Boolean))];
+  return `<div class="sheet-bg" id="sheet-bg"><form class="sheet" id="f-adh" autocomplete="off">
+    <div class="top"><h2 style="margin:0">${isNew?"Nouvel adhérent":esc(a.prenom+" "+a.nom)}</h2><span style="display:flex;gap:8px">${isNew?"":`<button type="button" class="btn ghost sm" data-card="${a.id}">🪪 Carte</button>`}<button type="button" class="btn ghost sm" id="close">Fermer</button></span></div>
+    <fieldset><legend>Identité</legend>
+      <div class="two">
+        <label class="f"><span>Nom *</span><input type="text" name="nom" required value="${v("nom")}" ${dis}></label>
+        <label class="f"><span>Prénom *</span><input type="text" name="prenom" required value="${v("prenom")}" ${dis}></label>
+        <label class="f"><span>Date de naissance</span><input type="date" name="naissance" value="${v("naissance")}" ${dis}></label>
+        <label class="f"><span>Groupe</span><select name="groupe" ${dis}><option value="">—</option>${groupes.map(g=>`<option ${a.groupe===g?"selected":""}>${esc(g)}</option>`).join("")}</select></label>
+      </div></fieldset>
+    <fieldset><legend>Contact & connexion</legend>
+      <label class="f"><span>Email (adhérent majeur ou parent 1)</span><input type="email" name="email" value="${v("email")}" ${dis}></label>
+      <label class="f"><span>2e email (parent 2)</span><input type="email" name="email2" value="${v("email2")}" ${dis}></label>
+      <label class="f"><span>Téléphone</span><input type="tel" name="telephone" value="${v("telephone")}" ${dis}></label>
+      <p class="note" style="margin-top:-6px">Ces emails permettent de se connecter à l’espace adhérent et de voir ce dossier.</p>
+    </fieldset>
+    <fieldset><legend>Dossier ${esc(a.saison||SAISON)}</legend>
+      <div class="two">
+        <label class="f"><span>N° de licence</span><input type="text" name="licence_num" value="${v("licence_num")}" ${dis}></label>
+        <label class="f"><span>Date du certificat</span><input type="date" name="certificat_date" value="${v("certificat_date")}" ${dis}></label>
+      </div>
+      <label class="check"><input type="checkbox" name="licence_ok" ${a.licence_ok?"checked":""} ${dis}> Licence validée par la fédération <small class="note">(active la carte de membre)</small></label>
+      <label class="check"><input type="checkbox" name="competiteur" ${a.competiteur?"checked":""} ${dis}> Compétiteur</label>
+      <div class="two">
+        <label class="f"><span>Cotisation due (€)</span><input type="number" step="0.01" min="0" name="cotisation_due" value="${v("cotisation_due")}" ${dis}></label>
+        <label class="f"><span>Déjà payé (€)</span><input type="number" step="0.01" min="0" name="cotisation_payee" value="${v("cotisation_payee")}" ${dis}></label>
+      </div>
+      <label class="f"><span>Droit à l’image</span><select name="droit_image" ${dis}>
+        <option value="" ${a.droit_image==null?"selected":""}>Pas encore répondu</option>
+        <option value="1" ${a.droit_image===true?"selected":""}>Accepté</option>
+        <option value="0" ${a.droit_image===false?"selected":""}>Refusé</option></select></label>
+    </fieldset>
+    <div id="sheet-msg"></div>
+    ${ro?"":`<div class="acts">
+      <button class="btn" id="save">${isNew?"Créer le dossier":"Enregistrer"}</button>
+      ${isNew?"":(S.confirmDel?`<span style="display:flex;gap:8px"><button type="button" class="btn danger" id="del-yes">Oui, supprimer</button><button type="button" class="btn ghost" id="del-no">Annuler</button></span>`:`<button type="button" class="btn danger" id="del">Supprimer</button>`)}
+    </div>`}
+  </form></div>`;
+}
+
+async function saveAdh(form){
+  const f = new FormData(form), o = {};
+  for(const k of ["nom","prenom","naissance","groupe","email","email2","telephone","licence_num","certificat_date"]) o[k] = (f.get(k)||"").toString().trim() || null;
+  o.licence_ok = f.get("licence_ok")==="on";
+  o.competiteur = f.get("competiteur")==="on";
+  o.cotisation_due = Number(f.get("cotisation_due"))||0;
+  o.cotisation_payee = Number(f.get("cotisation_payee"))||0;
+  const di = f.get("droit_image"); o.droit_image = di==="" ? null : di==="1";
+  const box = document.getElementById("sheet-msg");
+  for(const k of ["email","email2"]) if(o[k] && !okMail(o[k])) { box.innerHTML=`<p class="msg err">L’adresse « ${esc(o[k])} » n’est pas valide.</p>`; return; }
+  const btn = document.getElementById("save"); btn.disabled=true; btn.innerHTML='<span class="spin"></span>';
+  const res = S.edit.id ? await sb.from("adherents").update(o).eq("id",S.edit.id).select().single()
+                        : await sb.from("adherents").insert({...o, saison:SAISON}).select().single();
+  if(res.error){ btn.disabled=false; btn.textContent="Réessayer"; box.innerHTML=`<p class="msg err">Erreur : ${esc(res.error.message)}</p>`; return; }
+  const i = S.adh.findIndex(x=>x.id===res.data.id);
+  if(i>=0) S.adh[i]=res.data; else S.adh.push(res.data);
+  S.adh.sort((x,y)=>(x.nom+x.prenom).localeCompare(y.nom+y.prenom,"fr"));
+  S.edit=null; render(); toast("Dossier enregistré");
+}
+async function delAdh(){
+  const { error } = await sb.from("adherents").delete().eq("id",S.edit.id);
+  if(error){ document.getElementById("sheet-msg").innerHTML=`<p class="msg err">${esc(error.message)}</p>`; return; }
+  S.adh = S.adh.filter(x=>x.id!==S.edit.id); S.edit=null; S.confirmDel=false; render(); toast("Dossier supprimé");
+}
+
+/* ===== Équipe ===== */
+function viewTeam(){
+  return `<p class="lead">Les personnes ici voient tous les dossiers. <b>Bureau</b> = peut tout modifier. <b>Coach</b> = consulte seulement.</p>
+    <div class="list" style="margin-bottom:18px">${S.staff.map(s=>`<div class="staff-row"><div><b>${esc(s.nom||s.email)}</b><br><small>${esc(s.email)} · ${s.role==="bureau"?"Bureau":"Coach"}</small></div>
+      ${s.email===S.user.email.toLowerCase()?`<span class="pill n">Toi</span>`:`<button class="btn danger sm" data-unstaff="${esc(s.email)}">Retirer</button>`}</div>`).join("")}</div>
+    <form class="card" id="f-staff"><h2>Ajouter quelqu’un</h2>
+      <div class="two">
+        <label class="f"><span>Nom</span><input type="text" name="nom"></label>
+        <label class="f"><span>Rôle</span><select name="role"><option value="coach">Coach</option><option value="bureau">Bureau</option></select></label>
+      </div>
+      <label class="f"><span>Email *</span><input type="email" name="email" required></label>
+      <button class="btn">Ajouter</button><div id="staff-msg"></div>
+      <p class="note">La personne se connecte ensuite sur cette page avec cet email.</p></form>`;
+}
+async function addStaff(form){
+  const f=new FormData(form), o={email:String(f.get("email")).trim().toLowerCase(), nom:String(f.get("nom")).trim()||null, role:f.get("role")};
+  if(!okMail(o.email)){ document.getElementById("staff-msg").innerHTML=`<p class="msg err">Email invalide.</p>`; return; }
+  const { data, error } = await sb.from("staff").upsert(o).select().single();
+  if(error){ document.getElementById("staff-msg").innerHTML=`<p class="msg err">${esc(error.message)}</p>`; return; }
+  S.staff = S.staff.filter(s=>s.email!==data.email).concat(data); render(); toast("Ajouté à l’équipe");
+}
+async function removeStaff(email){
+  const { error } = await sb.from("staff").delete().eq("email",email);
+  if(error){ toast(error.message); return; }
+  S.staff = S.staff.filter(s=>s.email!==email); render(); toast("Retiré de l’équipe");
+}
+
+/* ===== Rendu & événements ===== */
+function render(){
+  if(!S.user) return viewLogin();
+  if(S.card) return viewCard();
+  if(S.role==="bureau"||S.role==="coach") viewStaff(); else viewMember();
+}
+function toast(t){
+  const d=document.createElement("div"); d.textContent=t;
+  d.style.cssText="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:var(--gold-ink);padding:10px 16px;border-radius:10px;font:700 14px var(--f-label);letter-spacing:.06em;text-transform:uppercase;z-index:50";
+  document.body.appendChild(d); setTimeout(()=>d.remove(),2200);
+}
+
+document.addEventListener("submit", e=>{
+  e.preventDefault();
+  const id=e.target.id;
+  if(id==="f-mail"){ const m=document.getElementById("mail").value.trim().toLowerCase(); if(!okMail(m)){S.msg=["err","Cette adresse email n’est pas valide."];viewLogin();return} sendLink(m); }
+  if(id==="f-code"){ const c=document.getElementById("code").value.replace(/\D/g,""); if(c.length<6){S.msg=["err","Le code fait au moins 6 chiffres."];viewLogin();return} verifyCode(c); }
+  if(id==="f-adh") saveAdh(e.target);
+  if(id==="f-staff") addStaff(e.target);
+  if(id==="f-av") addAv(e.target);
+});
+document.addEventListener("click", e=>{
+  const t=e.target.closest("button,a"); if(!t) return;
+  if(t.id==="again"){ e.preventDefault(); S.loginStep="email"; S.msg=null; viewLogin(); }
+  if(t.id==="logout"){ sb.auth.signOut(); }
+  if(t.dataset.tab){ S.tab=t.dataset.tab; render(); }
+  if(t.dataset.card){ S.card=t.dataset.card; S.edit=null; render(); scrollTo(0,0); }
+  if(t.id==="card-back"){ S.card=null; render(); }
+  if(t.dataset.delav){ delAv(t.dataset.delav); }
+  if(t.id==="add"){ S.edit={ saison:SAISON, licence_ok:false, droit_image:null }; S.confirmDel=false; render(); }
+  if(t.classList.contains("item")){ S.edit={...S.adh.find(a=>a.id===t.dataset.id)}; S.confirmDel=false; render(); }
+  if(t.id==="close"){ S.edit=null; render(); }
+  if(t.id==="del"){ S.confirmDel=true; render(); }
+  if(t.id==="del-no"){ S.confirmDel=false; render(); }
+  if(t.id==="del-yes"){ delAdh(); }
+  if(t.dataset.unstaff){ removeStaff(t.dataset.unstaff); }
+});
+document.addEventListener("click", e=>{ if(e.target.id==="sheet-bg"){ S.edit=null; render(); } });
+document.addEventListener("keydown", e=>{ if(e.key==="Escape" && S.edit){ S.edit=null; render(); } });
+document.addEventListener("input", e=>{
+  if(e.target.id==="q"){ S.q=e.target.value; document.getElementById("list").innerHTML=listHTML(filtered()); }
+});
+document.addEventListener("change", e=>{ if(e.target.id==="grp"){ S.groupe=e.target.value; document.getElementById("list").innerHTML=listHTML(filtered()); } });
+
+if(/error_description=/.test(location.hash)){
+  const p=new URLSearchParams(location.hash.slice(1));
+  S.msg=["err", /expired|invalid/i.test(p.get("error_description")||"") ? "Ce lien a expiré ou a déjà servi. Redemande un lien ci-dessous." : (p.get("error_description")||"Connexion impossible.")];
+  history.replaceState(null,"",location.pathname);
+}
+if(sb){
+  sb.auth.onAuthStateChange((ev, session)=>{
+    const u = session?.user || null;
+    if(u && (!S.user || S.user.id!==u.id)){ S.user=u; if(location.hash.includes("access_token")) history.replaceState(null,"",location.pathname); setTimeout(load,0); }
+    else if(!u && S.user){ Object.assign(S,{card:null,user:null,role:null,adh:[],staff:[],edit:null,loginStep:"email",msg:null}); render(); }
+    else if(!u && ev==="INITIAL_SESSION"){ render(); }
+  });
+}
+</script>
+</body>
+</html>
