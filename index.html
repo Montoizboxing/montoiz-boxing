@@ -67,6 +67,8 @@ nav.links a:hover{color:var(--fg)}
 nav.links a.on{color:var(--fg)}
 nav.links a.on::after,nav.links a:hover::after{transform:scaleX(1)}
 .nav-cta{white-space:nowrap}
+footer .credit{flex-basis:100%;font-size:12px;opacity:.65;color:inherit;text-decoration:none}
+footer .credit:hover{opacity:1;text-decoration:underline}
 .nav-member{white-space:nowrap;gap:7px}
 .nav-member svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex:none}
 @media (max-width:1180px){.nav-member{padding:8px 10px}.nav-member span{display:none}}
@@ -1097,6 +1099,7 @@ ${showAn?`<div class="annonce${an.type==="alerte"?" alerte":""}" role="status"><
   <span class="flags">France · Thaïlande · Cambodge</span>${D.club.avisGoogle?`<a href="${esc(D.club.avisGoogle)}" target="_blank" rel="noopener">★ Laisser un avis Google</a>`:""}<a href="espace.html">Espace membre</a><a href="#mentions">Mentions légales &amp; confidentialité</a>
   <button class="btn ghost sm install-btn" data-install${isStandalone()?" hidden":""}>📲 Installer l’appli</button>
   <span>Mis à jour le ${esc(fmtDate(D.maj))}</span>
+  <a class="credit" href="mailto:brunetflorian02@gmail.com?subject=${encodeURIComponent("Création de site internet")}">Site créé par Florian Brunet</a>
 </div></footer>
 ${canWrite?`<button class="btn fab" id="open-admin">Gérer le site</button>`:""}
 <div id="admin-root"></div>`;
