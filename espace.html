@@ -136,6 +136,47 @@ legend{font:700 13px var(--f-label);letter-spacing:.12em;text-transform:uppercas
   .item{grid-template-columns:1fr}
   .item .pills{grid-row:auto;grid-column:1;justify-content:flex-start}
 }
+textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;outline:none;resize:vertical;font:inherit;color:inherit}
+textarea:focus{border-color:var(--gold)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:var(--gold-ink);padding:10px 16px;border-radius:10px;font:700 14px var(--f-label);letter-spacing:.06em;text-transform:uppercase;z-index:60;max-width:calc(100% - 32px);text-align:center}
+.sec{margin:0 0 22px}
+.info{display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--bg-2);border:1px solid var(--line);border-radius:12px}
+.info .ic{font-size:22px;line-height:1.2}
+.info .bd{flex:1;min-width:0}
+.info small{display:block;color:var(--gold);font:700 12px var(--f-label);letter-spacing:.1em;text-transform:uppercase}
+.info b{display:block;font-size:17px}
+.info p{margin:4px 0 8px;color:var(--muted);font-size:15px}
+.more{margin-top:10px}
+.more summary{cursor:pointer;color:var(--gold-2);font:600 14px var(--f-label);letter-spacing:.06em;text-transform:uppercase;padding:6px 0}
+.mini{display:grid;gap:4px;margin-top:6px}
+.mini>div{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border-radius:8px;font-size:14px}
+.mini .r{display:flex;align-items:center;gap:8px}
+.mot{position:relative;margin-top:12px;padding:12px 14px;background:linear-gradient(180deg,#2a2114,#1c170f);border:1px solid #5a4520;border-radius:12px}
+.mot small,.mot-old small{display:block;color:var(--gold);font:700 12px var(--f-label);letter-spacing:.08em;text-transform:uppercase}
+.mot p,.mot-old p{margin:4px 0 0;font-size:15px}
+.mot .x{position:absolute;top:8px;right:8px}
+.mot-old{padding:10px 0;border-top:1px solid var(--line)}
+.compet{margin-top:12px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.compet .mini>div{background:var(--bg-2)}
+.lbl{margin:12px 0 6px;font:700 12px var(--f-label);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.fight{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:var(--bg-2);margin-top:4px;font-size:14px;flex-wrap:wrap}
+.fight b{min-width:84px}
+.fight>span:not(.pill){flex:1;min-width:120px}
+.fight .pill{flex:none}
+.fight.up{border-left:3px solid var(--gold)}
+.fight select{width:auto;min-height:36px;padding:4px 8px}
+.kid-acts{display:grid;gap:8px;margin-top:14px}
+.tools2{display:flex;flex-wrap:wrap;gap:8px;margin:-2px 0 12px}
+.relance{margin-bottom:14px}
+.relance .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.xsec{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.xsec h3{font:800 22px var(--f-display);text-transform:uppercase;margin:0 0 10px}
+.inline-f{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.inline-f input,.inline-f select{flex:1 1 130px;width:auto;min-height:40px;padding:8px 10px}
+.x{border:0;background:transparent;color:#ff8d84;cursor:pointer;font-size:15px;padding:4px 6px;border-radius:6px}
+.x:hover{background:#3a1512}
+.lbl2{display:block;font:600 13px var(--f-label);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.paid{min-height:46px;display:flex;align-items:center;padding:0 14px;border:1px dashed var(--line);border-radius:10px;font-weight:700}
 </style>
 </head>
 <body>
@@ -155,19 +196,30 @@ const SB_URL = "https://omnovkheumrwturqugmk.supabase.co";
 const SB_KEY = "sb_publishable_rdk1XMA8H6xt0sX9twQXXA_3MndR78o";
 const SAISON = "2026-2027";
 const GROUPES = ["Baby boxe","Enfants","Ados","Adultes","Compétition","Loisir"];
+const MODES = ["Espèces","Chèque","Virement","HelloAsso","Carte bancaire","Pass’Sport","Chèques ANCV"];
+const RESULTATS = ["À venir","Victoire","Défaite","Nul","Annulé"];
+const CLUB = { nom:"Montoiz’ Thaï Khmer Boxing", adresse:"2 Place de l’Église, 26800 Montoison", email:"allexthaikhmerboxing@gmail.com", tel:"06 58 40 32 45", site:"montoizthaikhmerboxing.fr" };
 
 const app = document.getElementById("app");
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const okMail = e => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(e||"").trim());
-const fmtDate = d => d ? new Date(d+"T12:00:00").toLocaleDateString("fr-FR") : "";
+const fmtDate = d => d ? new Date(String(d).slice(0,10)+"T12:00:00").toLocaleDateString("fr-FR") : "";
 const euros = n => (Number(n)||0).toLocaleString("fr-FR",{style:"currency",currency:"EUR",maximumFractionDigits:2});
 const age = d => { if(!d) return null; const b=new Date(d+"T12:00:00"), n=new Date(); let a=n.getFullYear()-b.getFullYear(); if(n<new Date(n.getFullYear(),b.getMonth(),b.getDate())) a--; return a; };
+const today = () => new Date().toLocaleDateString("sv-SE");
+const nl2br = t => esc(t).replace(/\n/g,"<br>");
+const safeUrl = u => /^https?:\/\//i.test(String(u||"").trim()) ? String(u).trim() : "";
 
 let sb = null;
 try { sb = window.supabase.createClient(SB_URL, SB_KEY, { auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:true } }); }
 catch(e){ app.innerHTML = `<div class="card login"><h2>Connexion indisponible</h2><p class="note">Le service n’a pas pu se charger. Vérifie ta connexion internet et recharge la page.</p></div>`; }
 
-const S = { card:null, avantages:[], user:null, role:null, adh:[], staff:[], tab:"adh", q:"", groupe:"", edit:null, confirmDel:false, loginStep:"email", email:"", busy:false, msg:null };
+const S = { user:null, role:null, adh:[], staff:[], avantages:[], pay:[], mots:[], combats:[], infos:[], reg:{},
+  tab:"adh", q:"", groupe:"", edit:null, confirmDel:false, card:null, relance:null,
+  loginStep:"email", email:"", busy:false, msg:null };
+const isB = () => S.role==="bureau";
+const isStaff = () => S.role==="bureau" || S.role==="coach";
+const meNom = () => (S.staff.find(s=>s.email===S.user?.email?.toLowerCase())?.nom) || null;
 
 /* ===== Statuts ===== */
 function certStatus(a){
@@ -183,10 +235,16 @@ function cotStatus(a){
   if(paid>0) return ["wait",`Reste ${euros(due-paid)}`];
   return ["ko","Cotisation à régler"];
 }
+const licStatus = a => a.licence_ok ? ["ok","Licence ✓"] : ["wait","Licence en cours"];
+const pill = ([k,t]) => `<span class="pill ${k}">${esc(t)}</span>`;
+const payOf = id => S.pay.filter(p=>p.adherent_id===id).sort((x,y)=>String(x.jour).localeCompare(y.jour));
+const motsOf = id => S.mots.filter(m=>m.adherent_id===id).sort((x,y)=>String(y.created_at).localeCompare(x.created_at));
+const combatsOf = id => S.combats.filter(c=>c.adherent_id===id).sort((x,y)=>String(y.jour||"").localeCompare(x.jour||""));
+
 /* ===== Carte de membre ===== */
 const numero = a => a.numero ? `MTKB-${String(a.saison||SAISON).slice(2,4)}-${String(a.numero).padStart(4,"0")}` : "—";
 const finSaison = a => `${String(a.saison||SAISON).split("-")[1]}-08-31`;
-const carteValide = a => !!a.licence_ok && new Date().toISOString().slice(0,10) <= finSaison(a);
+const carteValide = a => !!a.licence_ok && today() <= finSaison(a);
 const carteURL = a => new URL("carte.html#"+a.carte_token, location.href).href;
 function qrSVG(text){
   try{ const q=qrcode(0,"M"); q.addData(text); q.make(); return q.createSvgTag({cellSize:4,margin:0,scalable:true}); }
@@ -218,6 +276,508 @@ function viewCard(){
   </div>`;
 }
 
+/* ===== Attestation de paiement (PDF) ===== */
+let jspdfLoading = null;
+function loadJsPDF(){
+  if(window.jspdf) return Promise.resolve();
+  return jspdfLoading ||= new Promise((ok,ko)=>{ const s=document.createElement("script"); s.src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"; s.onload=ok; s.onerror=()=>{jspdfLoading=null;ko(new Error("chargement"))}; document.head.appendChild(s); });
+}
+function imgData(src){
+  return new Promise(res=>{ const i=new Image(); i.crossOrigin="anonymous"; i.onload=()=>{ try{ const c=document.createElement("canvas"); c.width=i.naturalWidth; c.height=i.naturalHeight; c.getContext("2d").drawImage(i,0,0); res(c.toDataURL("image/png")); }catch(e){res(null)} }; i.onerror=()=>res(null); i.src=src; });
+}
+// Les polices standard des PDF ne gèrent pas certains signes typographiques : on les simplifie
+const pdfTxt = t => String(t??"").replace(/[’‘]/g,"'").replace(/[“”«»]/g,'"').replace(/[–—]/g,"-").replace(/ | /g," ");
+const pdfEur = n => pdfTxt((Number(n)||0).toLocaleString("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2}))+" EUR";
+async function attestation(id, btn){
+  const a = S.adh.find(x=>x.id===id); if(!a) return;
+  const old = btn?.innerHTML; if(btn){ btn.disabled=true; btn.innerHTML='<span class="spin"></span>'; }
+  try{
+    await loadJsPDF();
+    const { jsPDF } = window.jspdf, doc = new jsPDF({unit:"mm",format:"a4"});
+    const R = S.reg||{}, gold=[184,134,40], ink=[30,26,20], grey=[110,100,85];
+    const logo = await imgData("icon-192.png");
+    if(logo) doc.addImage(logo,"PNG",20,16,24,24);
+    doc.setFont("helvetica","bold"); doc.setFontSize(16); doc.setTextColor(...ink);
+    doc.text(pdfTxt("MONTOIZ' THAÏ KHMER BOXING"),50,24);
+    doc.setFont("helvetica","normal"); doc.setFontSize(9.5); doc.setTextColor(...grey);
+    const idl = [ "Association sportive loi 1901 - "+pdfTxt(CLUB.adresse), CLUB.email+" - "+CLUB.tel+" - "+CLUB.site,
+      [R.rna?"RNA : "+R.rna:null, R.siret?"SIRET : "+R.siret:null].filter(Boolean).join(" - ") ].filter(Boolean);
+    idl.forEach((l,i)=>doc.text(pdfTxt(l),50,30+i*4.6));
+    doc.setDrawColor(...gold); doc.setLineWidth(.8); doc.line(20,48,190,48);
+    doc.setFont("helvetica","bold"); doc.setFontSize(20); doc.setTextColor(...ink);
+    doc.text("ATTESTATION DE PAIEMENT",105,66,{align:"center"});
+    doc.setFont("helvetica","normal"); doc.setFontSize(10); doc.setTextColor(...grey);
+    doc.text("Saison "+pdfTxt(a.saison||SAISON),105,73,{align:"center"});
+
+    const signataire = R.president ? `${R.president}, ${(R.fonction||"Président").toLowerCase()}` : "le bureau";
+    const due=Number(a.cotisation_due)||0, paid=Number(a.cotisation_payee)||0;
+    const p = [
+      `Je soussigné(e), ${signataire} de l'association Montoiz' Thaï Khmer Boxing, atteste que :`,
+      "",
+      `${a.prenom} ${String(a.nom).toUpperCase()}${a.naissance?`, né(e) le ${fmtDate(a.naissance)},`:""}`,
+      "",
+      `est adhérent(e) du club pour la saison ${a.saison||SAISON}${a.groupe?` (groupe ${a.groupe})`:""} et a réglé la somme de ${pdfEur(paid)} au titre de son adhésion (cotisation et licence)${due>paid?`, sur un total de ${pdfEur(due)}`:""}.`
+    ];
+    doc.setFontSize(11.5); doc.setTextColor(...ink);
+    let y=90;
+    p.forEach(par=>{ if(!par){ y+=3; return; }
+      const bold = par.startsWith(a.prenom);
+      doc.setFont("helvetica", bold?"bold":"normal"); if(bold) doc.setFontSize(13);
+      const lines = doc.splitTextToSize(pdfTxt(par),170); doc.text(lines,20,y); y+=lines.length*6.2;
+      if(bold) doc.setFontSize(11.5); });
+
+    const pays = payOf(a.id);
+    if(pays.length){
+      y+=8; doc.setFont("helvetica","bold"); doc.setFontSize(10); doc.setTextColor(...grey);
+      doc.text("DÉTAIL DES PAIEMENTS",20,y); y+=3;
+      doc.setDrawColor(220,210,190); doc.setLineWidth(.3);
+      doc.setFont("helvetica","bold"); doc.setFontSize(10); doc.setTextColor(...ink);
+      y+=6; doc.text("Date",22,y); doc.text("Mode",62,y); doc.text("Montant",188,y,{align:"right"}); y+=2.5; doc.line(20,y,190,y);
+      doc.setFont("helvetica","normal");
+      pays.forEach(x=>{ y+=6.5; doc.text(fmtDate(x.jour),22,y); doc.text(pdfTxt(x.mode||""),62,y); doc.text(pdfEur(x.montant),188,y,{align:"right"}); y+=2.5; doc.line(20,y,190,y); });
+      y+=7; doc.setFont("helvetica","bold"); doc.text("Total réglé",62,y); doc.text(pdfEur(paid),188,y,{align:"right"});
+    }
+    y+=16; doc.setFont("helvetica","normal"); doc.setFontSize(11.5);
+    doc.text(pdfTxt("Attestation délivrée pour servir et valoir ce que de droit."),20,y);
+    y+=8; doc.text(pdfTxt(`Fait à ${R.ville||"Montoison"}, le ${new Date().toLocaleDateString("fr-FR")}`),20,y);
+    y+=18; doc.setFont("helvetica","bold"); doc.text(pdfTxt(R.president||"Le bureau de l'association"),130,y);
+    doc.setFont("helvetica","normal"); doc.setFontSize(10); doc.setTextColor(...grey);
+    doc.text(pdfTxt(R.president?(R.fonction||"Président"):"Montoiz' Thaï Khmer Boxing"),130,y+5);
+    doc.setDrawColor(...grey); doc.line(130,y+24,190,y+24); doc.setFontSize(8.5); doc.text("Signature et cachet",130,y+28);
+    doc.setFontSize(8.5); doc.text(pdfTxt(`N° membre ${numero(a)} - Document généré depuis l'espace adhérent du club`),105,285,{align:"center"});
+    doc.save(`attestation-${String(a.nom).toLowerCase()}-${String(a.prenom).toLowerCase()}-${a.saison||SAISON}.pdf`.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9.-]+/g,"-"));
+  }catch(e){ toast("Impossible de créer le PDF. Vérifie ta connexion."); }
+  if(btn){ btn.disabled=false; btn.innerHTML=old; }
+}
+
+/* ===== Connexion ===== */
+function viewLogin(){
+  const m = S.msg ? `<p class="msg ${S.msg[0]}">${esc(S.msg[1])}</p>` : "";
+  if(S.loginStep==="code"){
+    app.innerHTML = `<div class="card login">
+      <div class="eyebrow">Vérifie tes emails</div>
+      <h2>Lien envoyé</h2>
+      <p class="note">Un email vient de partir vers <b>${esc(S.email)}</b>. Clique sur le lien qu’il contient, <b>ou</b> tape ici le code reçu.</p>
+      <form id="f-code">
+        <label class="f"><span>Code reçu par email</span><input class="code" id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></label>
+        <button class="btn full" ${S.busy?"disabled":""}>${S.busy?'<span class="spin"></span>':"Se connecter"}</button>
+      </form>${m}
+      <p class="note" style="margin-top:16px">Rien reçu ? Regarde dans les <b>spams</b>. <a href="#" id="again">Changer d’email ou renvoyer</a></p>
+    </div>`;
+    document.getElementById("code").focus();
+    return;
+  }
+  app.innerHTML = `<div class="login">
+    <div class="eyebrow">Adhérents · Parents · Bureau</div>
+    <h1>Mon <em>espace</em></h1>
+    <p class="lead">Licence, certificat, cotisation, carte de membre : retrouve le dossier de ton inscription (ou celui de tes enfants).</p>
+    <div class="card">
+      <form id="f-mail">
+        <label class="f"><span>Ton email (celui donné au club)</span><input id="mail" type="email" autocomplete="email" required value="${esc(S.email)}"></label>
+        <button class="btn full" ${S.busy?"disabled":""}>${S.busy?'<span class="spin"></span>':"Recevoir mon lien de connexion"}</button>
+      </form>${m}
+      <p class="note" style="margin-top:14px">Pas de mot de passe : tu reçois un lien (et un code) par email à chaque connexion.</p>
+    </div></div>`;
+}
+async function sendLink(email){
+  S.busy=true; S.msg=null; viewLogin();
+  const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin + location.pathname, shouldCreateUser:true } });
+  S.busy=false;
+  if(error){
+    const t = /rate|limit|seconds/i.test(error.message) ? "Trop de demandes d’affilée. Attends une minute puis réessaie." : "L’email n’a pas pu partir : "+error.message;
+    S.msg=["err",t]; viewLogin(); return;
+  }
+  S.email=email; S.loginStep="code"; viewLogin();
+}
+async function verifyCode(code){
+  S.busy=true; S.msg=null; viewLogin();
+  const { error } = await sb.auth.verifyOtp({ email:S.email, token:code, type:"email" });
+  S.busy=false;
+  if(error){ S.msg=["err","Code incorrect ou expiré. Utilise le dernier email reçu."]; viewLogin(); }
+}
+
+/* ===== Chargement ===== */
+async function load(){
+  app.innerHTML = `<div class="loading"><span class="spin"></span></div>`;
+  const r = await sb.rpc("mon_role");
+  if(r.error){ return fatal("Impossible de lire ton profil ("+r.error.message+"). La base n’est peut-être pas encore installée."); }
+  S.role = r.data || "membre";
+  const q = await sb.from("adherents").select("*").order("nom").order("prenom");
+  if(q.error) return fatal(q.error.message);
+  S.adh = q.data || [];
+  const opt = (p) => p.then(x=>x.data||[]).catch(()=>[]);
+  const [staff, av, pay, mots, combats, infos, reg] = await Promise.all([
+    S.role==="membre" ? Promise.resolve([]) : opt(sb.from("staff").select("*").order("role").order("email")),
+    opt(sb.from("avantages").select("*").order("ordre").order("created_at")),
+    S.role==="coach" ? Promise.resolve([]) : opt(sb.from("paiements").select("*").order("jour")),
+    opt(sb.from("mots").select("*").order("created_at",{ascending:false})),
+    opt(sb.from("combats").select("*").order("jour",{ascending:false})),
+    opt(sb.from("infos").select("*").order("created_at",{ascending:false})),
+    opt(sb.from("reglages").select("*").eq("id",1))
+  ]);
+  Object.assign(S,{staff, avantages:av, pay, mots, combats, infos, reg:reg[0]||{}});
+  render();
+}
+async function refreshAdh(id){
+  const { data } = await sb.from("adherents").select("*").eq("id",id).single();
+  if(data){ const i=S.adh.findIndex(x=>x.id===id); if(i>=0) S.adh[i]=data; if(S.edit?.id===id) S.edit={...S.edit, cotisation_payee:data.cotisation_payee}; }
+}
+function fatal(t){ app.innerHTML = `<div class="card login"><h2>Oups</h2><p class="note">${esc(t)}</p><button class="btn ghost" id="logout">Se déconnecter</button></div>`; }
+
+/* ===== Infos du club (affichage) ===== */
+const INFO_T = { annonce:["📣","Annonce"], stage:["🥊","Stage / événement"], document:["📄","Document"] };
+function infosHTML(withDel){
+  if(!S.infos.length) return withDel?`<div class="empty">Aucune info publiée pour l’instant.</div>`:"";
+  const order = {annonce:0, stage:1, document:2};
+  return `<div class="list">${[...S.infos].sort((x,y)=>order[x.type]-order[y.type]||String(y.created_at).localeCompare(x.created_at)).map(i=>{
+    const [ic,lab]=INFO_T[i.type]||INFO_T.annonce, url=safeUrl(i.lien);
+    return `<div class="info"><span class="ic">${ic}</span><div class="bd">
+      <small>${lab}${i.jour?` · ${fmtDate(i.jour)}`:""}</small><b>${esc(i.titre)}</b>${i.texte?`<p>${nl2br(i.texte)}</p>`:""}
+      ${url?`<a class="btn ghost sm" href="${esc(url)}" target="_blank" rel="noopener">${i.type==="document"?"Ouvrir le document":"En savoir plus"} ↗</a>`:""}</div>
+      ${withDel?`<button class="btn danger sm" data-delinfo="${i.id}">Retirer</button>`:""}</div>`}).join("")}</div>`;
+}
+
+/* ===== Vue adhérent / parent ===== */
+function viewMember(){
+  const mine = S.adh;
+  const head = `<div class="hello"><div><div class="eyebrow">Saison ${esc(SAISON)}</div><h1>Bonjour<em>.</em></h1>
+    <div class="who">Connecté avec ${esc(S.user.email)}</div></div><button class="btn ghost sm" id="logout">Se déconnecter</button></div>`;
+  if(!mine.length){
+    app.innerHTML = head + `<div class="empty"><b>Aucun dossier n’est relié à cet email pour l’instant.</b><br>
+      Si tu es inscrit(e), le bureau n’a peut-être pas encore enregistré ton dossier, ou il l’a fait avec un autre email.
+      <br><br><a class="btn sm" href="./#contact">Contacter le club</a></div>`;
+    return;
+  }
+  const infos = S.infos.length ? `<section class="sec"><div class="eyebrow">Infos du club</div>${infosHTML(false)}</section>` : "";
+  app.innerHTML = head + infos + `<div class="grid">${mine.map(kidHTML).join("")}</div>
+    <p class="note" style="margin-top:18px">Une info est fausse ? <a href="./#contact">Préviens le bureau</a>.</p>`;
+}
+function kidHTML(a){
+  const ag = age(a.naissance);
+  const due=Number(a.cotisation_due)||0, paid=Number(a.cotisation_payee)||0;
+  const pays=payOf(a.id), mots=motsOf(a.id), comb=combatsOf(a.id);
+  const avenir=comb.filter(c=>c.resultat==="À venir").sort((x,y)=>String(x.jour||"").localeCompare(y.jour||"")), passes=comb.filter(c=>c.resultat!=="À venir");
+  return `<article class="card kid">
+    <h3>${esc(a.prenom)} ${esc(a.nom)}</h3>
+    <div class="sub">${[a.groupe, ag!=null?ag+" ans":null, "Saison "+a.saison].filter(Boolean).map(esc).join(" · ")}</div>
+    <div class="rows">
+      <div class="row"><span>Licence${a.licence_num?` <small class="note">n° ${esc(a.licence_num)}</small>`:""}</span>${pill(licStatus(a))}</div>
+      <div class="row"><span>Certificat médical${a.certificat_date?` <small class="note">du ${fmtDate(a.certificat_date)}</small>`:""}</span>${pill(certStatus(a))}</div>
+      <div class="row"><span>Cotisation${due>0?` <small class="note">${euros(paid)} / ${euros(due)}</small>`:""}</span>${pill(cotStatus(a))}</div>
+      <div class="row"><span>Droit à l’image</span>${a.droit_image==null?pill(["n","Non renseigné"]):a.droit_image?pill(["ok","Accepté"]):pill(["ko","Refusé"])}</div>
+    </div>
+    ${pays.length?`<details class="more"><summary>Mes paiements (${pays.length})</summary>
+      <div class="mini">${pays.map(p=>`<div><span>${fmtDate(p.jour)} · ${esc(p.mode)}</span><b>${euros(p.montant)}</b></div>`).join("")}</div></details>`:""}
+    ${mots.length?`<div class="mot"><small>💬 Le mot du coach · ${fmtDate(mots[0].created_at)}${mots[0].auteur_nom?` · ${esc(mots[0].auteur_nom)}`:""}</small><p>${nl2br(mots[0].texte)}</p>
+      ${mots.length>1?`<details class="more"><summary>Messages précédents (${mots.length-1})</summary>${mots.slice(1).map(m=>`<div class="mot-old"><small>${fmtDate(m.created_at)}${m.auteur_nom?` · ${esc(m.auteur_nom)}`:""}</small><p>${nl2br(m.texte)}</p></div>`).join("")}</details>`:""}</div>`:""}
+    ${a.competiteur?`<div class="compet"><div class="eyebrow">🏆 Compétition</div>
+      <div class="mini">${a.categorie_poids?`<div><span>Catégorie</span><b>${esc(a.categorie_poids)}</b></div>`:""}
+      ${passes.length?`<div><span>Bilan</span><b>${passes.filter(c=>c.resultat==="Victoire").length} V · ${passes.filter(c=>c.resultat==="Défaite").length} D · ${passes.filter(c=>c.resultat==="Nul").length} N</b></div>`:""}</div>
+      ${avenir.length?`<p class="lbl">Prochains combats</p>${avenir.map(c=>`<div class="fight up"><b>${c.jour?fmtDate(c.jour):"Date à venir"}</b><span>${esc(c.evenement)}${c.lieu?` · ${esc(c.lieu)}`:""}</span></div>`).join("")}`:""}
+      ${passes.length?`<p class="lbl">Derniers résultats</p>${passes.slice(0,5).map(c=>`<div class="fight"><b>${c.jour?fmtDate(c.jour):""}</b><span>${esc(c.evenement)}</span>${resPill(c.resultat)}</div>`).join("")}`:""}
+      ${a.palmares?`<p class="lbl">Palmarès</p><p class="note">${nl2br(a.palmares)}</p>`:""}
+    </div>`:""}
+    <div class="kid-acts">
+      <button class="btn full" data-card="${a.id}">🪪 Voir ma carte de membre</button>
+      ${paid>0?`<button class="btn ghost full" data-attest="${a.id}">📄 Attestation de paiement (PDF)</button>`:""}
+    </div>
+  </article>`;
+}
+const resPill = r => pill([r==="Victoire"?"ok":r==="Défaite"?"ko":r==="À venir"?"wait":"n", r]);
+
+/* ===== Vue bureau / coach ===== */
+function filtered(){
+  const q = S.q.trim().toLowerCase();
+  return S.adh.filter(a => (!S.groupe || a.groupe===S.groupe) &&
+    (!q || [a.nom,a.prenom,a.email,a.email2,a.licence_num].some(v=>String(v||"").toLowerCase().includes(q))));
+}
+const TABS = { adh:["Adhérents","Les <em>adhérents</em>"], infos:["Infos","Les <em>infos</em>"], avantages:["Avantages","Les <em>avantages</em>"], equipe:["Équipe","L’<em>équipe</em>"], club:["Réglages","Les <em>réglages</em>"] };
+function viewStaff(){
+  const tabs = isB() ? ["adh","infos","avantages","equipe","club"] : ["adh"];
+  if(!tabs.includes(S.tab)) S.tab="adh";
+  const head = `<div class="hello"><div><div class="eyebrow">${isB()?"Espace bureau":"Espace coach"} · ${esc(SAISON)}</div><h1>${TABS[S.tab][1]}</h1>
+    <div class="who">${esc(S.user.email)}</div></div><button class="btn ghost sm" id="logout">Se déconnecter</button></div>
+    ${tabs.length>1?`<div class="tabs">${tabs.map(k=>`<button data-tab="${k}" class="${S.tab===k?"on":""}">${TABS[k][0]}</button>`).join("")}</div>`:""}`;
+  if(S.tab==="equipe"){ app.innerHTML = head + viewTeam(); return; }
+  if(S.tab==="avantages"){ app.innerHTML = head + viewAvantages(); return; }
+  if(S.tab==="infos"){ app.innerHTML = head + viewInfos(); return; }
+  if(S.tab==="club"){ app.innerHTML = head + viewClub(); return; }
+
+  const all=S.adh, list=filtered();
+  const nLic=all.filter(a=>a.licence_ok).length, nCert=all.filter(a=>certStatus(a)[0]!=="ok").length, nCot=all.filter(a=>["ko","wait"].includes(cotStatus(a)[0])).length;
+  const groupes=[...new Set([...GROUPES, ...all.map(a=>a.groupe).filter(Boolean)])];
+  app.innerHTML = head + `
+    <div class="stats">
+      <div class="stat"><b>${all.length}</b><small>Adhérents</small></div>
+      <div class="stat"><b>${nLic}</b><small>Licences OK</small></div>
+      <div class="stat"><b>${nCert}</b><small>Certificats manquants</small></div>
+      <div class="stat"><b>${nCot}</b><small>Cotisations à régler</small></div>
+    </div>
+    <div class="tools">
+      <input type="search" id="q" placeholder="Rechercher un nom, un email…" value="${esc(S.q)}">
+      <select id="grp"><option value="">Tous les groupes</option>${groupes.map(g=>`<option ${S.groupe===g?"selected":""}>${esc(g)}</option>`).join("")}</select>
+      ${isB()?`<button class="btn" id="add">+ Ajouter</button>`:""}
+    </div>
+    ${isB()?`<div class="tools2"><button class="btn ghost sm" id="relance">📧 Relancer par email</button><button class="btn ghost sm" id="export">⬇ Export Excel</button></div>`:""}
+    ${S.relance?relanceHTML():""}
+    <div class="list" id="list">${listHTML(list)}</div>
+    ${S.edit?sheetHTML():""}`;
+}
+function listHTML(list){
+  if(!list.length) return `<div class="empty">${S.adh.length?"Aucun résultat.":"Aucun adhérent pour l’instant. Clique sur <b>+ Ajouter</b> pour créer le premier dossier."}</div>`;
+  return list.map(a=>{const ag=age(a.naissance);return `<button class="item" data-id="${a.id}">
+    <b>${esc(a.nom.toUpperCase())} ${esc(a.prenom)}${a.competiteur?" 🏆":""}</b>
+    <span class="meta">${[a.groupe, ag!=null?ag+" ans":null, a.email].filter(Boolean).map(esc).join(" · ")||"—"}</span>
+    <span class="pills">${pill(licStatus(a))}${pill(certStatus(a))}${pill(cotStatus(a))}</span></button>`}).join("");
+}
+
+/* ----- Relances par email ----- */
+const RELANCES = {
+  cert:{ label:"Certificat médical manquant ou expiré", test:a=>certStatus(a)[0]!=="ok", sujet:"Rappel : certificat médical",
+    corps:"Bonjour,\n\nPetit rappel du club : nous n’avons pas encore de certificat médical valide pour votre inscription (saison "+SAISON+").\nMerci de le remettre au coach lors du prochain entraînement.\n\nVous pouvez suivre votre dossier sur votre espace adhérent :\nhttps://montoizthaikhmerboxing.fr/espace.html\n\nSportivement,\nLe bureau de Montoiz’ Thaï Khmer Boxing" },
+  cot:{ label:"Cotisation pas entièrement réglée", test:a=>["ko","wait"].includes(cotStatus(a)[0]), sujet:"Rappel : cotisation",
+    corps:"Bonjour,\n\nPetit rappel du club : votre cotisation pour la saison "+SAISON+" n’est pas encore entièrement réglée.\nLe détail est visible sur votre espace adhérent :\nhttps://montoizthaikhmerboxing.fr/espace.html\n\nN’hésitez pas à nous contacter si besoin (paiement en plusieurs fois possible).\n\nSportivement,\nLe bureau de Montoiz’ Thaï Khmer Boxing" },
+  lic:{ label:"Licence pas encore validée", test:a=>!a.licence_ok, sujet:"Votre licence",
+    corps:"Bonjour,\n\nVotre licence pour la saison "+SAISON+" n’est pas encore finalisée. Merci de vérifier que votre dossier est complet (formulaire, certificat, paiement).\n\nVotre espace adhérent : https://montoizthaikhmerboxing.fr/espace.html\n\nSportivement,\nLe bureau de Montoiz’ Thaï Khmer Boxing" },
+  tous:{ label:"Tous les adhérents", test:()=>true, sujet:"Information du club",
+    corps:"Bonjour,\n\n\n\nSportivement,\nLe bureau de Montoiz’ Thaï Khmer Boxing" }
+};
+function relanceCible(){
+  const R = RELANCES[S.relance.type], gens = S.adh.filter(a=>(!S.groupe||a.groupe===S.groupe) && R.test(a));
+  const mails = [...new Set(gens.flatMap(a=>[a.email,a.email2]).filter(Boolean))];
+  return { R, gens, mails, sansMail: gens.filter(a=>!a.email && !a.email2) };
+}
+function relanceHTML(){
+  const { R, gens, mails, sansMail } = relanceCible();
+  return `<div class="card relance">
+    <div class="top"><h2 style="margin:0">Relancer par email</h2><button class="btn ghost sm" id="relance-x">Fermer</button></div>
+    <label class="f"><span>Qui relancer ?${S.groupe?` (groupe ${esc(S.groupe)})`:""}</span><select id="rel-type">${Object.entries(RELANCES).map(([k,v])=>`<option value="${k}" ${S.relance.type===k?"selected":""}>${v.label}</option>`).join("")}</select></label>
+    <p class="note"><b>${gens.length}</b> adhérent${gens.length>1?"s":""} concerné${gens.length>1?"s":""} · <b>${mails.length}</b> adresse${mails.length>1?"s":""} email${sansMail.length?` · ⚠ sans email : ${sansMail.map(a=>esc(a.prenom+" "+a.nom)).join(", ")}`:""}</p>
+    <label class="f"><span>Sujet</span><input type="text" id="rel-sujet" value="${esc(S.relance.sujet ?? R.sujet)}"></label>
+    <label class="f"><span>Message</span><textarea id="rel-corps" rows="8">${esc(S.relance.corps ?? R.corps)}</textarea></label>
+    <div class="acts" style="justify-content:flex-start">
+      <button class="btn" id="rel-open" ${mails.length?"":"disabled"}>Ouvrir dans ma messagerie</button>
+      <button class="btn ghost" id="rel-copy" ${mails.length?"":"disabled"}>Copier les emails</button>
+      <button class="btn ghost" id="rel-copy-msg">Copier le message</button>
+    </div>
+    <p class="note">Les adresses sont mises en <b>copie cachée (Cci)</b> : personne ne voit les emails des autres. Si ta messagerie ne s’ouvre pas (Gmail sur ordinateur), clique sur « Copier les emails » et colle-les dans le champ <b>Cci</b> d’un nouveau message.</p>
+  </div>`;
+}
+async function copy(t, ok){ try{ await navigator.clipboard.writeText(t); toast(ok); }catch(e){ prompt("Copie ce texte :", t); } }
+
+/* ----- Export Excel (CSV) ----- */
+function exportCSV(){
+  const cols = [["N° membre",numero],["Nom",a=>a.nom],["Prénom",a=>a.prenom],["Naissance",a=>fmtDate(a.naissance)],["Groupe",a=>a.groupe],
+    ["Email",a=>a.email],["Email 2",a=>a.email2],["Téléphone",a=>a.telephone],["N° licence",a=>a.licence_num],["Licence validée",a=>a.licence_ok?"Oui":"Non"],
+    ["Date certificat",a=>fmtDate(a.certificat_date)],["Cotisation due",a=>a.cotisation_due],["Payé",a=>a.cotisation_payee],["Reste",a=>Math.max(0,(Number(a.cotisation_due)||0)-(Number(a.cotisation_payee)||0))],
+    ["Droit à l’image",a=>a.droit_image==null?"":a.droit_image?"Oui":"Non"],["Compétiteur",a=>a.competiteur?"Oui":"Non"],["Catégorie de poids",a=>a.categorie_poids]];
+  const cell = v => { let s = v==null ? "" : typeof v==="number" ? String(v).replace(".",",") : String(v); if(/^[=+@\t]/.test(s)) s="'"+s; return /[";\n]/.test(s) ? `"${s.replace(/"/g,'""')}"` : s; };
+  const rows = [cols.map(c=>c[0]), ...filtered().map(a=>cols.map(c=>c[1](a)))];
+  const csv = "﻿" + rows.map(r=>r.map(cell).join(";")).join("\r\n");
+  const url = URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  const l = document.createElement("a"); l.href=url; l.download=`adherents-${SAISON}${S.groupe?"-"+S.groupe.toLowerCase().replace(/\s+/g,"-"):""}.csv`; document.body.appendChild(l); l.click(); l.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),2000); toast("Fichier téléchargé");
+}
+
+/* ----- Fiche adhérent ----- */
+function sheetHTML(){
+  const a = S.edit, isNew = !a.id, ro = !isB();
+  const dis = ro ? "disabled" : "";
+  const v = k => esc(a[k] ?? "");
+  const groupes=[...new Set([...GROUPES, a.groupe].filter(Boolean))];
+  const paid = Number(a.cotisation_payee)||0;
+  return `<div class="sheet-bg" id="sheet-bg"><div class="sheet">
+    <div class="top"><h2 style="margin:0">${isNew?"Nouvel adhérent":esc(a.prenom+" "+a.nom)}</h2>
+      <span style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">${isNew?"":`<button type="button" class="btn ghost sm" data-card="${a.id}">🪪 Carte</button>`}${!isNew&&isB()&&paid>0?`<button type="button" class="btn ghost sm" data-attest="${a.id}">📄 Attestation</button>`:""}<button type="button" class="btn ghost sm" id="close">Fermer</button></span></div>
+    <form id="f-adh" autocomplete="off">
+    <fieldset><legend>Identité</legend>
+      <div class="two">
+        <label class="f"><span>Nom *</span><input type="text" name="nom" required value="${v("nom")}" ${dis}></label>
+        <label class="f"><span>Prénom *</span><input type="text" name="prenom" required value="${v("prenom")}" ${dis}></label>
+        <label class="f"><span>Date de naissance</span><input type="date" name="naissance" value="${v("naissance")}" ${dis}></label>
+        <label class="f"><span>Groupe</span><select name="groupe" ${dis}><option value="">—</option>${groupes.map(g=>`<option ${a.groupe===g?"selected":""}>${esc(g)}</option>`).join("")}</select></label>
+      </div></fieldset>
+    <fieldset><legend>Contact & connexion</legend>
+      <label class="f"><span>Email (adhérent majeur ou parent 1)</span><input type="email" name="email" value="${v("email")}" ${dis}></label>
+      <label class="f"><span>2e email (parent 2)</span><input type="email" name="email2" value="${v("email2")}" ${dis}></label>
+      <label class="f"><span>Téléphone</span><input type="tel" name="telephone" value="${v("telephone")}" ${dis}></label>
+      <p class="note" style="margin-top:-6px">Ces emails permettent de se connecter à l’espace adhérent et de voir ce dossier.</p>
+    </fieldset>
+    <fieldset><legend>Dossier ${esc(a.saison||SAISON)}</legend>
+      <div class="two">
+        <label class="f"><span>N° de licence</span><input type="text" name="licence_num" value="${v("licence_num")}" ${dis}></label>
+        <label class="f"><span>Date du certificat</span><input type="date" name="certificat_date" value="${v("certificat_date")}" ${dis}></label>
+      </div>
+      <label class="check"><input type="checkbox" name="licence_ok" ${a.licence_ok?"checked":""} ${dis}> Licence validée par la fédération <small class="note">(active la carte de membre)</small></label>
+      <div class="two">
+        <label class="f"><span>Cotisation due (€)</span><input type="number" step="0.01" min="0" name="cotisation_due" value="${v("cotisation_due")}" ${dis}></label>
+        <div class="f"><span class="lbl2">Déjà payé</span><div class="paid">${euros(paid)}</div></div>
+      </div>
+      <label class="f"><span>Droit à l’image</span><select name="droit_image" ${dis}>
+        <option value="" ${a.droit_image==null?"selected":""}>Pas encore répondu</option>
+        <option value="1" ${a.droit_image===true?"selected":""}>Accepté</option>
+        <option value="0" ${a.droit_image===false?"selected":""}>Refusé</option></select></label>
+    </fieldset>
+    <fieldset><legend>Compétition</legend>
+      <label class="check"><input type="checkbox" name="competiteur" ${a.competiteur?"checked":""} ${dis}> Compétiteur</label>
+      <label class="f"><span>Catégorie de poids</span><input type="text" name="categorie_poids" placeholder="Ex : -67 kg, Junior" value="${v("categorie_poids")}" ${dis}></label>
+      <label class="f"><span>Palmarès</span><textarea name="palmares" rows="3" placeholder="Ex : Champion de France 2025 (classe B)" ${dis}>${v("palmares")}</textarea></label>
+    </fieldset>
+    <div id="sheet-msg"></div>
+    ${ro?"":`<div class="acts">
+      <button class="btn" id="save">${isNew?"Créer le dossier":"Enregistrer"}</button>
+      ${isNew?"":(S.confirmDel?`<span style="display:flex;gap:8px"><button type="button" class="btn danger" id="del-yes">Oui, supprimer</button><button type="button" class="btn ghost" id="del-no">Annuler</button></span>`:`<button type="button" class="btn danger" id="del">Supprimer</button>`)}
+    </div>`}
+    </form>
+    ${isNew?`<p class="note" style="margin-top:16px">Paiements, mot du coach et combats : disponibles une fois le dossier créé.</p>`:extrasHTML(a)}
+  </div></div>`;
+}
+function extrasHTML(a){
+  const pays=payOf(a.id), mots=motsOf(a.id), comb=combatsOf(a.id);
+  return `
+  ${isB()?`<section class="xsec"><h3>💶 Paiements</h3>
+    ${pays.length?`<div class="mini">${pays.map(p=>`<div><span>${fmtDate(p.jour)} · ${esc(p.mode)}${p.note?` <small class="note">(${esc(p.note)})</small>`:""}</span><span class="r"><b>${euros(p.montant)}</b><button class="x" data-delpay="${p.id}" aria-label="Supprimer ce paiement">✕</button></span></div>`).join("")}</div>`:`<p class="note">Aucun paiement enregistré.</p>`}
+    <form id="f-pay" class="inline-f">
+      <input type="date" name="jour" value="${today()}" required aria-label="Date">
+      <input type="number" name="montant" step="0.01" min="0.01" placeholder="Montant €" required aria-label="Montant">
+      <select name="mode" aria-label="Mode de paiement">${MODES.map(m=>`<option>${esc(m)}</option>`).join("")}</select>
+      <input type="text" name="note" placeholder="Note (facultatif)" aria-label="Note">
+      <button class="btn sm">Ajouter</button>
+    </form></section>`:""}
+  <section class="xsec"><h3>💬 Mot du coach</h3>
+    ${mots.length?mots.map(m=>`<div class="mot"><small>${fmtDate(m.created_at)}${m.auteur_nom?` · ${esc(m.auteur_nom)}`:""}</small><p>${nl2br(m.texte)}</p>
+      ${(isB()||m.auteur===S.user.email.toLowerCase())?`<button class="x" data-delmot="${m.id}" aria-label="Supprimer ce message">✕</button>`:""}</div>`).join(""):`<p class="note">Aucun message pour l’instant.</p>`}
+    <form id="f-mot"><textarea name="texte" rows="3" required placeholder="Ex : Très bonne séance, le jab progresse. À travailler : la garde haute."></textarea>
+      <button class="btn sm" style="margin-top:8px">Publier le message</button>
+      <p class="note">Visible par l’adhérent (ou ses parents) dans son espace.</p></form></section>
+  ${a.competiteur?`<section class="xsec"><h3>🏆 Combats</h3>
+    ${comb.length?comb.map(c=>`<div class="fight"><b>${c.jour?fmtDate(c.jour):"—"}</b><span>${esc(c.evenement)}${c.lieu?` · ${esc(c.lieu)}`:""}</span>
+      <select data-res="${c.id}" aria-label="Résultat">${RESULTATS.map(r=>`<option ${c.resultat===r?"selected":""}>${r}</option>`).join("")}</select>
+      <button class="x" data-delcomb="${c.id}" aria-label="Supprimer ce combat">✕</button></div>`).join(""):`<p class="note">Aucun combat enregistré.</p>`}
+    <form id="f-comb" class="inline-f">
+      <input type="date" name="jour" aria-label="Date du combat">
+      <input type="text" name="evenement" placeholder="Gala / championnat *" required aria-label="Événement">
+      <input type="text" name="lieu" placeholder="Lieu" aria-label="Lieu">
+      <button class="btn sm">Ajouter</button>
+    </form></section>`:""}`;
+}
+
+async function saveAdh(form){
+  const f = new FormData(form), o = {};
+  for(const k of ["nom","prenom","naissance","groupe","email","email2","telephone","licence_num","certificat_date","categorie_poids","palmares"]) o[k] = (f.get(k)||"").toString().trim() || null;
+  o.licence_ok = f.get("licence_ok")==="on";
+  o.competiteur = f.get("competiteur")==="on";
+  o.cotisation_due = Number(f.get("cotisation_due"))||0;
+  const di = f.get("droit_image"); o.droit_image = di==="" ? null : di==="1";
+  const box = document.getElementById("sheet-msg");
+  for(const k of ["email","email2"]) if(o[k] && !okMail(o[k])) { box.innerHTML=`<p class="msg err">L’adresse « ${esc(o[k])} » n’est pas valide.</p>`; return; }
+  const btn = document.getElementById("save"); btn.disabled=true; btn.innerHTML='<span class="spin"></span>';
+  const isNew = !S.edit.id;
+  const res = isNew ? await sb.from("adherents").insert({...o, saison:SAISON}).select().single()
+                    : await sb.from("adherents").update(o).eq("id",S.edit.id).select().single();
+  if(res.error){ btn.disabled=false; btn.textContent="Réessayer"; box.innerHTML=`<p class="msg err">Erreur : ${esc(res.error.message)}</p>`; return; }
+  const i = S.adh.findIndex(x=>x.id===res.data.id);
+  if(i>=0) S.adh[i]=res.data; else S.adh.push(res.data);
+  S.adh.sort((x,y)=>(x.nom+x.prenom).localeCompare(y.nom+y.prenom,"fr"));
+  // Après une création, on garde la fiche ouverte pour pouvoir saisir paiements / messages
+  S.edit = isNew ? {...res.data} : null; render(); toast(isNew?"Dossier créé":"Dossier enregistré");
+}
+async function delAdh(){
+  const { error } = await sb.from("adherents").delete().eq("id",S.edit.id);
+  if(error){ document.getElementById("sheet-msg").innerHTML=`<p class="msg err">${esc(error.message)}</p>`; return; }
+  S.adh = S.adh.filter(x=>x.id!==S.edit.id); S.edit=null; S.confirmDel=false; render(); toast("Dossier supprimé");
+}
+async function addPay(form){
+  const f=new FormData(form), o={adherent_id:S.edit.id, jour:f.get("jour")||today(), montant:Number(f.get("montant")), mode:f.get("mode"), note:String(f.get("note")||"").trim()||null};
+  if(!(o.montant>0)) return;
+  const { data, error } = await sb.from("paiements").insert(o).select().single();
+  if(error){ toast("Erreur : "+error.message); return; }
+  S.pay.push(data); await refreshAdh(S.edit.id); render(); toast("Paiement ajouté");
+}
+async function delPay(id){
+  const { error } = await sb.from("paiements").delete().eq("id",id);
+  if(error){ toast("Erreur : "+error.message); return; }
+  S.pay=S.pay.filter(p=>p.id!==id); await refreshAdh(S.edit.id); render();
+}
+async function addMot(form){
+  const texte=String(new FormData(form).get("texte")||"").trim(); if(!texte) return;
+  const { data, error } = await sb.from("mots").insert({adherent_id:S.edit.id, texte, auteur_nom:meNom()}).select().single();
+  if(error){ toast("Erreur : "+error.message); return; }
+  S.mots.unshift(data); render(); toast("Message publié");
+}
+async function delMot(id){
+  const { error } = await sb.from("mots").delete().eq("id",id);
+  if(error){ toast("Erreur : "+error.message); return; }
+  S.mots=S.mots.filter(m=>m.id!==id); render();
+}
+async function addComb(form){
+  const f=new FormData(form), o={adherent_id:S.edit.id, jour:f.get("jour")||null, evenement:String(f.get("evenement")||"").trim(), lieu:String(f.get("lieu")||"").trim()||null};
+  if(!o.evenement) return;
+  const { data, error } = await sb.from("combats").insert(o).select().single();
+  if(error){ toast("Erreur : "+error.message); return; }
+  S.combats.push(data); render(); toast("Combat ajouté");
+}
+async function setRes(id, resultat){
+  const { error } = await sb.from("combats").update({resultat}).eq("id",id);
+  if(error){ toast("Erreur : "+error.message); return; }
+  const c=S.combats.find(x=>x.id===id); if(c) c.resultat=resultat; toast("Résultat enregistré");
+}
+async function delComb(id){
+  const { error } = await sb.from("combats").delete().eq("id",id);
+  if(error){ toast("Erreur : "+error.message); return; }
+  S.combats=S.combats.filter(c=>c.id!==id); render();
+}
+
+/* ===== Infos (bureau) ===== */
+function viewInfos(){
+  return `<p class="lead">Annonces, stages et documents visibles <b>uniquement par les adhérents connectés</b> (pas sur le site public).</p>
+    ${infosHTML(true)}
+    <form class="card" id="f-info" style="margin-top:18px"><h2>Publier une info</h2>
+      <label class="f"><span>Type</span><select name="type"><option value="annonce">📣 Annonce</option><option value="stage">🥊 Stage / événement</option><option value="document">📄 Document</option></select></label>
+      <label class="f"><span>Titre *</span><input type="text" name="titre" required placeholder="Ex : Stage de Noël, règlement intérieur…"></label>
+      <label class="f"><span>Texte</span><textarea name="texte" rows="4"></textarea></label>
+      <div class="two">
+        <label class="f"><span>Date (stage, événement…)</span><input type="date" name="jour"></label>
+        <label class="f"><span>Lien (document, inscription…)</span><input type="url" name="lien" placeholder="https://…"></label>
+      </div>
+      <p class="note" style="margin-top:-6px">Pour un document : mets le PDF sur Google Drive (partage « tous ceux qui ont le lien ») et colle le lien ici.</p>
+      <button class="btn">Publier</button><div id="info-msg"></div></form>`;
+}
+async function addInfo(form){
+  const f=new FormData(form), o={type:f.get("type"), titre:String(f.get("titre")).trim(), texte:String(f.get("texte")||"").trim()||null, jour:f.get("jour")||null, lien:safeUrl(f.get("lien"))||null};
+  if(!o.titre) return;
+  if(f.get("lien") && !o.lien){ document.getElementById("info-msg").innerHTML=`<p class="msg err">Le lien doit commencer par https://</p>`; return; }
+  const { data, error } = await sb.from("infos").insert(o).select().single();
+  if(error){ document.getElementById("info-msg").innerHTML=`<p class="msg err">${esc(error.message)}</p>`; return; }
+  S.infos.unshift(data); render(); toast("Info publiée");
+}
+async function delInfo(id){
+  const { error } = await sb.from("infos").delete().eq("id",id);
+  if(error){ toast(error.message); return; }
+  S.infos=S.infos.filter(i=>i.id!==id); render();
+}
+
+/* ===== Réglages (bureau) ===== */
+function viewClub(){
+  const R=S.reg||{}, v=k=>esc(R[k]??"");
+  return `<p class="lead">Ces informations apparaissent sur les <b>attestations de paiement</b> (PDF).</p>
+    <form class="card" id="f-club">
+      <div class="two">
+        <label class="f"><span>Nom du président / de la présidente</span><input type="text" name="president" value="${v("president")}"></label>
+        <label class="f"><span>Fonction</span><input type="text" name="fonction" value="${v("fonction")||"Président"}"></label>
+        <label class="f"><span>N° RNA (W…)</span><input type="text" name="rna" value="${v("rna")}"></label>
+        <label class="f"><span>SIRET (facultatif)</span><input type="text" name="siret" value="${v("siret")}"></label>
+      </div>
+      <label class="f"><span>Ville (« Fait à … »)</span><input type="text" name="ville" value="${v("ville")||"Montoison"}"></label>
+      <button class="btn">Enregistrer</button><div id="club-msg"></div></form>`;
+}
+async function saveClub(form){
+  const f=new FormData(form), o={}; for(const k of ["president","fonction","rna","siret","ville"]) o[k]=String(f.get(k)||"").trim()||null;
+  const { data, error } = await sb.from("reglages").update(o).eq("id",1).select().single();
+  if(error){ document.getElementById("club-msg").innerHTML=`<p class="msg err">${esc(error.message)}</p>`; return; }
+  S.reg=data; toast("Réglages enregistrés");
+}
+
 /* ===== Avantages (bureau) ===== */
 function viewAvantages(){
   return `<p class="lead">Les réductions affichées sous la carte de membre (boutique, commerçants partenaires…).</p>
@@ -242,216 +802,9 @@ async function delAv(id){
   S.avantages=S.avantages.filter(v=>v.id!==id); render();
 }
 
-const licStatus = a => a.licence_ok ? ["ok","Licence ✓"] : ["wait","Licence en cours"];
-const pill = ([k,t]) => `<span class="pill ${k}">${esc(t)}</span>`;
-
-/* ===== Connexion ===== */
-function viewLogin(){
-  const m = S.msg ? `<p class="msg ${S.msg[0]}">${esc(S.msg[1])}</p>` : "";
-  if(S.loginStep==="code"){
-    app.innerHTML = `<div class="card login">
-      <div class="eyebrow">Vérifie tes emails</div>
-      <h2>Lien envoyé</h2>
-      <p class="note">Un email vient de partir vers <b>${esc(S.email)}</b>. Clique sur le lien qu’il contient, <b>ou</b> tape ici le code reçu.</p>
-      <form id="f-code">
-        <label class="f"><span>Code reçu par email</span><input class="code" id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></label>
-        <button class="btn full" ${S.busy?"disabled":""}>${S.busy?'<span class="spin"></span>':"Se connecter"}</button>
-      </form>${m}
-      <p class="note" style="margin-top:16px">Rien reçu ? Regarde dans les <b>spams</b>. <a href="#" id="again">Changer d’email ou renvoyer</a></p>
-    </div>`;
-    document.getElementById("code").focus();
-    return;
-  }
-  app.innerHTML = `<div class="login">
-    <div class="eyebrow">Adhérents · Parents · Bureau</div>
-    <h1>Mon <em>espace</em></h1>
-    <p class="lead">Licence, certificat, cotisation : retrouve le dossier de ton inscription (ou celui de tes enfants).</p>
-    <div class="card">
-      <form id="f-mail">
-        <label class="f"><span>Ton email (celui donné au club)</span><input id="mail" type="email" autocomplete="email" required value="${esc(S.email)}"></label>
-        <button class="btn full" ${S.busy?"disabled":""}>${S.busy?'<span class="spin"></span>':"Recevoir mon lien de connexion"}</button>
-      </form>${m}
-      <p class="note" style="margin-top:14px">Pas de mot de passe : tu reçois un lien (et un code) par email à chaque connexion.</p>
-    </div></div>`;
-}
-
-async function sendLink(email){
-  S.busy=true; S.msg=null; viewLogin();
-  const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin + location.pathname, shouldCreateUser:true } });
-  S.busy=false;
-  if(error){
-    const t = /rate|limit|seconds/i.test(error.message) ? "Trop de demandes d’affilée. Attends une minute puis réessaie." : "L’email n’a pas pu partir : "+error.message;
-    S.msg=["err",t]; viewLogin(); return;
-  }
-  S.email=email; S.loginStep="code"; viewLogin();
-}
-async function verifyCode(code){
-  S.busy=true; S.msg=null; viewLogin();
-  const { error } = await sb.auth.verifyOtp({ email:S.email, token:code, type:"email" });
-  S.busy=false;
-  if(error){ S.msg=["err","Code incorrect ou expiré. Utilise le dernier email reçu."]; viewLogin(); }
-}
-
-/* ===== Chargement des données ===== */
-async function load(){
-  app.innerHTML = `<div class="loading"><span class="spin"></span></div>`;
-  const r = await sb.rpc("mon_role");
-  if(r.error){ return fatal("Impossible de lire ton profil ("+r.error.message+"). La base n’est peut-être pas encore installée."); }
-  S.role = r.data || "membre";
-  const q = await sb.from("adherents").select("*").order("nom").order("prenom");
-  if(q.error) return fatal(q.error.message);
-  S.adh = q.data || [];
-  if(S.role==="bureau"){
-    const s = await sb.from("staff").select("*").order("role").order("email");
-    S.staff = s.data || [];
-  }
-  const av = await sb.from("avantages").select("*").order("ordre").order("created_at");
-  S.avantages = av.data || [];
-  render();
-}
-function fatal(t){ app.innerHTML = `<div class="card login"><h2>Oups</h2><p class="note">${esc(t)}</p><button class="btn ghost" id="logout">Se déconnecter</button></div>`; }
-
-/* ===== Vue adhérent / parent ===== */
-function viewMember(){
-  const mine = S.adh;
-  const head = `<div class="hello"><div><div class="eyebrow">Saison ${esc(SAISON)}</div><h1>Bonjour<em>.</em></h1>
-    <div class="who">Connecté avec ${esc(S.user.email)}</div></div><button class="btn ghost sm" id="logout">Se déconnecter</button></div>`;
-  if(!mine.length){
-    app.innerHTML = head + `<div class="empty"><b>Aucun dossier n’est relié à cet email pour l’instant.</b><br>
-      Si tu es inscrit(e), le bureau n’a peut-être pas encore enregistré ton dossier, ou il l’a fait avec un autre email.
-      <br><br><a class="btn sm" href="./#contact">Contacter le club</a></div>`;
-    return;
-  }
-  app.innerHTML = head + `<div class="grid">${mine.map(a=>{
-    const ag = age(a.naissance), [ck] = cotStatus(a);
-    const due=Number(a.cotisation_due)||0, paid=Number(a.cotisation_payee)||0;
-    return `<article class="card kid">
-      <h3>${esc(a.prenom)} ${esc(a.nom)}</h3>
-      <div class="sub">${[a.groupe, ag!=null?ag+" ans":null, "Saison "+a.saison].filter(Boolean).map(esc).join(" · ")}</div>
-      <div class="rows">
-        <div class="row"><span>Licence${a.licence_num?` <small class="note">n° ${esc(a.licence_num)}</small>`:""}</span>${pill(licStatus(a))}</div>
-        <div class="row"><span>Certificat médical${a.certificat_date?` <small class="note">du ${fmtDate(a.certificat_date)}</small>`:""}</span>${pill(certStatus(a))}</div>
-        <div class="row"><span>Cotisation${due>0?` <small class="note">${euros(paid)} / ${euros(due)}</small>`:""}</span>${pill(cotStatus(a))}</div>
-        <div class="row"><span>Droit à l’image</span>${a.droit_image==null?pill(["n","Non renseigné"]):a.droit_image?pill(["ok","Accepté"]):pill(["ko","Refusé"])}</div>
-      </div>
-      <button class="btn full" style="margin-top:14px" data-card="${a.id}">🪪 Voir ma carte de membre</button>
-    </article>`}).join("")}</div>
-    <p class="note" style="margin-top:18px">Une info est fausse ? <a href="./#contact">Préviens le bureau</a>.</p>`;
-}
-
-/* ===== Vue bureau / coach ===== */
-function filtered(){
-  const q = S.q.trim().toLowerCase();
-  return S.adh.filter(a => (!S.groupe || a.groupe===S.groupe) &&
-    (!q || [a.nom,a.prenom,a.email,a.email2,a.licence_num].some(v=>String(v||"").toLowerCase().includes(q))));
-}
-function viewStaff(){
-  const isB = S.role==="bureau";
-  const tabs = [["adh","Adhérents"], ...(isB?[["avantages","Avantages"]]:[]), ...(isB?[["equipe","Équipe"]]:[])];
-  const head = `<div class="hello"><div><div class="eyebrow">${isB?"Espace bureau":"Espace coach"} · ${esc(SAISON)}</div><h1>${S.tab==="avantages"?"Les <em>avantages</em>":S.tab==="equipe"?"L’<em>équipe</em>":"Les <em>adhérents</em>"}</h1>
-    <div class="who">${esc(S.user.email)}</div></div><button class="btn ghost sm" id="logout">Se déconnecter</button></div>
-    <div class="tabs">${tabs.map(([k,l])=>`<button data-tab="${k}" class="${S.tab===k?"on":""}">${l}</button>`).join("")}</div>`;
-  if(S.tab==="equipe" && isB){ app.innerHTML = head + viewTeam(); return; }
-  if(S.tab==="avantages" && isB){ app.innerHTML = head + viewAvantages(); return; }
-
-  const all=S.adh, list=filtered();
-  const nLic=all.filter(a=>a.licence_ok).length, nCert=all.filter(a=>certStatus(a)[0]!=="ok").length, nCot=all.filter(a=>["ko","wait"].includes(cotStatus(a)[0])).length;
-  const groupes=[...new Set([...GROUPES, ...all.map(a=>a.groupe).filter(Boolean)])];
-  app.innerHTML = head + `
-    <div class="stats">
-      <div class="stat"><b>${all.length}</b><small>Adhérents</small></div>
-      <div class="stat"><b>${nLic}</b><small>Licences OK</small></div>
-      <div class="stat"><b>${nCert}</b><small>Certificats manquants</small></div>
-      <div class="stat"><b>${nCot}</b><small>Cotisations à régler</small></div>
-    </div>
-    <div class="tools">
-      <input type="search" id="q" placeholder="Rechercher un nom, un email…" value="${esc(S.q)}">
-      <select id="grp"><option value="">Tous les groupes</option>${groupes.map(g=>`<option ${S.groupe===g?"selected":""}>${esc(g)}</option>`).join("")}</select>
-      ${isB?`<button class="btn" id="add">+ Ajouter</button>`:""}
-    </div>
-    <div class="list" id="list">${listHTML(list)}</div>
-    ${S.edit?sheetHTML():""}`;
-}
-function listHTML(list){
-  if(!list.length) return `<div class="empty">${S.adh.length?"Aucun résultat.":"Aucun adhérent pour l’instant. Clique sur <b>+ Ajouter</b> pour créer le premier dossier."}</div>`;
-  return list.map(a=>{const ag=age(a.naissance);return `<button class="item" data-id="${a.id}">
-    <b>${esc(a.nom.toUpperCase())} ${esc(a.prenom)}</b>
-    <span class="meta">${[a.groupe, ag!=null?ag+" ans":null, a.email].filter(Boolean).map(esc).join(" · ")||"—"}</span>
-    <span class="pills">${pill(licStatus(a))}${pill(certStatus(a))}${pill(cotStatus(a))}</span></button>`}).join("");
-}
-
-function sheetHTML(){
-  const a = S.edit, isNew = !a.id, ro = S.role!=="bureau";
-  const dis = ro ? "disabled" : "";
-  const v = k => esc(a[k] ?? "");
-  const groupes=[...new Set([...GROUPES, a.groupe].filter(Boolean))];
-  return `<div class="sheet-bg" id="sheet-bg"><form class="sheet" id="f-adh" autocomplete="off">
-    <div class="top"><h2 style="margin:0">${isNew?"Nouvel adhérent":esc(a.prenom+" "+a.nom)}</h2><span style="display:flex;gap:8px">${isNew?"":`<button type="button" class="btn ghost sm" data-card="${a.id}">🪪 Carte</button>`}<button type="button" class="btn ghost sm" id="close">Fermer</button></span></div>
-    <fieldset><legend>Identité</legend>
-      <div class="two">
-        <label class="f"><span>Nom *</span><input type="text" name="nom" required value="${v("nom")}" ${dis}></label>
-        <label class="f"><span>Prénom *</span><input type="text" name="prenom" required value="${v("prenom")}" ${dis}></label>
-        <label class="f"><span>Date de naissance</span><input type="date" name="naissance" value="${v("naissance")}" ${dis}></label>
-        <label class="f"><span>Groupe</span><select name="groupe" ${dis}><option value="">—</option>${groupes.map(g=>`<option ${a.groupe===g?"selected":""}>${esc(g)}</option>`).join("")}</select></label>
-      </div></fieldset>
-    <fieldset><legend>Contact & connexion</legend>
-      <label class="f"><span>Email (adhérent majeur ou parent 1)</span><input type="email" name="email" value="${v("email")}" ${dis}></label>
-      <label class="f"><span>2e email (parent 2)</span><input type="email" name="email2" value="${v("email2")}" ${dis}></label>
-      <label class="f"><span>Téléphone</span><input type="tel" name="telephone" value="${v("telephone")}" ${dis}></label>
-      <p class="note" style="margin-top:-6px">Ces emails permettent de se connecter à l’espace adhérent et de voir ce dossier.</p>
-    </fieldset>
-    <fieldset><legend>Dossier ${esc(a.saison||SAISON)}</legend>
-      <div class="two">
-        <label class="f"><span>N° de licence</span><input type="text" name="licence_num" value="${v("licence_num")}" ${dis}></label>
-        <label class="f"><span>Date du certificat</span><input type="date" name="certificat_date" value="${v("certificat_date")}" ${dis}></label>
-      </div>
-      <label class="check"><input type="checkbox" name="licence_ok" ${a.licence_ok?"checked":""} ${dis}> Licence validée par la fédération <small class="note">(active la carte de membre)</small></label>
-      <label class="check"><input type="checkbox" name="competiteur" ${a.competiteur?"checked":""} ${dis}> Compétiteur</label>
-      <div class="two">
-        <label class="f"><span>Cotisation due (€)</span><input type="number" step="0.01" min="0" name="cotisation_due" value="${v("cotisation_due")}" ${dis}></label>
-        <label class="f"><span>Déjà payé (€)</span><input type="number" step="0.01" min="0" name="cotisation_payee" value="${v("cotisation_payee")}" ${dis}></label>
-      </div>
-      <label class="f"><span>Droit à l’image</span><select name="droit_image" ${dis}>
-        <option value="" ${a.droit_image==null?"selected":""}>Pas encore répondu</option>
-        <option value="1" ${a.droit_image===true?"selected":""}>Accepté</option>
-        <option value="0" ${a.droit_image===false?"selected":""}>Refusé</option></select></label>
-    </fieldset>
-    <div id="sheet-msg"></div>
-    ${ro?"":`<div class="acts">
-      <button class="btn" id="save">${isNew?"Créer le dossier":"Enregistrer"}</button>
-      ${isNew?"":(S.confirmDel?`<span style="display:flex;gap:8px"><button type="button" class="btn danger" id="del-yes">Oui, supprimer</button><button type="button" class="btn ghost" id="del-no">Annuler</button></span>`:`<button type="button" class="btn danger" id="del">Supprimer</button>`)}
-    </div>`}
-  </form></div>`;
-}
-
-async function saveAdh(form){
-  const f = new FormData(form), o = {};
-  for(const k of ["nom","prenom","naissance","groupe","email","email2","telephone","licence_num","certificat_date"]) o[k] = (f.get(k)||"").toString().trim() || null;
-  o.licence_ok = f.get("licence_ok")==="on";
-  o.competiteur = f.get("competiteur")==="on";
-  o.cotisation_due = Number(f.get("cotisation_due"))||0;
-  o.cotisation_payee = Number(f.get("cotisation_payee"))||0;
-  const di = f.get("droit_image"); o.droit_image = di==="" ? null : di==="1";
-  const box = document.getElementById("sheet-msg");
-  for(const k of ["email","email2"]) if(o[k] && !okMail(o[k])) { box.innerHTML=`<p class="msg err">L’adresse « ${esc(o[k])} » n’est pas valide.</p>`; return; }
-  const btn = document.getElementById("save"); btn.disabled=true; btn.innerHTML='<span class="spin"></span>';
-  const res = S.edit.id ? await sb.from("adherents").update(o).eq("id",S.edit.id).select().single()
-                        : await sb.from("adherents").insert({...o, saison:SAISON}).select().single();
-  if(res.error){ btn.disabled=false; btn.textContent="Réessayer"; box.innerHTML=`<p class="msg err">Erreur : ${esc(res.error.message)}</p>`; return; }
-  const i = S.adh.findIndex(x=>x.id===res.data.id);
-  if(i>=0) S.adh[i]=res.data; else S.adh.push(res.data);
-  S.adh.sort((x,y)=>(x.nom+x.prenom).localeCompare(y.nom+y.prenom,"fr"));
-  S.edit=null; render(); toast("Dossier enregistré");
-}
-async function delAdh(){
-  const { error } = await sb.from("adherents").delete().eq("id",S.edit.id);
-  if(error){ document.getElementById("sheet-msg").innerHTML=`<p class="msg err">${esc(error.message)}</p>`; return; }
-  S.adh = S.adh.filter(x=>x.id!==S.edit.id); S.edit=null; S.confirmDel=false; render(); toast("Dossier supprimé");
-}
-
 /* ===== Équipe ===== */
 function viewTeam(){
-  return `<p class="lead">Les personnes ici voient tous les dossiers. <b>Bureau</b> = peut tout modifier. <b>Coach</b> = consulte seulement.</p>
+  return `<p class="lead">Les personnes ici voient tous les dossiers. <b>Bureau</b> = peut tout modifier. <b>Coach</b> = consulte et écrit le mot du coach / les combats.</p>
     <div class="list" style="margin-bottom:18px">${S.staff.map(s=>`<div class="staff-row"><div><b>${esc(s.nom||s.email)}</b><br><small>${esc(s.email)} · ${s.role==="bureau"?"Bureau":"Coach"}</small></div>
       ${s.email===S.user.email.toLowerCase()?`<span class="pill n">Toi</span>`:`<button class="btn danger sm" data-unstaff="${esc(s.email)}">Retirer</button>`}</div>`).join("")}</div>
     <form class="card" id="f-staff"><h2>Ajouter quelqu’un</h2>
@@ -461,7 +814,7 @@ function viewTeam(){
       </div>
       <label class="f"><span>Email *</span><input type="email" name="email" required></label>
       <button class="btn">Ajouter</button><div id="staff-msg"></div>
-      <p class="note">La personne se connecte ensuite sur cette page avec cet email.</p></form>`;
+      <p class="note">La personne se connecte ensuite sur cette page avec cet email. Le nom s’affiche sous ses « mots du coach ».</p></form>`;
 }
 async function addStaff(form){
   const f=new FormData(form), o={email:String(f.get("email")).trim().toLowerCase(), nom:String(f.get("nom")).trim()||null, role:f.get("role")};
@@ -480,45 +833,71 @@ async function removeStaff(email){
 function render(){
   if(!S.user) return viewLogin();
   if(S.card) return viewCard();
-  if(S.role==="bureau"||S.role==="coach") viewStaff(); else viewMember();
+  const sc = document.querySelector(".sheet")?.scrollTop;
+  if(isStaff()) viewStaff(); else viewMember();
+  if(sc!=null){ const s=document.querySelector(".sheet"); if(s) s.scrollTop=sc; }
 }
 function toast(t){
-  const d=document.createElement("div"); d.textContent=t;
-  d.style.cssText="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:var(--gold-ink);padding:10px 16px;border-radius:10px;font:700 14px var(--f-label);letter-spacing:.06em;text-transform:uppercase;z-index:50";
-  document.body.appendChild(d); setTimeout(()=>d.remove(),2200);
+  const d=document.createElement("div"); d.textContent=t; d.className="toast";
+  document.body.appendChild(d); setTimeout(()=>d.remove(),2400);
 }
 
 document.addEventListener("submit", e=>{
   e.preventDefault();
-  const id=e.target.id;
+  const id=e.target.id, F=e.target;
   if(id==="f-mail"){ const m=document.getElementById("mail").value.trim().toLowerCase(); if(!okMail(m)){S.msg=["err","Cette adresse email n’est pas valide."];viewLogin();return} sendLink(m); }
   if(id==="f-code"){ const c=document.getElementById("code").value.replace(/\D/g,""); if(c.length<6){S.msg=["err","Le code fait au moins 6 chiffres."];viewLogin();return} verifyCode(c); }
-  if(id==="f-adh") saveAdh(e.target);
-  if(id==="f-staff") addStaff(e.target);
-  if(id==="f-av") addAv(e.target);
+  if(id==="f-adh") saveAdh(F);
+  if(id==="f-staff") addStaff(F);
+  if(id==="f-av") addAv(F);
+  if(id==="f-pay") addPay(F);
+  if(id==="f-mot") addMot(F);
+  if(id==="f-comb") addComb(F);
+  if(id==="f-info") addInfo(F);
+  if(id==="f-club") saveClub(F);
 });
 document.addEventListener("click", e=>{
   const t=e.target.closest("button,a"); if(!t) return;
+  const d=t.dataset;
   if(t.id==="again"){ e.preventDefault(); S.loginStep="email"; S.msg=null; viewLogin(); }
   if(t.id==="logout"){ sb.auth.signOut(); }
-  if(t.dataset.tab){ S.tab=t.dataset.tab; render(); }
-  if(t.dataset.card){ S.card=t.dataset.card; S.edit=null; render(); scrollTo(0,0); }
+  if(d.tab){ S.tab=d.tab; S.relance=null; render(); }
+  if(d.card){ S.card=d.card; S.edit=null; render(); scrollTo(0,0); }
+  if(d.attest){ attestation(d.attest, t); }
   if(t.id==="card-back"){ S.card=null; render(); }
-  if(t.dataset.delav){ delAv(t.dataset.delav); }
+  if(d.delav){ delAv(d.delav); }
+  if(d.delinfo){ delInfo(d.delinfo); }
+  if(d.delpay){ delPay(d.delpay); }
+  if(d.delmot){ delMot(d.delmot); }
+  if(d.delcomb){ delComb(d.delcomb); }
   if(t.id==="add"){ S.edit={ saison:SAISON, licence_ok:false, droit_image:null }; S.confirmDel=false; render(); }
-  if(t.classList.contains("item")){ S.edit={...S.adh.find(a=>a.id===t.dataset.id)}; S.confirmDel=false; render(); }
+  if(t.classList.contains("item")){ S.edit={...S.adh.find(a=>a.id===d.id)}; S.confirmDel=false; render(); }
   if(t.id==="close"){ S.edit=null; render(); }
   if(t.id==="del"){ S.confirmDel=true; render(); }
   if(t.id==="del-no"){ S.confirmDel=false; render(); }
   if(t.id==="del-yes"){ delAdh(); }
-  if(t.dataset.unstaff){ removeStaff(t.dataset.unstaff); }
+  if(d.unstaff){ removeStaff(d.unstaff); }
+  if(t.id==="export"){ exportCSV(); }
+  if(t.id==="relance"){ S.relance = S.relance ? null : {type:"cert"}; render(); }
+  if(t.id==="relance-x"){ S.relance=null; render(); }
+  if(t.id==="rel-open"){ const {mails}=relanceCible(); const su=document.getElementById("rel-sujet").value, co=document.getElementById("rel-corps").value;
+    location.href=`mailto:?bcc=${mails.map(encodeURIComponent).join(",")}&subject=${encodeURIComponent(su)}&body=${encodeURIComponent(co)}`; }
+  if(t.id==="rel-copy"){ copy(relanceCible().mails.join(", "), "Emails copiés"); }
+  if(t.id==="rel-copy-msg"){ copy(document.getElementById("rel-sujet").value+"\n\n"+document.getElementById("rel-corps").value, "Message copié"); }
 });
 document.addEventListener("click", e=>{ if(e.target.id==="sheet-bg"){ S.edit=null; render(); } });
 document.addEventListener("keydown", e=>{ if(e.key==="Escape" && S.edit){ S.edit=null; render(); } });
 document.addEventListener("input", e=>{
   if(e.target.id==="q"){ S.q=e.target.value; document.getElementById("list").innerHTML=listHTML(filtered()); }
+  if(e.target.id==="rel-sujet" && S.relance) S.relance.sujet=e.target.value;
+  if(e.target.id==="rel-corps" && S.relance) S.relance.corps=e.target.value;
 });
-document.addEventListener("change", e=>{ if(e.target.id==="grp"){ S.groupe=e.target.value; document.getElementById("list").innerHTML=listHTML(filtered()); } });
+document.addEventListener("change", e=>{
+  const t=e.target;
+  if(t.id==="grp"){ S.groupe=t.value; if(S.relance) render(); else document.getElementById("list").innerHTML=listHTML(filtered()); }
+  if(t.id==="rel-type"){ S.relance={type:t.value}; render(); }
+  if(t.dataset.res){ setRes(t.dataset.res, t.value); }
+});
 
 if(/error_description=/.test(location.hash)){
   const p=new URLSearchParams(location.hash.slice(1));
@@ -529,7 +908,7 @@ if(sb){
   sb.auth.onAuthStateChange((ev, session)=>{
     const u = session?.user || null;
     if(u && (!S.user || S.user.id!==u.id)){ S.user=u; if(location.hash.includes("access_token")) history.replaceState(null,"",location.pathname); setTimeout(load,0); }
-    else if(!u && S.user){ Object.assign(S,{card:null,user:null,role:null,adh:[],staff:[],edit:null,loginStep:"email",msg:null}); render(); }
+    else if(!u && S.user){ Object.assign(S,{card:null,user:null,role:null,adh:[],staff:[],pay:[],mots:[],combats:[],infos:[],edit:null,relance:null,loginStep:"email",msg:null}); render(); }
     else if(!u && ev==="INITIAL_SESSION"){ render(); }
   });
 }
