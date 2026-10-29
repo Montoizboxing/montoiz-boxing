@@ -67,6 +67,10 @@ nav.links a:hover{color:var(--fg)}
 nav.links a.on{color:var(--fg)}
 nav.links a.on::after,nav.links a:hover::after{transform:scaleX(1)}
 .nav-cta{white-space:nowrap}
+.nav-member{white-space:nowrap;gap:7px}
+.nav-member svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex:none}
+@media (max-width:1180px){.nav-member{padding:8px 10px}.nav-member span{display:none}}
+@media (max-width:520px){.nav-member{display:none}}
 .burger{display:none;width:44px;height:44px;border-radius:8px;border:1px solid var(--line);background:var(--bg-2);cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:0}
 .burger span{display:block;width:20px;height:2px;background:var(--fg);border-radius:2px;transition:transform .25s,opacity .2s}
 .top.open .burger span:nth-child(1){transform:translateY(7px) rotate(45deg)}
@@ -1071,6 +1075,7 @@ ${showAn?`<div class="annonce${an.type==="alerte"?" alerte":""}" role="status"><
 <header class="top${menuOpen?" open":""}"><div class="wrap">
   <a class="brand" href="#accueil" data-nav="accueil"><img src="${IMG.logo}" alt=""><span>Montoiz’<small>Thaï Khmer Boxing</small></span></a>
   <nav class="links" aria-label="Menu principal">${navLinks.map(([id,l])=>`<a href="#${id}" data-nav="${id}">${l}</a>`).join("")}</nav>
+  <a class="btn ghost sm nav-member" href="espace.html" aria-label="Espace membre"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><span>Espace membre</span></a>
   <a class="btn sm nav-cta" href="#demande" data-type="essai">Cours d’essai</a>
   <button class="burger" id="burger" aria-expanded="${menuOpen}" aria-controls="menu-panel" aria-label="${menuOpen?"Fermer le menu":"Ouvrir le menu"}"><span></span><span></span><span></span></button>
 </div></header>
@@ -1078,6 +1083,7 @@ ${showAn?`<div class="annonce${an.type==="alerte"?" alerte":""}" role="status"><
   <nav aria-label="Menu">${[["accueil","Accueil","Page d’entrée"],...navLinks].map(([id,l,s])=>`<a href="#${id}" data-nav="${id}"><span>${l}</span><small>${s}</small></a>`).join("")}</nav>
   <div class="menu-contact">
     <a class="btn" href="#demande" data-type="essai">Réserver un cours d’essai</a>
+    <a class="btn ghost" href="espace.html">👤 Espace membre</a>
     <button class="btn ghost install-btn" data-install${isStandalone()?" hidden":""}>📲 Installer l’appli sur mon téléphone</button>
     <p><b>${esc(c.tel)}</b><br>${esc(c.adresse)}, ${esc(c.ville)}</p>
   </div>
@@ -1088,7 +1094,7 @@ ${showAn?`<div class="annonce${an.type==="alerte"?" alerte":""}" role="status"><
 <footer><div class="wrap">
   <span>© ${new Date().getFullYear()} ${esc(c.nom)} · Association sportive · ${esc(c.ville)}</span>
   ${(D.affiliations||[]).length?`<span class="foot-affil">Club affilié : ${D.affiliations.map(a=>a.url?`<a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.sigle||a.nom)}</a>`:esc(a.sigle||a.nom)).join(" · ")}</span>`:""}
-  <span class="flags">France · Thaïlande · Cambodge</span>${D.club.avisGoogle?`<a href="${esc(D.club.avisGoogle)}" target="_blank" rel="noopener">★ Laisser un avis Google</a>`:""}<a href="#mentions">Mentions légales &amp; confidentialité</a>
+  <span class="flags">France · Thaïlande · Cambodge</span>${D.club.avisGoogle?`<a href="${esc(D.club.avisGoogle)}" target="_blank" rel="noopener">★ Laisser un avis Google</a>`:""}<a href="espace.html">Espace membre</a><a href="#mentions">Mentions légales &amp; confidentialité</a>
   <button class="btn ghost sm install-btn" data-install${isStandalone()?" hidden":""}>📲 Installer l’appli</button>
   <span>Mis à jour le ${esc(fmtDate(D.maj))}</span>
 </div></footer>
