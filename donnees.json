@@ -96,8 +96,8 @@
   "coachs": [],
   "agenda": [],
   "annonce": {
-    "texte": "La boutique sera bientôt disponible, restez en garde ",
-    "actif": true,
+    "texte": "test annonce",
+    "actif": false,
     "type": "info",
     "jusqu": ""
   },
