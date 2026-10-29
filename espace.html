@@ -138,6 +138,12 @@ legend{font:700 13px var(--f-label);letter-spacing:.12em;text-transform:uppercas
 }
 textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;outline:none;resize:vertical;font:inherit;color:inherit}
 textarea:focus{border-color:var(--gold)}
+.insc{margin-top:10px;display:grid;gap:8px;justify-items:start}
+.info .insc small.note{color:var(--muted);text-transform:none;letter-spacing:0;font:400 13px var(--f-body)}
+.insc-btns{display:flex;flex-wrap:wrap;gap:8px}
+.urg{font-size:14px;text-align:right}
+.urg-bar{display:block;margin:0 0 14px;padding:12px 14px;border-radius:12px;background:#3a1512;border:1px solid #6b2a25;color:#ffd0cb;text-decoration:none}
+.btn.pay{background:#6fbf73;border-color:#6fbf73;color:#0d1a0e}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:var(--gold-ink);padding:10px 16px;border-radius:10px;font:700 14px var(--f-label);letter-spacing:.06em;text-transform:uppercase;z-index:60;max-width:calc(100% - 32px);text-align:center}
 .sec{margin:0 0 22px}
 .info{display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--bg-2);border:1px solid var(--line);border-radius:12px}
@@ -214,7 +220,7 @@ let sb = null;
 try { sb = window.supabase.createClient(SB_URL, SB_KEY, { auth:{ persistSession:true, autoRefreshToken:true, detectSessionInUrl:true } }); }
 catch(e){ app.innerHTML = `<div class="card login"><h2>Connexion indisponible</h2><p class="note">Le service n’a pas pu se charger. Vérifie ta connexion internet et recharge la page.</p></div>`; }
 
-const S = { user:null, role:null, adh:[], staff:[], avantages:[], pay:[], mots:[], combats:[], infos:[], reg:{},
+const S = { user:null, role:null, adh:[], staff:[], avantages:[], pay:[], mots:[], combats:[], infos:[], reg:{}, parts:[], nb:{},
   tab:"adh", q:"", groupe:"", edit:null, confirmDel:false, card:null, relance:null,
   loginStep:"email", email:"", busy:false, msg:null };
 const isB = () => S.role==="bureau";
@@ -406,16 +412,18 @@ async function load(){
   if(q.error) return fatal(q.error.message);
   S.adh = q.data || [];
   const opt = (p) => p.then(x=>x.data||[]).catch(()=>[]);
-  const [staff, av, pay, mots, combats, infos, reg] = await Promise.all([
+  const [staff, av, pay, mots, combats, infos, reg, parts, nb] = await Promise.all([
     S.role==="membre" ? Promise.resolve([]) : opt(sb.from("staff").select("*").order("role").order("email")),
     opt(sb.from("avantages").select("*").order("ordre").order("created_at")),
     S.role==="coach" ? Promise.resolve([]) : opt(sb.from("paiements").select("*").order("jour")),
     opt(sb.from("mots").select("*").order("created_at",{ascending:false})),
     opt(sb.from("combats").select("*").order("jour",{ascending:false})),
     opt(sb.from("infos").select("*").order("created_at",{ascending:false})),
-    opt(sb.from("reglages").select("*").eq("id",1))
+    opt(sb.from("reglages").select("*").eq("id",1)),
+    opt(sb.from("participations").select("*")),
+    opt(sb.rpc("nb_inscrits"))
   ]);
-  Object.assign(S,{staff, avantages:av, pay, mots, combats, infos, reg:reg[0]||{}});
+  Object.assign(S,{staff, avantages:av, pay, mots, combats, infos, reg:reg[0]||{}, parts, nb:Object.fromEntries((nb||[]).map(x=>[x.info_id,Number(x.n)]))});
   render();
 }
 async function refreshAdh(id){
@@ -433,8 +441,38 @@ function infosHTML(withDel){
     const [ic,lab]=INFO_T[i.type]||INFO_T.annonce, url=safeUrl(i.lien);
     return `<div class="info"><span class="ic">${ic}</span><div class="bd">
       <small>${lab}${i.jour?` · ${fmtDate(i.jour)}`:""}</small><b>${esc(i.titre)}</b>${i.texte?`<p>${nl2br(i.texte)}</p>`:""}
-      ${url?`<a class="btn ghost sm" href="${esc(url)}" target="_blank" rel="noopener">${i.type==="document"?"Ouvrir le document":"En savoir plus"} ↗</a>`:""}</div>
+      ${url?`<a class="btn ghost sm" href="${esc(url)}" target="_blank" rel="noopener">${i.type==="document"?"Ouvrir le document":"En savoir plus"} ↗</a>`:""}
+      ${i.inscription?inscrHTML(i,withDel):""}</div>
       ${withDel?`<button class="btn danger sm" data-delinfo="${i.id}">Retirer</button>`:""}</div>`}).join("")}</div>`;
+}
+
+/* ===== Inscriptions aux stages ===== */
+function inscrHTML(i, bureau){
+  const n = S.nb[i.id]||0, plein = i.places!=null && n>=i.places;
+  const count = `<span class="pill ${plein?"ko":"n"}">${n}${i.places?` / ${i.places}`:""} inscrit${n>1?"s":""}${plein?" · complet":""}</span>`;
+  if(bureau){
+    const noms = S.parts.filter(p=>p.info_id===i.id).map(p=>S.adh.find(a=>a.id===p.adherent_id)).filter(Boolean);
+    return `<div class="insc">${count}${noms.length?`<details class="more"><summary>Voir les inscrits</summary><div class="mini">${noms.map(a=>`<div><span>${esc(a.prenom)} ${esc(a.nom)}${a.groupe?` <small class="note">· ${esc(a.groupe)}</small>`:""}</span></div>`).join("")}</div></details>`:""}</div>`;
+  }
+  return `<div class="insc">${count}<div class="insc-btns">${S.adh.map(a=>{
+    const on = S.parts.some(p=>p.info_id===i.id && p.adherent_id===a.id);
+    return `<button class="btn sm ${on?"":"ghost"}" data-part="${i.id}" data-adh="${a.id}" ${!on&&plein?"disabled":""}>${on?"✓ "+esc(a.prenom)+" inscrit(e)":"+ Inscrire "+esc(a.prenom)}</button>`}).join("")}</div>
+    ${S.adh.length&&S.parts.some(p=>p.info_id===i.id)?`<small class="note">Clique à nouveau pour annuler l’inscription.</small>`:""}</div>`;
+}
+async function togglePart(info_id, adherent_id, btn){
+  const on = S.parts.some(p=>p.info_id===info_id && p.adherent_id===adherent_id);
+  btn.disabled=true;
+  if(on){
+    const { error } = await sb.from("participations").delete().eq("info_id",info_id).eq("adherent_id",adherent_id);
+    if(error){ btn.disabled=false; return toast("Erreur : "+error.message); }
+    S.parts=S.parts.filter(p=>!(p.info_id===info_id && p.adherent_id===adherent_id)); S.nb[info_id]=Math.max(0,(S.nb[info_id]||1)-1);
+    toast("Inscription annulée");
+  } else {
+    const { data, error } = await sb.from("participations").insert({info_id, adherent_id}).select().single();
+    if(error){ btn.disabled=false; return toast(/complet|fermées/i.test(error.message)?error.message:"Erreur : "+error.message); }
+    S.parts.push(data); S.nb[info_id]=(S.nb[info_id]||0)+1; toast("Inscription enregistrée 👍");
+  }
+  render();
 }
 
 /* ===== Vue adhérent / parent ===== */
@@ -465,6 +503,7 @@ function kidHTML(a){
       <div class="row"><span>Certificat médical${a.certificat_date?` <small class="note">du ${fmtDate(a.certificat_date)}</small>`:""}</span>${pill(certStatus(a))}</div>
       <div class="row"><span>Cotisation${due>0?` <small class="note">${euros(paid)} / ${euros(due)}</small>`:""}</span>${pill(cotStatus(a))}</div>
       <div class="row"><span>Droit à l’image</span>${a.droit_image==null?pill(["n","Non renseigné"]):a.droit_image?pill(["ok","Accepté"]):pill(["ko","Refusé"])}</div>
+      <div class="row"><span>Contact d’urgence</span>${a.urgence_tel?`<b class="urg">${esc(a.urgence_nom||"")} ${esc(a.urgence_tel)}</b>`:pill(["wait","À donner au club"])}</div>
     </div>
     ${pays.length?`<details class="more"><summary>Mes paiements (${pays.length})</summary>
       <div class="mini">${pays.map(p=>`<div><span>${fmtDate(p.jour)} · ${esc(p.mode)}</span><b>${euros(p.montant)}</b></div>`).join("")}</div></details>`:""}
@@ -478,7 +517,8 @@ function kidHTML(a){
       ${a.palmares?`<p class="lbl">Palmarès</p><p class="note">${nl2br(a.palmares)}</p>`:""}
     </div>`:""}
     <div class="kid-acts">
-      <button class="btn full" data-card="${a.id}">🪪 Voir ma carte de membre</button>
+      ${due>paid && safeUrl(S.reg.lien_paiement)?`<a class="btn full pay" href="${esc(safeUrl(S.reg.lien_paiement))}" target="_blank" rel="noopener">💳 Payer ma cotisation · reste ${euros(due-paid)}</a>`:""}
+      <button class="btn ${due>paid && safeUrl(S.reg.lien_paiement)?"ghost ":""}full" data-card="${a.id}">🪪 Voir ma carte de membre</button>
       ${paid>0?`<button class="btn ghost full" data-attest="${a.id}">📄 Attestation de paiement (PDF)</button>`:""}
     </div>
   </article>`;
@@ -589,6 +629,7 @@ function sheetHTML(){
   return `<div class="sheet-bg" id="sheet-bg"><div class="sheet">
     <div class="top"><h2 style="margin:0">${isNew?"Nouvel adhérent":esc(a.prenom+" "+a.nom)}</h2>
       <span style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">${isNew?"":`<button type="button" class="btn ghost sm" data-card="${a.id}">🪪 Carte</button>`}${!isNew&&isB()&&paid>0?`<button type="button" class="btn ghost sm" data-attest="${a.id}">📄 Attestation</button>`:""}<button type="button" class="btn ghost sm" id="close">Fermer</button></span></div>
+    ${!isNew&&a.urgence_tel?`<a class="urg-bar" href="tel:${esc(String(a.urgence_tel).replace(/[^\d+]/g,""))}">📞 Urgence : <b>${esc(a.urgence_nom||"")} ${esc(a.urgence_tel)}</b></a>`:""}
     <form id="f-adh" autocomplete="off">
     <fieldset><legend>Identité</legend>
       <div class="two">
@@ -603,6 +644,11 @@ function sheetHTML(){
       <label class="f"><span>Téléphone</span><input type="tel" name="telephone" value="${v("telephone")}" ${dis}></label>
       <p class="note" style="margin-top:-6px">Ces emails permettent de se connecter à l’espace adhérent et de voir ce dossier.</p>
     </fieldset>
+    <fieldset><legend>Contact d’urgence</legend>
+      <div class="two">
+        <label class="f"><span>Nom (et lien : mère, conjoint…)</span><input type="text" name="urgence_nom" placeholder="Ex : Sarah (mère)" value="${v("urgence_nom")}" ${dis}></label>
+        <label class="f"><span>Téléphone</span><input type="tel" name="urgence_tel" value="${v("urgence_tel")}" ${dis}></label>
+      </div></fieldset>
     <fieldset><legend>Dossier ${esc(a.saison||SAISON)}</legend>
       <div class="two">
         <label class="f"><span>N° de licence</span><input type="text" name="licence_num" value="${v("licence_num")}" ${dis}></label>
@@ -664,7 +710,7 @@ function extrasHTML(a){
 
 async function saveAdh(form){
   const f = new FormData(form), o = {};
-  for(const k of ["nom","prenom","naissance","groupe","email","email2","telephone","licence_num","certificat_date","categorie_poids","palmares"]) o[k] = (f.get(k)||"").toString().trim() || null;
+  for(const k of ["nom","prenom","naissance","groupe","email","email2","telephone","licence_num","certificat_date","categorie_poids","palmares","urgence_nom","urgence_tel"]) o[k] = (f.get(k)||"").toString().trim() || null;
   o.licence_ok = f.get("licence_ok")==="on";
   o.competiteur = f.get("competiteur")==="on";
   o.cotisation_due = Number(f.get("cotisation_due"))||0;
@@ -740,11 +786,13 @@ function viewInfos(){
         <label class="f"><span>Date (stage, événement…)</span><input type="date" name="jour"></label>
         <label class="f"><span>Lien (document, inscription…)</span><input type="url" name="lien" placeholder="https://…"></label>
       </div>
+      <label class="check"><input type="checkbox" name="inscription"> Ouvrir les inscriptions (bouton « Inscrire » pour les adhérents)</label>
+      <label class="f"><span>Nombre de places (vide = illimité)</span><input type="number" name="places" min="1" step="1"></label>
       <p class="note" style="margin-top:-6px">Pour un document : mets le PDF sur Google Drive (partage « tous ceux qui ont le lien ») et colle le lien ici.</p>
       <button class="btn">Publier</button><div id="info-msg"></div></form>`;
 }
 async function addInfo(form){
-  const f=new FormData(form), o={type:f.get("type"), titre:String(f.get("titre")).trim(), texte:String(f.get("texte")||"").trim()||null, jour:f.get("jour")||null, lien:safeUrl(f.get("lien"))||null};
+  const f=new FormData(form), o={type:f.get("type"), titre:String(f.get("titre")).trim(), texte:String(f.get("texte")||"").trim()||null, jour:f.get("jour")||null, lien:safeUrl(f.get("lien"))||null, inscription:f.get("inscription")==="on", places:Number(f.get("places"))||null};
   if(!o.titre) return;
   if(f.get("lien") && !o.lien){ document.getElementById("info-msg").innerHTML=`<p class="msg err">Le lien doit commencer par https://</p>`; return; }
   const { data, error } = await sb.from("infos").insert(o).select().single();
@@ -769,13 +817,16 @@ function viewClub(){
         <label class="f"><span>SIRET (facultatif)</span><input type="text" name="siret" value="${v("siret")}"></label>
       </div>
       <label class="f"><span>Ville (« Fait à … »)</span><input type="text" name="ville" value="${v("ville")||"Montoison"}"></label>
+      <label class="f"><span>Lien de paiement en ligne (HelloAsso)</span><input type="url" name="lien_paiement" placeholder="https://www.helloasso.com/associations/…" value="${v("lien_paiement")}"></label>
+      <p class="note" style="margin-top:-6px">Si ce lien est rempli, un bouton « Payer ma cotisation » apparaît chez les adhérents qui ont un reste à payer. Pense ensuite à enregistrer le paiement reçu dans leur fiche (mode HelloAsso).</p>
       <button class="btn">Enregistrer</button><div id="club-msg"></div></form>`;
 }
 async function saveClub(form){
-  const f=new FormData(form), o={}; for(const k of ["president","fonction","rna","siret","ville"]) o[k]=String(f.get(k)||"").trim()||null;
+  const f=new FormData(form), o={}; for(const k of ["president","fonction","rna","siret","ville","lien_paiement"]) o[k]=String(f.get(k)||"").trim()||null;
+  if(o.lien_paiement && !safeUrl(o.lien_paiement)){ document.getElementById("club-msg").innerHTML=`<p class="msg err">Le lien doit commencer par https://</p>`; return; }
   const { data, error } = await sb.from("reglages").update(o).eq("id",1).select().single();
   if(error){ document.getElementById("club-msg").innerHTML=`<p class="msg err">${esc(error.message)}</p>`; return; }
-  S.reg=data; toast("Réglages enregistrés");
+  S.reg=data; document.getElementById("club-msg").innerHTML=""; toast("Réglages enregistrés");
 }
 
 /* ===== Avantages (bureau) ===== */
@@ -864,6 +915,7 @@ document.addEventListener("click", e=>{
   if(d.tab){ S.tab=d.tab; S.relance=null; render(); }
   if(d.card){ S.card=d.card; S.edit=null; render(); scrollTo(0,0); }
   if(d.attest){ attestation(d.attest, t); }
+  if(d.part){ togglePart(d.part, d.adh, t); }
   if(t.id==="card-back"){ S.card=null; render(); }
   if(d.delav){ delAv(d.delav); }
   if(d.delinfo){ delInfo(d.delinfo); }
@@ -908,7 +960,7 @@ if(sb){
   sb.auth.onAuthStateChange((ev, session)=>{
     const u = session?.user || null;
     if(u && (!S.user || S.user.id!==u.id)){ S.user=u; if(location.hash.includes("access_token")) history.replaceState(null,"",location.pathname); setTimeout(load,0); }
-    else if(!u && S.user){ Object.assign(S,{card:null,user:null,role:null,adh:[],staff:[],pay:[],mots:[],combats:[],infos:[],edit:null,relance:null,loginStep:"email",msg:null}); render(); }
+    else if(!u && S.user){ Object.assign(S,{card:null,user:null,role:null,adh:[],staff:[],pay:[],mots:[],combats:[],infos:[],parts:[],nb:{},edit:null,relance:null,loginStep:"email",msg:null}); render(); }
     else if(!u && ev==="INITIAL_SESSION"){ render(); }
   });
 }
