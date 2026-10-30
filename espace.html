@@ -514,7 +514,12 @@ async function notifier(body, silent){
     if(error) throw error;
     if(!silent) toast(data?.envoyes ? `Notification envoyée à ${data.envoyes} appareil${data.envoyes>1?"s":""}` : "Personne n’a encore activé les notifications");
     return data;
-  }catch(e){ if(!silent) toast("Notification non envoyée (service pas encore installé ?)"); }
+  }catch(e){
+    let why = e?.message || "";
+    try{ if(e?.context){ why = `${e.context.status||""} ${(await e.context.json())?.error||""}`.trim() || why; } }catch(_){}
+    console.warn("notifier", e, why);
+    if(!silent) toast("Notification non envoyée : "+(why||"erreur inconnue"));
+  }
 }
 function compteBtns(){
   const n = S.push==="on" ? "🔔 Notifications activées" : S.push==="off" ? "🔔 Activer les notifications" : S.push==="denied" ? "🔕 Notifications bloquées" : S.push==="ios" ? "🔔 Notifications" : "";
