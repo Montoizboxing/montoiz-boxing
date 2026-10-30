@@ -162,6 +162,11 @@ textarea:focus{border-color:var(--gold)}
 .first{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
 .first .btn{margin-top:10px}
 .save-alert{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px;padding:12px 14px;border-radius:12px;background:#3a2a12;border:1px solid #6b5023;color:#f3d39a;font-size:15px}
+.champ-list{display:grid;gap:6px;margin:6px 0 12px}
+.champ-row{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--bg);border:1px solid var(--line);border-radius:10px;cursor:pointer}
+.champ-row input{width:20px;height:20px;accent-color:var(--gold);flex:none}
+.champ-row small{display:block;color:var(--muted);font-size:13px}
+.champ-row.dis{opacity:.6;cursor:not-allowed}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:var(--gold-ink);padding:10px 16px;border-radius:10px;font:700 14px var(--f-label);letter-spacing:.06em;text-transform:uppercase;z-index:60;max-width:calc(100% - 32px);text-align:center}
 .sec{margin:0 0 22px}
 .info{display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--bg-2);border:1px solid var(--line);border-radius:12px}
@@ -818,6 +823,7 @@ function sheetHTML(){
     </fieldset>
     <fieldset><legend>Compétition</legend>
       <label class="check"><input type="checkbox" name="competiteur" ${a.competiteur?"checked":""} ${dis}> Compétiteur</label>
+      <label class="check"><input type="checkbox" name="champion_public" ${a.champion_public?"checked":""} ${dis}> Afficher sur la page publique « Nos champions » ${a.droit_image!==true?`<small class="note">(il faut aussi le droit à l’image accepté)</small>`:""}</label>
       <label class="f"><span>Catégorie de poids</span><input type="text" name="categorie_poids" placeholder="Ex : -67 kg, Junior" value="${v("categorie_poids")}" ${dis}></label>
       <label class="f"><span>Palmarès</span><textarea name="palmares" rows="3" placeholder="Ex : Champion de France 2025 (classe B)" ${dis}>${v("palmares")}</textarea></label>
     </fieldset>
@@ -865,6 +871,7 @@ async function saveAdh(form){
   for(const k of ["nom","prenom","naissance","groupe","email","email2","telephone","licence_num","certificat_date","categorie_poids","palmares","urgence_nom","urgence_tel"]) o[k] = (f.get(k)||"").toString().trim() || null;
   o.licence_ok = f.get("licence_ok")==="on";
   o.competiteur = f.get("competiteur")==="on";
+  o.champion_public = o.competiteur && f.get("champion_public")==="on";
   o.cotisation_due = Number(f.get("cotisation_due"))||0;
   const di = f.get("droit_image"); o.droit_image = di==="" ? null : di==="1";
   const box = document.getElementById("sheet-msg");
@@ -1002,6 +1009,13 @@ function rappelSauvegarde(){
   return `<div class="save-alert"><span>💾 ${j==null?"Aucune sauvegarde n’a encore été faite.":`Dernière sauvegarde il y a ${j} jours.`} Pense à en faire une (1 fois par mois).</span><button class="btn sm" data-tab="club">Sauvegarder</button></div>`;
 }
 
+async function setChampion(id, v, box){
+  box.disabled=true;
+  const { data, error } = await sb.from("adherents").update({ champion_public:v }).eq("id",id).select().single();
+  if(error){ box.checked=!v; box.disabled=false; return toast("Erreur : "+error.message); }
+  const i=S.adh.findIndex(a=>a.id===id); if(i>=0) S.adh[i]=data;
+  render(); toast(v?`${data.prenom} ajouté(e) à la page`:`${data.prenom} retiré(e) de la page`);
+}
 async function toggleChampions(btn){
   btn.disabled=true;
   const v = !S.reg?.champions_en_ligne;
@@ -1014,11 +1028,15 @@ async function toggleChampions(btn){
 function viewClub(){
   const R=S.reg||{}, v=k=>esc(R[k]??"");
   const j = joursDepuis(R.derniere_sauvegarde);
-  const comp = S.adh.filter(a=>a.competiteur), vis = comp.filter(a=>a.droit_image===true), exclus = comp.filter(a=>a.droit_image!==true);
+  const comp = S.adh.filter(a=>a.competiteur), vis = comp.filter(a=>a.champion_public && a.droit_image===true);
   const on = !!R.champions_en_ligne;
   return `<div class="card" style="margin-bottom:18px"><h2>🏆 Page « Nos champions »</h2>
       <p style="margin:-4px 0 10px">${on?pill(["ok","En ligne : visible par tout le monde"]):pill(["n","Hors ligne : visible seulement par le bureau"])}</p>
-      <p class="note"><b>${vis.length}</b> combattant${vis.length>1?"s":""} affiché${vis.length>1?"s":""} (compétiteurs avec droit à l’image accepté, prénom + initiale).${exclus.length?` Non affiché${exclus.length>1?"s":""} faute de droit à l’image : ${exclus.map(a=>esc(a.prenom+" "+a.nom)).join(", ")}.`:""}</p>
+      <p class="note"><b>Coche qui apparaît sur la page</b> (${vis.length} sélectionné${vis.length>1?"s":""}). Affichage : prénom + initiale du nom.</p>
+      ${comp.length?`<div class="champ-list">${comp.map(a=>{ const okImg=a.droit_image===true;
+        return `<label class="champ-row ${okImg?"":"dis"}"><input type="checkbox" data-champ="${a.id}" ${a.champion_public&&okImg?"checked":""} ${okImg?"":"disabled"}>
+          <span><b>${esc(a.prenom)} ${esc(a.nom)}</b><small>${[a.categorie_poids,a.groupe].filter(Boolean).map(esc).join(" · ")||"—"}${okImg?"":" · ⚠ droit à l’image non accepté"}</small></span></label>`}).join("")}</div>`
+        :`<p class="note">Aucun compétiteur pour l’instant : coche « Compétiteur » dans les fiches.</p>`}
       <div class="acts" style="justify-content:flex-start">
         <a class="btn ghost" href="champions.html" target="_blank" rel="noopener">👁 Voir la page${on?"":" (aperçu)"}</a>
         <button class="btn ${on?"danger":""}" id="champ-toggle">${on?"Retirer du site":"Mettre en ligne"}</button>
@@ -1181,6 +1199,7 @@ document.addEventListener("change", e=>{
   if(t.id==="grp"){ S.groupe=t.value; if(S.relance) render(); else document.getElementById("list").innerHTML=listHTML(filtered()); }
   if(t.id==="rel-type"){ S.relance={type:t.value}; render(); }
   if(t.dataset.res){ setRes(t.dataset.res, t.value); }
+  if(t.dataset.champ){ setChampion(t.dataset.champ, t.checked, t); }
 });
 
 if("serviceWorker" in navigator && location.protocol==="https:") navigator.serviceWorker.register("sw.js").catch(()=>{});
