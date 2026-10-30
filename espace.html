@@ -1002,11 +1002,29 @@ function rappelSauvegarde(){
   return `<div class="save-alert"><span>💾 ${j==null?"Aucune sauvegarde n’a encore été faite.":`Dernière sauvegarde il y a ${j} jours.`} Pense à en faire une (1 fois par mois).</span><button class="btn sm" data-tab="club">Sauvegarder</button></div>`;
 }
 
+async function toggleChampions(btn){
+  btn.disabled=true;
+  const v = !S.reg?.champions_en_ligne;
+  const { data, error } = await sb.from("reglages").update({ champions_en_ligne:v }).eq("id",1).select().single();
+  if(error){ btn.disabled=false; return toast("Erreur : "+error.message); }
+  S.reg=data; render(); toast(v?"Page « Nos champions » en ligne 🏆":"Page retirée du site");
+}
+
 /* ===== Réglages (bureau) ===== */
 function viewClub(){
   const R=S.reg||{}, v=k=>esc(R[k]??"");
   const j = joursDepuis(R.derniere_sauvegarde);
-  return `<div class="card" style="margin-bottom:18px"><h2>💾 Sauvegarde</h2>
+  const comp = S.adh.filter(a=>a.competiteur), vis = comp.filter(a=>a.droit_image===true), exclus = comp.filter(a=>a.droit_image!==true);
+  const on = !!R.champions_en_ligne;
+  return `<div class="card" style="margin-bottom:18px"><h2>🏆 Page « Nos champions »</h2>
+      <p style="margin:-4px 0 10px">${on?pill(["ok","En ligne : visible par tout le monde"]):pill(["n","Hors ligne : visible seulement par le bureau"])}</p>
+      <p class="note"><b>${vis.length}</b> combattant${vis.length>1?"s":""} affiché${vis.length>1?"s":""} (compétiteurs avec droit à l’image accepté, prénom + initiale).${exclus.length?` Non affiché${exclus.length>1?"s":""} faute de droit à l’image : ${exclus.map(a=>esc(a.prenom+" "+a.nom)).join(", ")}.`:""}</p>
+      <div class="acts" style="justify-content:flex-start">
+        <a class="btn ghost" href="champions.html" target="_blank" rel="noopener">👁 Voir la page${on?"":" (aperçu)"}</a>
+        <button class="btn ${on?"danger":""}" id="champ-toggle">${on?"Retirer du site":"Mettre en ligne"}</button>
+      </div>
+      <p class="note">Hors ligne, le lien « Champions » n’apparaît pas sur le site et la page affiche « Bientôt ». Prépare les fiches (catégorie, palmarès, combats à venir), vérifie l’aperçu, puis mets en ligne.</p></div>
+    <div class="card" style="margin-bottom:18px"><h2>💾 Sauvegarde</h2>
       <p class="note" style="margin-top:-4px">Télécharge une copie complète de l’espace adhérents (dossiers, paiements, messages, combats, infos…). À faire <b>une fois par mois</b> et après les inscriptions de septembre. Range le fichier dans le Google Drive du club.</p>
       <p class="note">Dernière sauvegarde : <b>${R.derniere_sauvegarde?`${fmtDate(R.derniere_sauvegarde)} (il y a ${j} jour${j>1?"s":""})`:"jamais"}</b></p>
       <button class="btn" id="backup">⬇ Télécharger une sauvegarde</button></div>
@@ -1128,6 +1146,7 @@ document.addEventListener("click", e=>{
   if(d.attest){ attestation(d.attest, t); }
   if(d.qrzoom){ qrZoom(d.qrzoom); }
   if(t.id==="backup"){ sauvegarde(t); }
+  if(t.id==="champ-toggle"){ toggleChampions(t); }
   if(d.part){ togglePart(d.part, d.adh, t); }
   if(t.id==="card-back"){ S.card=null; render(); }
   if(d.delav){ delAv(d.delav); }

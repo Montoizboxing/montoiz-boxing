@@ -71,7 +71,8 @@ footer .credit{flex-basis:100%;font-size:12px;opacity:.65;color:inherit;text-dec
 footer .credit:hover{opacity:1;text-decoration:underline}
 .nav-member{white-space:nowrap;gap:7px}
 .nav-member svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;flex:none}
-@media (max-width:1180px){.nav-member{padding:8px 10px}.nav-member span{display:none}}
+@media (max-width:1320px){.nav-member{padding:8px 10px}.nav-member span{display:none}}
+@media (max-width:1180px){nav.links a{padding:10px 8px;letter-spacing:.06em}}
 @media (max-width:520px){.nav-member{display:none}}
 .burger{display:none;width:44px;height:44px;border-radius:8px;border:1px solid var(--line);background:var(--bg-2);cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:0}
 .burger span{display:block;width:20px;height:2px;background:var(--fg);border-radius:2px;transition:transform .25s,opacity .2s}
@@ -677,6 +678,10 @@ async function installApp(){
   s.addEventListener("click",e=>{if(e.target===s)closeSheet()});
   document.body.appendChild(s);document.body.style.overflow="hidden";document.getElementById("sheet-x").focus();
 }
+// Lien « Champions » : affiché seulement si le bureau a mis la page en ligne
+var CHAMP=false;
+fetch("https://omnovkheumrwturqugmk.supabase.co/rest/v1/rpc/champions_en_ligne",{method:"POST",headers:{"apikey":"sb_publishable_rdk1XMA8H6xt0sX9twQXXA_3MndR78o","Content-Type":"application/json"},body:"{}"})
+  .then(r=>r.ok?r.json():false).then(v=>{ if(v===true){ CHAMP=true; try{ render(); }catch(e){} } }).catch(()=>{});
 if("serviceWorker" in navigator&&location.protocol==="https:"){addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{})})}
 const PAGES=["accueil","club","planning","tarifs","agenda","actus","photos","boutique","contact"];
 const pageFromHash=()=>{const x=location.hash.slice(1);return PAGES.includes(x)?x:(x==="demande"?"contact":null)};
@@ -1076,13 +1081,13 @@ ${affilSection(D,false)}`,
 ${showAn?`<div class="annonce${an.type==="alerte"?" alerte":""}" role="status"><div class="wrap"><span>${esc(an.texte)}</span><button id="annonce-x" aria-label="Masquer l’annonce">×</button></div></div>`:""}
 <header class="top${menuOpen?" open":""}"><div class="wrap">
   <a class="brand" href="#accueil" data-nav="accueil"><img src="${IMG.logo}" alt=""><span>Montoiz’<small>Thaï Khmer Boxing</small></span></a>
-  <nav class="links" aria-label="Menu principal">${navLinks.map(([id,l])=>`<a href="#${id}" data-nav="${id}">${l}</a>`).join("")}</nav>
+  <nav class="links" aria-label="Menu principal">${navLinks.map(([id,l])=>`<a href="#${id}" data-nav="${id}">${l}</a>`).join("")}${CHAMP?`<a href="champions.html">Champions</a>`:""}</nav>
   <a class="btn ghost sm nav-member" href="espace.html" aria-label="Espace membre"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg><span>Espace membre</span></a>
   <a class="btn sm nav-cta" href="#demande" data-type="essai">Cours d’essai</a>
   <button class="burger" id="burger" aria-expanded="${menuOpen}" aria-controls="menu-panel" aria-label="${menuOpen?"Fermer le menu":"Ouvrir le menu"}"><span></span><span></span><span></span></button>
 </div></header>
 <div class="menu-panel" id="menu-panel"${menuOpen?"":" hidden"}><div class="wrap">
-  <nav aria-label="Menu">${[["accueil","Accueil","Page d’entrée"],...navLinks].map(([id,l,s])=>`<a href="#${id}" data-nav="${id}"><span>${l}</span><small>${s}</small></a>`).join("")}</nav>
+  <nav aria-label="Menu">${[["accueil","Accueil","Page d’entrée"],...navLinks].map(([id,l,s])=>`<a href="#${id}" data-nav="${id}"><span>${l}</span><small>${s}</small></a>`).join("")}${CHAMP?`<a href="champions.html"><span>Champions</span><small>L’équipe compétition</small></a>`:""}</nav>
   <div class="menu-contact">
     <a class="btn" href="#demande" data-type="essai">Réserver un cours d’essai</a>
     <a class="btn ghost" href="espace.html">👤 Espace membre</a>
