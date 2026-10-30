@@ -123,6 +123,15 @@ legend{font:700 13px var(--f-label);letter-spacing:.12em;text-transform:uppercas
 .mc-bottom b{display:block;font:800 4.6cqw/1.1 var(--f-label);margin-bottom:5px}
 .mc-qr{width:27cqw;height:27cqw;background:#fff;border-radius:10px;padding:2.2cqw;flex:none}
 .mc-qr svg{width:100%;height:100%;display:block}
+button.mc-qr{border:0;cursor:zoom-in;position:relative}
+.mc-zoom{position:absolute;right:-6px;bottom:-6px;width:22px;height:22px;border-radius:50%;background:var(--gold);color:var(--gold-ink);font:700 13px/22px var(--f-body);box-shadow:0 2px 6px #0008}
+.qr-zoom{position:fixed;inset:0;z-index:80;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;animation:qz .18s ease-out}
+@keyframes qz{from{opacity:0;transform:scale(.96)}}
+.qz-box{width:min(86vw,72vh,520px);aspect-ratio:1}
+.qz-box svg{width:100%;height:100%;display:block}
+.qz-name{margin:22px 0 4px;color:#111;font:800 24px var(--f-display);text-transform:uppercase;text-align:center}
+.qz-num{margin:0 0 10px;color:#8a6a2c;font:700 15px var(--f-label);letter-spacing:.14em}
+.qz-hint{margin:0;color:#666;font-size:14px;text-align:center}
 .mc-band{position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,var(--red) 0 33.3%,#f3ece0 33.3% 66.6%,var(--blue) 66.6%)}
 .adv{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;background:var(--bg-2);border:1px solid var(--line);border-radius:12px}
 .adv small{display:block;color:var(--muted);font-size:14px}
@@ -281,15 +290,28 @@ function viewCard(){
       <div class="mc-tags">${tags.map((t,i)=>`<span class="${i?"":"hl"}">${esc(t)}</span>`).join("")}</div>
       <div class="mc-bottom">
         <div><small>N° membre</small><b>${esc(numero(a))}</b><small>Valable jusqu’au</small><b>${fmtDate(finSaison(a))}</b></div>
-        <div class="mc-qr">${a.carte_token?qrSVG(carteURL(a)):""}</div>
+        <button type="button" class="mc-qr" data-qrzoom="${a.id}" aria-label="Agrandir le QR code">${a.carte_token?qrSVG(carteURL(a)):""}<span class="mc-zoom" aria-hidden="true">⤢</span></button>
       </div>
       <div class="mc-band"></div>
     </div>
-    ${ok?`<p class="note center">Montre cette carte ou fais scanner le QR code</p>`
+    ${ok?`<p class="note center">Montre cette carte ou fais scanner le QR code · <b>touche le QR code pour l’agrandir</b></p>`
         :`<p class="msg err center">Carte pas encore active : la licence n’a pas encore été validée par le bureau.</p>`}
     ${S.avantages.length?`<div class="eyebrow" style="margin-top:26px">Tes avantages adhérent</div>
       <div class="list">${S.avantages.map(v=>`<div class="adv"><div><b>${esc(v.titre)}</b>${v.detail?`<small>${esc(v.detail)}</small>`:""}</div>${v.remise?`<span>${esc(v.remise)}</span>`:""}</div>`).join("")}</div>`:""}
   </div>`;
+}
+
+function qrZoom(id){
+  const a = S.adh.find(x=>x.id===id); if(!a?.carte_token) return;
+  const d = document.createElement("div"); d.className="qr-zoom"; d.setAttribute("role","dialog"); d.setAttribute("aria-label","QR code agrandi");
+  d.innerHTML = `<div class="qz-box">${qrSVG(carteURL(a))}</div>
+    <p class="qz-name">${esc(a.prenom)} ${esc(a.nom)}</p><p class="qz-num">N° ${esc(numero(a))}</p>
+    <p class="qz-hint">Fais scanner ce code par le commerçant<br>Touche l’écran pour fermer</p>`;
+  let lock=null; try{ navigator.wakeLock?.request("screen").then(l=>lock=l).catch(()=>{}); }catch(e){}
+  const close=()=>{ d.remove(); try{lock?.release()}catch(e){} document.removeEventListener("keydown",esc1); };
+  const esc1=e=>{ if(e.key==="Escape") close(); };
+  d.addEventListener("click",close); document.addEventListener("keydown",esc1);
+  document.body.appendChild(d);
 }
 
 /* ===== Attestation de paiement (PDF) ===== */
@@ -1069,6 +1091,7 @@ document.addEventListener("click", e=>{
   if(d.tab){ S.tab=d.tab; S.relance=null; render(); }
   if(d.card){ S.card=d.card; S.edit=null; render(); scrollTo(0,0); }
   if(d.attest){ attestation(d.attest, t); }
+  if(d.qrzoom){ qrZoom(d.qrzoom); }
   if(d.part){ togglePart(d.part, d.adh, t); }
   if(t.id==="card-back"){ S.card=null; render(); }
   if(d.delav){ delAv(d.delav); }
