@@ -166,6 +166,12 @@ textarea:focus{border-color:var(--gold)}
 .champ-row{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--bg);border:1px solid var(--line);border-radius:10px;cursor:pointer}
 .champ-row input{width:20px;height:20px;accent-color:var(--gold);flex:none}
 .champ-row small{display:block;color:var(--muted);font-size:13px}
+.thumb{width:44px;height:44px;flex:none;border-radius:8px;overflow:hidden;background:var(--bg-3);display:grid;place-items:center;font-size:18px}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.photo-f{display:flex;gap:14px;align-items:flex-start;margin:4px 0 14px;padding:12px;border:1px dashed var(--line);border-radius:12px}
+.photo-f small{display:block}
+.photo-prev{width:96px;aspect-ratio:4/3;flex:none;border-radius:10px;overflow:hidden;background:var(--bg-3);display:grid;place-items:center;font-size:28px}
+.photo-prev img{width:100%;height:100%;object-fit:cover;object-position:center 25%}
 .champ-row.dis{opacity:.6;cursor:not-allowed}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:var(--gold-ink);padding:10px 16px;border-radius:10px;font:700 14px var(--f-label);letter-spacing:.06em;text-transform:uppercase;z-index:60;max-width:calc(100% - 32px);text-align:center}
 .sec{margin:0 0 22px}
@@ -824,6 +830,13 @@ function sheetHTML(){
     <fieldset><legend>Compétition</legend>
       <label class="check"><input type="checkbox" name="competiteur" ${a.competiteur?"checked":""} ${dis}> Compétiteur</label>
       <label class="check"><input type="checkbox" name="champion_public" ${a.champion_public?"checked":""} ${dis}> Afficher sur la page publique « Nos champions » ${a.droit_image!==true?`<small class="note">(il faut aussi le droit à l’image accepté)</small>`:""}</label>
+      ${!isNew&&isB()?`<div class="photo-f">
+        <div class="photo-prev">${a.photo_champion?`<img src="${esc(a.photo_champion)}" alt="">`:`<span>📷</span>`}</div>
+        <div><b>Photo pour la page « Nos champions »</b><small class="note">Photo en tenue, cadrée buste ou en garde. Elle est réduite automatiquement.</small>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+            <label class="btn ghost sm" style="cursor:pointer">${a.photo_champion?"Changer la photo":"Ajouter une photo"}<input type="file" accept="image/*" data-photo="${a.id}" hidden></label>
+            ${a.photo_champion?`<button type="button" class="btn danger sm" data-delphoto="${a.id}">Retirer</button>`:""}
+          </div></div></div>`:""}
       <label class="f"><span>Catégorie de poids</span><input type="text" name="categorie_poids" placeholder="Ex : -67 kg, Junior" value="${v("categorie_poids")}" ${dis}></label>
       <label class="f"><span>Palmarès</span><textarea name="palmares" rows="3" placeholder="Ex : Champion de France 2025 (classe B)" ${dis}>${v("palmares")}</textarea></label>
     </fieldset>
@@ -1009,6 +1022,44 @@ function rappelSauvegarde(){
   return `<div class="save-alert"><span>💾 ${j==null?"Aucune sauvegarde n’a encore été faite.":`Dernière sauvegarde il y a ${j} jours.`} Pense à en faire une (1 fois par mois).</span><button class="btn sm" data-tab="club">Sauvegarder</button></div>`;
 }
 
+/* ----- Photos des champions ----- */
+function reduireImage(file, max=1200){
+  return new Promise((ok,ko)=>{
+    const url=URL.createObjectURL(file), img=new Image();
+    img.onload=()=>{ const r=Math.min(1, max/Math.max(img.naturalWidth,img.naturalHeight));
+      const c=document.createElement("canvas"); c.width=Math.round(img.naturalWidth*r); c.height=Math.round(img.naturalHeight*r);
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(url);
+      c.toBlob(b=>b?ok(b):ko(new Error("conversion")),"image/jpeg",0.85); };
+    img.onerror=()=>{ URL.revokeObjectURL(url); ko(new Error("Format d’image non reconnu (essaie une photo JPG ou PNG)")); };
+    img.src=url;
+  });
+}
+const cheminPhoto = u => { const m=String(u||"").split("/champions/"); return m.length>1 ? decodeURIComponent(m.pop().split("?")[0]) : null; };
+async function setPhoto(id, file){
+  if(!file) return;
+  toast("Envoi de la photo…");
+  try{
+    const blob = await reduireImage(file);
+    const path = `${id}-${Date.now()}.jpg`;
+    const up = await sb.storage.from("champions").upload(path, blob, { contentType:"image/jpeg", upsert:true });
+    if(up.error) throw up.error;
+    const url = sb.storage.from("champions").getPublicUrl(path).data.publicUrl;
+    const old = cheminPhoto(S.adh.find(a=>a.id===id)?.photo_champion);
+    const { data, error } = await sb.from("adherents").update({ photo_champion:url }).eq("id",id).select().single();
+    if(error) throw error;
+    if(old) sb.storage.from("champions").remove([old]);
+    const i=S.adh.findIndex(a=>a.id===id); if(i>=0) S.adh[i]=data; if(S.edit?.id===id) S.edit={...S.edit, photo_champion:url};
+    render(); toast("Photo enregistrée 📷");
+  }catch(e){ toast("Photo non enregistrée : "+(e.message||e)); }
+}
+async function delPhoto(id){
+  const old = cheminPhoto(S.adh.find(a=>a.id===id)?.photo_champion);
+  const { data, error } = await sb.from("adherents").update({ photo_champion:null }).eq("id",id).select().single();
+  if(error) return toast("Erreur : "+error.message);
+  if(old) sb.storage.from("champions").remove([old]);
+  const i=S.adh.findIndex(a=>a.id===id); if(i>=0) S.adh[i]=data; if(S.edit?.id===id) S.edit={...S.edit, photo_champion:null};
+  render(); toast("Photo retirée");
+}
 async function setChampion(id, v, box){
   box.disabled=true;
   const { data, error } = await sb.from("adherents").update({ champion_public:v }).eq("id",id).select().single();
@@ -1035,7 +1086,8 @@ function viewClub(){
       <p class="note"><b>Coche qui apparaît sur la page</b> (${vis.length} sélectionné${vis.length>1?"s":""}). Affichage : prénom + initiale du nom.</p>
       ${comp.length?`<div class="champ-list">${comp.map(a=>{ const okImg=a.droit_image===true;
         return `<label class="champ-row ${okImg?"":"dis"}"><input type="checkbox" data-champ="${a.id}" ${a.champion_public&&okImg?"checked":""} ${okImg?"":"disabled"}>
-          <span><b>${esc(a.prenom)} ${esc(a.nom)}</b><small>${[a.categorie_poids,a.groupe].filter(Boolean).map(esc).join(" · ")||"—"}${okImg?"":" · ⚠ droit à l’image non accepté"}</small></span></label>`}).join("")}</div>`
+          <span class="thumb">${a.photo_champion?`<img src="${esc(a.photo_champion)}" alt="">`:"📷"}</span>
+          <span><b>${esc(a.prenom)} ${esc(a.nom)}</b><small>${[a.categorie_poids,a.groupe].filter(Boolean).map(esc).join(" · ")||"—"}${okImg?"":" · ⚠ droit à l’image non accepté"}${okImg&&!a.photo_champion?" · pas de photo (à ajouter dans sa fiche)":""}</small></span></label>`}).join("")}</div>`
         :`<p class="note">Aucun compétiteur pour l’instant : coche « Compétiteur » dans les fiches.</p>`}
       <div class="acts" style="justify-content:flex-start">
         <a class="btn ghost" href="champions.html" target="_blank" rel="noopener">👁 Voir la page${on?"":" (aperçu)"}</a>
@@ -1165,6 +1217,7 @@ document.addEventListener("click", e=>{
   if(d.qrzoom){ qrZoom(d.qrzoom); }
   if(t.id==="backup"){ sauvegarde(t); }
   if(t.id==="champ-toggle"){ toggleChampions(t); }
+  if(d.delphoto){ delPhoto(d.delphoto); }
   if(d.part){ togglePart(d.part, d.adh, t); }
   if(t.id==="card-back"){ S.card=null; render(); }
   if(d.delav){ delAv(d.delav); }
@@ -1200,6 +1253,7 @@ document.addEventListener("change", e=>{
   if(t.id==="rel-type"){ S.relance={type:t.value}; render(); }
   if(t.dataset.res){ setRes(t.dataset.res, t.value); }
   if(t.dataset.champ){ setChampion(t.dataset.champ, t.checked, t); }
+  if(t.dataset.photo){ setPhoto(t.dataset.photo, t.files?.[0]); t.value=""; }
 });
 
 if("serviceWorker" in navigator && location.protocol==="https:") navigator.serviceWorker.register("sw.js").catch(()=>{});

@@ -55,6 +55,9 @@ h2{font:800 34px var(--fd);text-transform:uppercase;margin:40px 0 14px}
 .ph{position:relative;aspect-ratio:4/3;background:linear-gradient(160deg,#3a2c14,#120f0b);display:grid;place-items:center;overflow:hidden}
 .ph .ini{font:900 92px var(--fd);color:#e0b04a33}
 .ph img{position:absolute;right:-30px;bottom:-40px;width:200px;opacity:.12}
+.ph img.photo{inset:0;right:auto;bottom:auto;width:100%;height:100%;object-fit:cover;object-position:center 25%;opacity:1}
+.ph.has::after{content:"";position:absolute;inset:auto 0 0 0;height:45%;background:linear-gradient(transparent,#000c)}
+.ph .cat,.ph .title{z-index:1}
 .ph .cat{position:absolute;left:12px;top:12px;background:var(--gold);color:var(--ink);font:700 12px var(--fl);letter-spacing:.1em;text-transform:uppercase;border-radius:6px;padding:3px 8px}
 .ph .title{position:absolute;left:12px;bottom:12px;right:12px;font:700 13px var(--fl);letter-spacing:.06em;text-transform:uppercase;color:var(--gold2)}
 .bd{padding:14px 16px 16px}
@@ -103,7 +106,8 @@ function page(d){
       <div class="t"><b>${esc(e.evenement)}</b>${e.lieu?`<span>${esc(e.lieu)}</span>`:""}</div>
       <div class="who">${(e.qui||[]).map(q=>`<span class="chip">${esc(q)}</span>`).join("")}</div></div>`; };
   const carte = c => { const pal=lignes(c.palmares);
-    return `<article class="f"><div class="ph"><span class="ini">${esc((c.prenom||"?")[0]+c.initiale)}</span><img src="icon-192.png" alt="">
+    const photo = /^https:\/\//.test(c.photo||"") ? c.photo : "";
+    return `<article class="f"><div class="ph ${photo?"has":""}">${photo?`<img class="photo" src="${esc(photo)}" alt="${esc(c.prenom)}" loading="lazy">`:`<span class="ini">${esc((c.prenom||"?")[0]+c.initiale)}</span><img src="icon-192.png" alt="">`}
       ${c.categorie?`<span class="cat">${esc(c.categorie)}</span>`:""}${pal[0]?`<span class="title">${esc(pal[0])}</span>`:""}</div>
       <div class="bd"><h3>${esc(c.prenom)} ${esc(c.initiale)}.</h3>${c.groupe?`<div class="grp">${esc(c.groupe)}</div>`:""}
       ${pal.length?`<ul class="pal">${pal.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:""}</div></article>`; };
