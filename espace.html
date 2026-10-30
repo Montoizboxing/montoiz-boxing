@@ -43,7 +43,7 @@ h2{font:800 26px/1 var(--f-display);text-transform:uppercase;margin:0 0 12px}
 .login{max-width:440px;margin:6vh auto 0}
 label.f{display:block;margin:0 0 14px}
 label.f span{display:block;font:600 13px var(--f-label);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-input[type=text],input[type=email],input[type=date],input[type=number],input[type=tel],input[type=search],select{
+input[type=text],input[type=email],input[type=password],input[type=url],input[type=date],input[type=number],input[type=tel],input[type=search],select{
   width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-height:46px;outline:none}
 input:focus,select:focus{border-color:var(--gold)}
 .code{font:700 26px var(--f-label);letter-spacing:.4em;text-align:center}
@@ -144,6 +144,14 @@ textarea:focus{border-color:var(--gold)}
 .urg{font-size:14px;text-align:right}
 .urg-bar{display:block;margin:0 0 14px;padding:12px 14px;border-radius:12px;background:#3a1512;border:1px solid #6b2a25;color:#ffd0cb;text-decoration:none}
 .btn.pay{background:#6fbf73;border-color:#6fbf73;color:#0d1a0e}
+.compte{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.compte .on{border-color:var(--ok);color:#b9e8bb}
+.pwbox{position:relative;display:block}
+.pwbox input{padding-right:48px}
+.eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:transparent;cursor:pointer;font-size:18px;padding:6px;border-radius:8px;opacity:.7}
+.eye:hover{opacity:1}
+.first{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+.first .btn{margin-top:10px}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:var(--gold-ink);padding:10px 16px;border-radius:10px;font:700 14px var(--f-label);letter-spacing:.06em;text-transform:uppercase;z-index:60;max-width:calc(100% - 32px);text-align:center}
 .sec{margin:0 0 22px}
 .info{display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--bg-2);border:1px solid var(--line);border-radius:12px}
@@ -204,6 +212,7 @@ const SAISON = "2026-2027";
 const GROUPES = ["Baby boxe","Enfants","Ados","Adultes","Compétition","Loisir"];
 const MODES = ["Espèces","Chèque","Virement","HelloAsso","Carte bancaire","Pass’Sport","Chèques ANCV"];
 const RESULTATS = ["À venir","Victoire","Défaite","Nul","Annulé"];
+const VAPID = "BIwVilFY5GizYK9mPZB_uTUmij_b3HRLqfh7UQPUzuohHxtYucxXH7b9g-Tr5yQDNF8ue8rcJZ4n16i-PgZq1DU";
 const CLUB = { nom:"Montoiz’ Thaï Khmer Boxing", adresse:"2 Place de l’Église, 26800 Montoison", email:"allexthaikhmerboxing@gmail.com", tel:"06 58 40 32 45", site:"montoizthaikhmerboxing.fr" };
 
 const app = document.getElementById("app");
@@ -222,7 +231,8 @@ catch(e){ app.innerHTML = `<div class="card login"><h2>Connexion indisponible</h
 
 const S = { user:null, role:null, adh:[], staff:[], avantages:[], pay:[], mots:[], combats:[], infos:[], reg:{}, parts:[], nb:{},
   tab:"adh", q:"", groupe:"", edit:null, confirmDel:false, card:null, relance:null,
-  loginStep:"email", email:"", busy:false, msg:null };
+  loginStep:"pw", email:"", busy:false, msg:null, mustSetPw:false, pwView:false, push:"na" };
+const LS = { get:k=>{try{return localStorage.getItem(k)}catch(e){return null}}, set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}, del:k=>{try{localStorage.removeItem(k)}catch(e){}} };
 const isB = () => S.role==="bureau";
 const isStaff = () => S.role==="bureau" || S.role==="coach";
 const meNom = () => (S.staff.find(s=>s.email===S.user?.email?.toLowerCase())?.nom) || null;
@@ -359,18 +369,33 @@ async function attestation(id, btn){
 /* ===== Connexion ===== */
 function viewLogin(){
   const m = S.msg ? `<p class="msg ${S.msg[0]}">${esc(S.msg[1])}</p>` : "";
+  const spin = t => S.busy?'<span class="spin"></span>':t;
   if(S.loginStep==="code"){
     app.innerHTML = `<div class="card login">
       <div class="eyebrow">Vérifie tes emails</div>
-      <h2>Lien envoyé</h2>
-      <p class="note">Un email vient de partir vers <b>${esc(S.email)}</b>. Clique sur le lien qu’il contient, <b>ou</b> tape ici le code reçu.</p>
+      <h2>Code envoyé</h2>
+      <p class="note">Un email vient de partir vers <b>${esc(S.email)}</b>. Tape ici le <b>code à 6 chiffres</b> qu’il contient (ou clique sur le bouton de l’email).</p>
       <form id="f-code">
         <label class="f"><span>Code reçu par email</span><input class="code" id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required></label>
-        <button class="btn full" ${S.busy?"disabled":""}>${S.busy?'<span class="spin"></span>':"Se connecter"}</button>
+        <button class="btn full" ${S.busy?"disabled":""}>${spin("Valider le code")}</button>
       </form>${m}
-      <p class="note" style="margin-top:16px">Rien reçu ? Regarde dans les <b>spams</b>. <a href="#" id="again">Changer d’email ou renvoyer</a></p>
+      <p class="note" style="margin-top:16px">Rien reçu ? Regarde dans les <b>spams</b>. <a href="#" data-step="otp">Changer d’email ou renvoyer</a></p>
     </div>`;
     document.getElementById("code").focus();
+    return;
+  }
+  if(S.loginStep==="otp"){
+    app.innerHTML = `<div class="login">
+      <div class="eyebrow">Première connexion · mot de passe oublié</div>
+      <h1>Créer mon <em>mot de passe</em></h1>
+      <p class="lead">On t’envoie un code par email pour vérifier que l’adresse est bien à toi, puis tu choisis ton mot de passe.</p>
+      <div class="card">
+        <form id="f-otp">
+          <label class="f"><span>Ton email (celui donné au club)</span><input id="mail" type="email" autocomplete="email" required value="${esc(S.email)}"></label>
+          <button class="btn full" ${S.busy?"disabled":""}>${spin("Recevoir mon code")}</button>
+        </form>${m}
+        <p class="note" style="margin-top:14px"><a href="#" data-step="pw">← J’ai déjà un mot de passe</a></p>
+      </div></div>`;
     return;
   }
   app.innerHTML = `<div class="login">
@@ -378,28 +403,126 @@ function viewLogin(){
     <h1>Mon <em>espace</em></h1>
     <p class="lead">Licence, certificat, cotisation, carte de membre : retrouve le dossier de ton inscription (ou celui de tes enfants).</p>
     <div class="card">
-      <form id="f-mail">
-        <label class="f"><span>Ton email (celui donné au club)</span><input id="mail" type="email" autocomplete="email" required value="${esc(S.email)}"></label>
-        <button class="btn full" ${S.busy?"disabled":""}>${S.busy?'<span class="spin"></span>':"Recevoir mon lien de connexion"}</button>
+      <form id="f-pw">
+        <label class="f"><span>Email</span><input id="mail" type="email" autocomplete="username" required value="${esc(S.email)}"></label>
+        <label class="f"><span>Mot de passe</span><span class="pwbox"><input id="pw" type="password" autocomplete="current-password" required><button type="button" class="eye" data-eye="pw" aria-label="Afficher le mot de passe">👁</button></span></label>
+        <button class="btn full" ${S.busy?"disabled":""}>${spin("Se connecter")}</button>
       </form>${m}
-      <p class="note" style="margin-top:14px">Pas de mot de passe : tu reçois un lien (et un code) par email à chaque connexion.</p>
+      <div class="first"><b>Première connexion ?</b> ou mot de passe oublié<br><button class="btn ghost full" data-step="otp">Créer / changer mon mot de passe</button></div>
     </div></div>`;
 }
-async function sendLink(email){
-  S.busy=true; S.msg=null; viewLogin();
+async function loginPw(email, password){
+  S.busy=true; S.msg=null; S.email=email; viewLogin();
+  LS.del("mtkb-setpw");
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  S.busy=false;
+  if(error){
+    const t = /invalid login|credentials/i.test(error.message) ? "Email ou mot de passe incorrect. Si c’est ta première connexion, clique sur « Créer / changer mon mot de passe »."
+            : /rate|limit|too many/i.test(error.message) ? "Trop d’essais d’affilée. Attends quelques minutes."
+            : "Connexion impossible : "+error.message;
+    S.msg=["err",t]; viewLogin();
+  }
+}
+async function sendCode(email){
+  S.busy=true; S.msg=null; S.email=email; viewLogin();
+  LS.set("mtkb-setpw","1");
   const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.origin + location.pathname, shouldCreateUser:true } });
   S.busy=false;
   if(error){
     const t = /rate|limit|seconds/i.test(error.message) ? "Trop de demandes d’affilée. Attends une minute puis réessaie." : "L’email n’a pas pu partir : "+error.message;
     S.msg=["err",t]; viewLogin(); return;
   }
-  S.email=email; S.loginStep="code"; viewLogin();
+  S.loginStep="code"; viewLogin();
 }
 async function verifyCode(code){
   S.busy=true; S.msg=null; viewLogin();
+  S.mustSetPw = true;
   const { error } = await sb.auth.verifyOtp({ email:S.email, token:code, type:"email" });
   S.busy=false;
-  if(error){ S.msg=["err","Code incorrect ou expiré. Utilise le dernier email reçu."]; viewLogin(); }
+  if(error){ S.mustSetPw=false; S.msg=["err","Code incorrect ou expiré. Utilise le dernier email reçu."]; viewLogin(); }
+}
+function viewSetPw(){
+  const must = S.mustSetPw;
+  app.innerHTML = `<div class="login">
+    <div class="eyebrow">${must?"Dernière étape":"Mon compte"}</div>
+    <h1>${must?"Choisis ton":"Changer mon"} <em>mot de passe</em></h1>
+    <p class="lead">${must?"Tu l’utiliseras pour tes prochaines connexions, avec ton email.":"Pour le compte "+esc(S.user.email)+"."}</p>
+    <div class="card">
+      <form id="f-setpw">
+        <input type="email" autocomplete="username" value="${esc(S.user.email)}" hidden>
+        <label class="f"><span>Nouveau mot de passe (8 caractères minimum)</span><span class="pwbox"><input id="pw1" type="password" autocomplete="new-password" minlength="8" required><button type="button" class="eye" data-eye="pw1" aria-label="Afficher le mot de passe">👁</button></span></label>
+        <label class="f"><span>Retape-le</span><input id="pw2" type="password" autocomplete="new-password" minlength="8" required></label>
+        <button class="btn full" id="setpw-btn">Enregistrer mon mot de passe</button>
+      </form><div id="setpw-msg"></div>
+      ${must?`<p class="note" style="margin-top:14px"><a href="#" id="setpw-later">Plus tard</a> (tu pourras te reconnecter avec un code par email)</p>`:`<button class="btn ghost full" style="margin-top:10px" id="setpw-cancel">Annuler</button>`}
+    </div></div>`;
+  document.getElementById("pw1").focus();
+}
+async function savePw(){
+  const a=document.getElementById("pw1").value, b=document.getElementById("pw2").value, box=document.getElementById("setpw-msg");
+  if(a.length<8){ box.innerHTML=`<p class="msg err">8 caractères minimum.</p>`; return; }
+  if(a!==b){ box.innerHTML=`<p class="msg err">Les deux mots de passe ne sont pas identiques.</p>`; return; }
+  const btn=document.getElementById("setpw-btn"); btn.disabled=true; btn.innerHTML='<span class="spin"></span>';
+  const { error } = await sb.auth.updateUser({ password:a });
+  if(error){
+    btn.disabled=false; btn.textContent="Enregistrer mon mot de passe";
+    const t = /different|same/i.test(error.message) ? "C’est déjà ton mot de passe actuel : choisis-en un autre." : /weak|short|characters/i.test(error.message) ? "Mot de passe trop simple : mélange lettres et chiffres." : error.message;
+    box.innerHTML=`<p class="msg err">${esc(t)}</p>`; return;
+  }
+  LS.del("mtkb-setpw"); S.mustSetPw=false; S.pwView=false; render(); toast("Mot de passe enregistré 👍");
+}
+
+/* ===== Notifications ===== */
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const standalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const pushOK = () => "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+const swReady = () => Promise.race([navigator.serviceWorker.ready, new Promise((_,ko)=>setTimeout(()=>ko(new Error("sw")),8000))]);
+function b64u(b){ const p="=".repeat((4-b.length%4)%4), r=atob((b+p).replace(/-/g,"+").replace(/_/g,"/")); return Uint8Array.from(r,c=>c.charCodeAt(0)); }
+async function pushState(){
+  try{
+    if(!pushOK()){ S.push = isIOS && !standalone() ? "ios" : "na"; return; }
+    if(Notification.permission==="denied"){ S.push="denied"; return; }
+    const sub = await (await swReady()).pushManager.getSubscription();
+    S.push = sub ? "on" : "off";
+  }catch(e){ S.push="na"; }
+}
+async function pushToggle(btn){
+  if(S.push==="ios") return toast("Sur iPhone : installe d’abord l’appli (Partager → Sur l’écran d’accueil), puis ouvre l’espace depuis l’appli.");
+  if(S.push==="denied") return toast("Notifications bloquées : autorise-les dans les réglages du navigateur pour ce site.");
+  btn.disabled=true;
+  try{
+    const reg = await swReady();
+    if(S.push==="on"){
+      const sub = await reg.pushManager.getSubscription();
+      if(sub){ await sb.from("push_subs").delete().eq("endpoint",sub.endpoint); await sub.unsubscribe(); }
+      S.push="off"; toast("Notifications désactivées");
+    } else {
+      const perm = await Notification.requestPermission();
+      if(perm!=="granted"){ S.push = perm==="denied"?"denied":"off"; render(); return; }
+      const sub = await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:b64u(VAPID) });
+      const j = sub.toJSON();
+      const { error } = await sb.from("push_subs").upsert({ endpoint:j.endpoint, p256dh:j.keys.p256dh, auth:j.keys.auth });
+      if(error) throw error;
+      S.push="on"; toast("Notifications activées 🔔");
+    }
+  }catch(e){ toast("Impossible d’activer les notifications sur cet appareil."); }
+  render();
+}
+async function notifier(body, silent){
+  try{
+    const { data, error } = await sb.functions.invoke("notifier", { body });
+    if(error) throw error;
+    if(!silent) toast(data?.envoyes ? `Notification envoyée à ${data.envoyes} appareil${data.envoyes>1?"s":""}` : "Personne n’a encore activé les notifications");
+    return data;
+  }catch(e){ if(!silent) toast("Notification non envoyée (service pas encore installé ?)"); }
+}
+function compteBtns(){
+  const n = S.push==="on" ? "🔔 Notifications activées" : S.push==="off" ? "🔔 Activer les notifications" : S.push==="denied" ? "🔕 Notifications bloquées" : S.push==="ios" ? "🔔 Notifications" : "";
+  return `<div class="compte">${n?`<button class="btn ghost sm ${S.push==="on"?"on":""}" id="push">${n}</button>`:""}<button class="btn ghost sm" id="pwchange">🔑 Mot de passe</button><button class="btn ghost sm" id="logout">Se déconnecter</button></div>`;
+}
+async function logout(){
+  try{ if(S.push==="on"){ const sub=await (await swReady()).pushManager.getSubscription(); if(sub){ await sb.from("push_subs").delete().eq("endpoint",sub.endpoint); await sub.unsubscribe(); } } }catch(e){}
+  sb.auth.signOut();
 }
 
 /* ===== Chargement ===== */
@@ -423,6 +546,7 @@ async function load(){
     opt(sb.from("participations").select("*")),
     opt(sb.rpc("nb_inscrits"))
   ]);
+  await pushState();
   Object.assign(S,{staff, avantages:av, pay, mots, combats, infos, reg:reg[0]||{}, parts, nb:Object.fromEntries((nb||[]).map(x=>[x.info_id,Number(x.n)]))});
   render();
 }
@@ -479,7 +603,7 @@ async function togglePart(info_id, adherent_id, btn){
 function viewMember(){
   const mine = S.adh;
   const head = `<div class="hello"><div><div class="eyebrow">Saison ${esc(SAISON)}</div><h1>Bonjour<em>.</em></h1>
-    <div class="who">Connecté avec ${esc(S.user.email)}</div></div><button class="btn ghost sm" id="logout">Se déconnecter</button></div>`;
+    <div class="who">Connecté avec ${esc(S.user.email)}</div></div>${compteBtns()}</div>`;
   if(!mine.length){
     app.innerHTML = head + `<div class="empty"><b>Aucun dossier n’est relié à cet email pour l’instant.</b><br>
       Si tu es inscrit(e), le bureau n’a peut-être pas encore enregistré ton dossier, ou il l’a fait avec un autre email.
@@ -536,7 +660,7 @@ function viewStaff(){
   const tabs = isB() ? ["adh","infos","avantages","equipe","club"] : ["adh"];
   if(!tabs.includes(S.tab)) S.tab="adh";
   const head = `<div class="hello"><div><div class="eyebrow">${isB()?"Espace bureau":"Espace coach"} · ${esc(SAISON)}</div><h1>${TABS[S.tab][1]}</h1>
-    <div class="who">${esc(S.user.email)}</div></div><button class="btn ghost sm" id="logout">Se déconnecter</button></div>
+    <div class="who">${esc(S.user.email)}</div></div>${compteBtns()}</div>
     ${tabs.length>1?`<div class="tabs">${tabs.map(k=>`<button data-tab="${k}" class="${S.tab===k?"on":""}">${TABS[k][0]}</button>`).join("")}</div>`:""}`;
   if(S.tab==="equipe"){ app.innerHTML = head + viewTeam(); return; }
   if(S.tab==="avantages"){ app.innerHTML = head + viewAvantages(); return; }
@@ -750,6 +874,7 @@ async function addMot(form){
   const { data, error } = await sb.from("mots").insert({adherent_id:S.edit.id, texte, auteur_nom:meNom()}).select().single();
   if(error){ toast("Erreur : "+error.message); return; }
   S.mots.unshift(data); render(); toast("Message publié");
+  notifier({type:"mot", id:data.id}, true);
 }
 async function delMot(id){
   const { error } = await sb.from("mots").delete().eq("id",id);
@@ -789,7 +914,14 @@ function viewInfos(){
       <label class="check"><input type="checkbox" name="inscription"> Ouvrir les inscriptions (bouton « Inscrire » pour les adhérents)</label>
       <label class="f"><span>Nombre de places (vide = illimité)</span><input type="number" name="places" min="1" step="1"></label>
       <p class="note" style="margin-top:-6px">Pour un document : mets le PDF sur Google Drive (partage « tous ceux qui ont le lien ») et colle le lien ici.</p>
-      <button class="btn">Publier</button><div id="info-msg"></div></form>`;
+      <label class="check"><input type="checkbox" name="notif" checked> Envoyer une notification aux adhérents</label>
+      <button class="btn">Publier</button><div id="info-msg"></div></form>
+    <div class="card" style="margin-top:18px"><h2>🔔 Envoyer une notification</h2>
+      <p class="note" style="margin-top:-4px">Message rapide sur le téléphone des adhérents qui ont activé les notifications (ex : cours annulé ce soir).</p>
+      <label class="f"><span>Titre</span><input type="text" id="nl-titre" maxlength="80" placeholder="Ex : ⚠️ Cours annulé ce soir"></label>
+      <label class="f"><span>Message</span><textarea id="nl-texte" rows="3" maxlength="200" placeholder="Ex : Pas d’entraînement Ados ce mercredi, salle indisponible."></textarea></label>
+      <label class="f"><span>Pour qui ?</span><select id="nl-groupe"><option value="">Tout le monde</option>${[...new Set([...GROUPES,...S.adh.map(a=>a.groupe).filter(Boolean)])].map(g=>`<option>${esc(g)}</option>`).join("")}</select></label>
+      <button class="btn" id="notif-send">Envoyer</button></div>`;
 }
 async function addInfo(form){
   const f=new FormData(form), o={type:f.get("type"), titre:String(f.get("titre")).trim(), texte:String(f.get("texte")||"").trim()||null, jour:f.get("jour")||null, lien:safeUrl(f.get("lien"))||null, inscription:f.get("inscription")==="on", places:Number(f.get("places"))||null};
@@ -798,11 +930,19 @@ async function addInfo(form){
   const { data, error } = await sb.from("infos").insert(o).select().single();
   if(error){ document.getElementById("info-msg").innerHTML=`<p class="msg err">${esc(error.message)}</p>`; return; }
   S.infos.unshift(data); render(); toast("Info publiée");
+  if(f.get("notif")==="on") notifier({type:"info", id:data.id});
 }
 async function delInfo(id){
   const { error } = await sb.from("infos").delete().eq("id",id);
   if(error){ toast(error.message); return; }
   S.infos=S.infos.filter(i=>i.id!==id); render();
+}
+
+async function sendLibre(btn){
+  const titre=document.getElementById("nl-titre").value.trim(), texte=document.getElementById("nl-texte").value.trim(), groupe=document.getElementById("nl-groupe").value;
+  if(!titre){ toast("Mets au moins un titre"); return; }
+  btn.disabled=true; const r = await notifier({type:"libre", titre, texte, groupe:groupe||null}); btn.disabled=false;
+  if(r){ document.getElementById("nl-titre").value=""; document.getElementById("nl-texte").value=""; }
 }
 
 /* ===== Réglages (bureau) ===== */
@@ -883,6 +1023,7 @@ async function removeStaff(email){
 /* ===== Rendu & événements ===== */
 function render(){
   if(!S.user) return viewLogin();
+  if(S.mustSetPw || S.pwView) return viewSetPw();
   if(S.card) return viewCard();
   const sc = document.querySelector(".sheet")?.scrollTop;
   if(isStaff()) viewStaff(); else viewMember();
@@ -896,7 +1037,9 @@ function toast(t){
 document.addEventListener("submit", e=>{
   e.preventDefault();
   const id=e.target.id, F=e.target;
-  if(id==="f-mail"){ const m=document.getElementById("mail").value.trim().toLowerCase(); if(!okMail(m)){S.msg=["err","Cette adresse email n’est pas valide."];viewLogin();return} sendLink(m); }
+  if(id==="f-pw"){ const m=document.getElementById("mail").value.trim().toLowerCase(); if(!okMail(m)){S.msg=["err","Cette adresse email n’est pas valide."];viewLogin();return} loginPw(m, document.getElementById("pw").value); }
+  if(id==="f-otp"){ const m=document.getElementById("mail").value.trim().toLowerCase(); if(!okMail(m)){S.msg=["err","Cette adresse email n’est pas valide."];viewLogin();return} sendCode(m); }
+  if(id==="f-setpw") savePw();
   if(id==="f-code"){ const c=document.getElementById("code").value.replace(/\D/g,""); if(c.length<6){S.msg=["err","Le code fait au moins 6 chiffres."];viewLogin();return} verifyCode(c); }
   if(id==="f-adh") saveAdh(F);
   if(id==="f-staff") addStaff(F);
@@ -910,8 +1053,14 @@ document.addEventListener("submit", e=>{
 document.addEventListener("click", e=>{
   const t=e.target.closest("button,a"); if(!t) return;
   const d=t.dataset;
-  if(t.id==="again"){ e.preventDefault(); S.loginStep="email"; S.msg=null; viewLogin(); }
-  if(t.id==="logout"){ sb.auth.signOut(); }
+  if(d.step){ e.preventDefault(); const m=document.getElementById("mail"); if(m&&m.value) S.email=m.value.trim(); S.loginStep=d.step; S.msg=null; viewLogin(); }
+  if(d.eye){ const i=document.getElementById(d.eye); i.type = i.type==="password"?"text":"password"; }
+  if(t.id==="logout"){ logout(); }
+  if(t.id==="push"){ pushToggle(t); }
+  if(t.id==="pwchange"){ S.pwView=true; S.edit=null; render(); scrollTo(0,0); }
+  if(t.id==="setpw-cancel"){ S.pwView=false; render(); }
+  if(t.id==="setpw-later"){ e.preventDefault(); LS.del("mtkb-setpw"); S.mustSetPw=false; render(); }
+  if(t.id==="notif-send"){ sendLibre(t); }
   if(d.tab){ S.tab=d.tab; S.relance=null; render(); }
   if(d.card){ S.card=d.card; S.edit=null; render(); scrollTo(0,0); }
   if(d.attest){ attestation(d.attest, t); }
@@ -951,6 +1100,7 @@ document.addEventListener("change", e=>{
   if(t.dataset.res){ setRes(t.dataset.res, t.value); }
 });
 
+if("serviceWorker" in navigator && location.protocol==="https:") navigator.serviceWorker.register("sw.js").catch(()=>{});
 if(/error_description=/.test(location.hash)){
   const p=new URLSearchParams(location.hash.slice(1));
   S.msg=["err", /expired|invalid/i.test(p.get("error_description")||"") ? "Ce lien a expiré ou a déjà servi. Redemande un lien ci-dessous." : (p.get("error_description")||"Connexion impossible.")];
@@ -959,8 +1109,8 @@ if(/error_description=/.test(location.hash)){
 if(sb){
   sb.auth.onAuthStateChange((ev, session)=>{
     const u = session?.user || null;
-    if(u && (!S.user || S.user.id!==u.id)){ S.user=u; if(location.hash.includes("access_token")) history.replaceState(null,"",location.pathname); setTimeout(load,0); }
-    else if(!u && S.user){ Object.assign(S,{card:null,user:null,role:null,adh:[],staff:[],pay:[],mots:[],combats:[],infos:[],parts:[],nb:{},edit:null,relance:null,loginStep:"email",msg:null}); render(); }
+    if(u && (!S.user || S.user.id!==u.id)){ S.user=u; if(LS.get("mtkb-setpw")) S.mustSetPw=true; if(location.hash.includes("access_token")) history.replaceState(null,"",location.pathname); setTimeout(load,0); }
+    else if(!u && S.user){ Object.assign(S,{card:null,user:null,role:null,adh:[],staff:[],pay:[],mots:[],combats:[],infos:[],parts:[],nb:{},edit:null,relance:null,loginStep:"pw",msg:null,mustSetPw:false,pwView:false}); render(); }
     else if(!u && ev==="INITIAL_SESSION"){ render(); }
   });
 }

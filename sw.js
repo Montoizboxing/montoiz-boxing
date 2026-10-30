@@ -1,5 +1,5 @@
 // Appli Montoiz' Thaï Khmer Boxing : garde le site disponible sans réseau.
-const V = "mtkb-v1";
+const V = "mtkb-v2";
 const CORE = ["./", "index.html", "donnees.json", "manifest.json", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", e => {
@@ -35,9 +35,29 @@ self.addEventListener("fetch", e => {
   const url = new URL(req.url);
   if (url.hostname === "api.github.com" || url.hostname.endsWith("formsubmit.co")) return;
   if (url.origin === location.origin) {
-    if (req.mode === "navigate" || url.pathname.endsWith("/index.html")) return e.respondWith(networkFirst(req, "index.html"));
+    if (req.mode === "navigate" || url.pathname.endsWith(".html")) {
+      const page = url.pathname.endsWith("/") || url.pathname.endsWith("/index.html");
+      return e.respondWith(networkFirst(req, page ? "index.html" : url.pathname));
+    }
     if (url.pathname.endsWith("/donnees.json")) return e.respondWith(networkFirst(req, "donnees.json"));
     return e.respondWith(cacheFirst(req));
   }
   if (url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com") return e.respondWith(cacheFirst(req));
+});
+
+// Notifications du club (espace adhérent)
+self.addEventListener("push", e => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (_) { d = { body: e.data && e.data.text() }; }
+  e.waitUntil(self.registration.showNotification(d.title || "Montoiz’ Thaï Khmer Boxing", {
+    body: d.body || "", icon: "icon-192.png", badge: "icon-192.png", data: { url: d.url || "espace.html" }
+  }));
+});
+self.addEventListener("notificationclick", e => {
+  e.notification.close();
+  const target = new URL(e.notification.data?.url || "espace.html", self.registration.scope).href;
+  e.waitUntil(clients.matchAll({ type: "window", includeUncontrolled: true }).then(list => {
+    for (const c of list) if (c.url.startsWith(target) && "focus" in c) return c.focus();
+    return clients.openWindow(target);
+  }));
 });
