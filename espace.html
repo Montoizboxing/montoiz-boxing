@@ -161,6 +161,7 @@ textarea:focus{border-color:var(--gold)}
 .eye:hover{opacity:1}
 .first{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
 .first .btn{margin-top:10px}
+.save-alert{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin:0 0 14px;padding:12px 14px;border-radius:12px;background:#3a2a12;border:1px solid #6b5023;color:#f3d39a;font-size:15px}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:var(--gold-ink);padding:10px 16px;border-radius:10px;font:700 14px var(--f-label);letter-spacing:.06em;text-transform:uppercase;z-index:60;max-width:calc(100% - 32px);text-align:center}
 .sec{margin:0 0 22px}
 .info{display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--bg-2);border:1px solid var(--line);border-radius:12px}
@@ -697,7 +698,7 @@ function viewStaff(){
   const all=S.adh, list=filtered();
   const nLic=all.filter(a=>a.licence_ok).length, nCert=all.filter(a=>certStatus(a)[0]!=="ok").length, nCot=all.filter(a=>["ko","wait"].includes(cotStatus(a)[0])).length;
   const groupes=[...new Set([...GROUPES, ...all.map(a=>a.groupe).filter(Boolean)])];
-  app.innerHTML = head + `
+  app.innerHTML = head + rappelSauvegarde() + `
     <div class="stats">
       <div class="stat"><b>${all.length}</b><small>Adhérents</small></div>
       <div class="stat"><b>${nLic}</b><small>Licences OK</small></div>
@@ -972,10 +973,44 @@ async function sendLibre(btn){
   if(r){ document.getElementById("nl-titre").value=""; document.getElementById("nl-texte").value=""; }
 }
 
+/* ===== Sauvegarde (bureau) ===== */
+const BACKUP_TABLES = ["adherents","paiements","mots","combats","infos","participations","avantages","staff","reglages"];
+const joursDepuis = d => d ? Math.floor((Date.now()-new Date(d).getTime())/86400000) : null;
+async function sauvegarde(btn){
+  const old=btn.innerHTML; btn.disabled=true; btn.innerHTML='<span class="spin"></span> Préparation…';
+  try{
+    const out = { club:"Montoiz’ Thaï Khmer Boxing", type:"sauvegarde-espace-adherents", version:1, date:new Date().toISOString(), par:S.user.email, tables:{} };
+    for(const t of BACKUP_TABLES){
+      let all=[], from=0;
+      for(;;){ const { data, error } = await sb.from(t).select("*").range(from, from+999); if(error) throw new Error(t+" : "+error.message); all=all.concat(data||[]); if(!data || data.length<1000) break; from+=1000; }
+      out.tables[t]=all;
+    }
+    const nb = Object.fromEntries(Object.entries(out.tables).map(([k,v])=>[k,v.length]));
+    out.resume = nb;
+    const url = URL.createObjectURL(new Blob([JSON.stringify(out,null,1)],{type:"application/json"}));
+    const l=document.createElement("a"); l.href=url; l.download=`sauvegarde-montoiz-${today()}.json`; document.body.appendChild(l); l.click(); l.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),3000);
+    const { data } = await sb.from("reglages").update({ derniere_sauvegarde:new Date().toISOString() }).eq("id",1).select().single();
+    if(data) S.reg=data;
+    render(); toast(`Sauvegarde téléchargée : ${nb.adherents} adhérents, ${nb.paiements} paiements`);
+  }catch(e){ btn.disabled=false; btn.innerHTML=old; toast("Sauvegarde impossible : "+e.message); }
+}
+function rappelSauvegarde(){
+  if(!isB()) return "";
+  const j = joursDepuis(S.reg?.derniere_sauvegarde);
+  if(j!=null && j<30) return "";
+  return `<div class="save-alert"><span>💾 ${j==null?"Aucune sauvegarde n’a encore été faite.":`Dernière sauvegarde il y a ${j} jours.`} Pense à en faire une (1 fois par mois).</span><button class="btn sm" data-tab="club">Sauvegarder</button></div>`;
+}
+
 /* ===== Réglages (bureau) ===== */
 function viewClub(){
   const R=S.reg||{}, v=k=>esc(R[k]??"");
-  return `<p class="lead">Ces informations apparaissent sur les <b>attestations de paiement</b> (PDF).</p>
+  const j = joursDepuis(R.derniere_sauvegarde);
+  return `<div class="card" style="margin-bottom:18px"><h2>💾 Sauvegarde</h2>
+      <p class="note" style="margin-top:-4px">Télécharge une copie complète de l’espace adhérents (dossiers, paiements, messages, combats, infos…). À faire <b>une fois par mois</b> et après les inscriptions de septembre. Range le fichier dans le Google Drive du club.</p>
+      <p class="note">Dernière sauvegarde : <b>${R.derniere_sauvegarde?`${fmtDate(R.derniere_sauvegarde)} (il y a ${j} jour${j>1?"s":""})`:"jamais"}</b></p>
+      <button class="btn" id="backup">⬇ Télécharger une sauvegarde</button></div>
+    <p class="lead">Ces informations apparaissent sur les <b>attestations de paiement</b> (PDF).</p>
     <form class="card" id="f-club">
       <div class="two">
         <label class="f"><span>Nom du président / de la présidente</span><input type="text" name="president" value="${v("president")}"></label>
@@ -1092,6 +1127,7 @@ document.addEventListener("click", e=>{
   if(d.card){ S.card=d.card; S.edit=null; render(); scrollTo(0,0); }
   if(d.attest){ attestation(d.attest, t); }
   if(d.qrzoom){ qrZoom(d.qrzoom); }
+  if(t.id==="backup"){ sauvegarde(t); }
   if(d.part){ togglePart(d.part, d.adh, t); }
   if(t.id==="card-back"){ S.card=null; render(); }
   if(d.delav){ delAv(d.delav); }
