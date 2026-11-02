@@ -253,7 +253,7 @@
         "id": "survet",
         "nom": "Survêtement",
         "description": "Sweat à capuche brodé dans le dos et pantalon assorti.",
-        "photo": "builtin:hoodie",
+        "photo": "photos/2026-11-02-i07oown.jpg",
         "prixAdh": "60",
         "prixPub": "60",
         "tailles": "Du XS au 3XL",
@@ -267,6 +267,16 @@
         "prixAdh": "20",
         "prixPub": "20",
         "tailles": "Taille unique",
+        "dispo": true
+      },
+      {
+        "id": "0cyoep5",
+        "nom": "Survêtement enfant",
+        "description": "",
+        "photo": "photos/2026-11-02-nqbidq4.jpg",
+        "prixAdh": "40",
+        "prixPub": "40",
+        "tailles": "6 ans a 14 ans",
         "dispo": true
       }
     ],
