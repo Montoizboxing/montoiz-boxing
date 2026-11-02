@@ -244,7 +244,7 @@
         "nom": "Débardeur femme",
         "description": "Idéal pour l’entraînement.",
         "photo": "photos/2026-11-02-pgj61cg.jpg",
-        "prixAdh": "",
+        "prixAdh": "15",
         "prixPub": "15",
         "tailles": "Du XS au 3XL",
         "dispo": true
@@ -253,8 +253,8 @@
         "id": "survet",
         "nom": "Survêtement",
         "description": "Sweat à capuche brodé dans le dos et pantalon assorti.",
-        "photo": "builtin:hoodie",
-        "prixAdh": "",
+        "photo": "photos/2026-11-02-0lmp6nh.jpg",
+        "prixAdh": "60",
         "prixPub": "60",
         "tailles": "Du XS au 3XL",
         "dispo": true
@@ -264,9 +264,19 @@
         "nom": "Casquette ",
         "description": "Casquette noire, logo brodé.",
         "photo": "photos/2026-11-02-nq8o8fs.jpg",
-        "prixAdh": "",
+        "prixAdh": "20",
         "prixPub": "20",
         "tailles": "Taille unique",
+        "dispo": true
+      },
+      {
+        "id": "e62xvax",
+        "nom": "Survêtement enfant",
+        "description": "",
+        "photo": "photos/2026-11-02-b3wjn29.jpg",
+        "prixAdh": "",
+        "prixPub": "40",
+        "tailles": "6ans a 14ans",
         "dispo": true
       }
     ],
