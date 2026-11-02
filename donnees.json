@@ -226,7 +226,7 @@
     "actif": false,
     "intro": "Les textiles officiels du club, fabriqués par Atelier Mirabel à Valence. Commandez en ligne et récupérez votre commande à la salle.",
     "paiement": "Paiement au moment du retrait à la salle (espèces ou chèque à l’ordre du club).",
-    "lienPaiement": "https://www.helloasso.com/associations/allex-thai-khmer-boxing/boutiques/boutique-officielle-montoiz-thai-khmer-boxing",
+    "lienPaiement": "",
     "email": "allexthaikhmerboxing@gmail.com",
     "articles": [
       {
@@ -289,6 +289,7 @@
       "adresse": "2 rue Mirabel Chambaud, 26000 Valence",
       "horaires": "Lundi–vendredi, 8h–18h sur rendez-vous",
       "url": ""
-    }
+    },
+    "helloasso": "https://www.helloasso.com/associations/allex-thai-khmer-boxing/boutiques/boutique-officielle-montoiz-thai-khmer-boxing"
   }
 }
