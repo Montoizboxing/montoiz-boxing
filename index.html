@@ -67,6 +67,11 @@ nav.links a:hover{color:var(--fg)}
 nav.links a.on{color:var(--fg)}
 nav.links a.on::after,nav.links a:hover::after{transform:scaleX(1)}
 .nav-cta{white-space:nowrap}
+.ha-box{margin:18px 0 28px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--bg-2)}
+.ha-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.ha-top b{display:block;font-size:17px}.ha-top span{color:var(--muted);font-size:14px}
+.ha-frame{display:block;width:100%;height:900px;border:0;background:#fff}
+.ha-note{margin:0;padding:12px 18px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
 footer .credit{flex-basis:100%;font-size:12px;opacity:.65;color:inherit;text-decoration:none}
 footer .credit:hover{opacity:1;text-decoration:underline}
 .nav-member{white-space:nowrap;gap:7px}
@@ -678,6 +683,8 @@ async function installApp(){
   s.addEventListener("click",e=>{if(e.target===s)closeSheet()});
   document.body.appendChild(s);document.body.style.overflow="hidden";document.getElementById("sheet-x").focus();
 }
+// Hauteur automatique du widget HelloAsso
+addEventListener("message",e=>{try{if(!/helloasso\.com$/.test(new URL(e.origin).hostname))return;const h=e.data&&(e.data.height||(typeof e.data==="string"&&JSON.parse(e.data).height));const f=document.getElementById("haWidget");if(f&&h>200)f.style.height=(h+20)+"px";}catch(_){}});
 // Lien « Champions » : affiché seulement si le bureau a mis la page en ligne
 var CHAMP=false;
 fetch("https://omnovkheumrwturqugmk.supabase.co/rest/v1/rpc/champions_en_ligne",{method:"POST",headers:{"apikey":"sb_publishable_rdk1XMA8H6xt0sX9twQXXA_3MndR78o","Content-Type":"application/json"},body:"{}"})
@@ -804,7 +811,8 @@ function affilSection(D,alt){const A=D.affiliations||[];if(!A.length)return "";
 </div></section>`}
 
 /* ===== Boutique ===== */
-const shopOpen=D=>{const B=D.boutique;return !!(B&&(B.articles||[]).length&&(B.actif||canWrite))};
+const haShop=B=>{const u=String((B&&B.helloasso)||"").trim().replace(/\/+$/,"").replace(/\/widget$/,"");return /^https:\/\/(www\.)?helloasso\.com\/associations\/[^\s"'<>]+$/i.test(u)?u:""};
+const shopOpen=D=>{const B=D.boutique;return !!(B&&((B.articles||[]).length||haShop(B))&&(B.actif||canWrite))};
 const eur=n=>(Math.round(n*100)/100).toLocaleString("fr-FR",{style:"currency",currency:"EUR",minimumFractionDigits:Number.isInteger(n)?0:2});
 const num=v=>{const x=parseFloat(String(v).replace(",","."));return isFinite(x)?x:null};
 let CART=[];try{CART=JSON.parse(localStorage.getItem("mtkb-cart")||"[]")||[]}catch(_){CART=[]}
@@ -851,6 +859,18 @@ function makerHTML(M){if(!M||!M.nom)return "";
 function shopHTML(D){
   const B=D.boutique||{articles:[]},A=B.articles||[];
   if(!shopOpen(D)) return `<section class="band" id="boutique"><div class="wrap"><div class="empty"><b>Boutique bientôt ouverte</b>Les textiles du club seront bientôt disponibles à la commande.</div></div></section>`;
+  const HA=haShop(B);
+  if(HA) return `<section class="band" id="boutique"><div class="wrap">
+  <div class="sec-head"><div><div class="eyebrow">Textiles officiels</div><h2>Boutique du club</h2></div><p>${esc(B.intro||"")}</p></div>
+  ${!B.actif?`<p class="preview-note">Aperçu réservé au bureau : la boutique n’est pas encore visible du public. Cochez « Boutique ouverte » dans l’Espace bureau.</p>`:""}
+  <div class="ha-box">
+    <div class="ha-top"><div><b>Commande et paiement sécurisés avec HelloAsso</b><span>Choisis tes articles et ta taille ci-dessous. ${esc(B.paiement||"Retrait au club lors des entraînements.")}</span></div>
+      <a class="btn" href="${esc(HA)}" target="_blank" rel="noopener">Ouvrir la boutique ↗</a></div>
+    <iframe id="haWidget" class="ha-frame" title="Boutique Montoiz’ Thaï Khmer Boxing sur HelloAsso" src="${esc(HA)}/widget" allowtransparency="true" scrolling="auto" loading="lazy"></iframe>
+    <p class="ha-note">Le paiement est géré par HelloAsso, la plateforme de paiement des associations. Le club reçoit 100 % du prix des articles ; une contribution volontaire à HelloAsso vous est proposée, vous pouvez la mettre à 0 €.</p>
+  </div>
+  ${makerHTML(B.atelier)}
+</div></section>`;
   const nb=CART.reduce((s,l)=>s+l.qty,0);
   return `<section class="band" id="boutique"><div class="wrap">
   <div class="sec-head"><div><div class="eyebrow">Textiles officiels</div><h2>Boutique du club</h2></div><p>${esc(B.intro||"")}</p></div>
@@ -1203,7 +1223,8 @@ function adminTab(){
     <div class="fgrid">${field("Boutique ouverte au public","boutique.actif",B.actif,{type:"checkbox",full:1})}
     ${field("Texte d’introduction","boutique.intro",B.intro,{type:"textarea",full:1})}
     ${field("Modalités de paiement et de retrait","boutique.paiement",B.paiement,{full:1})}
-    ${field("Lien de paiement en ligne (facultatif)","boutique.lienPaiement",B.lienPaiement,{type:"url",ph:"https://www.helloasso.com/…"})}
+    ${field("Lien de la boutique HelloAsso (remplace le panier du site)","boutique.helloasso",B.helloasso||"",{type:"url",full:1,ph:"https://www.helloasso.com/associations/…/boutiques/…"})}
+    ${field("Lien de paiement en ligne (facultatif, seulement sans boutique HelloAsso)","boutique.lienPaiement",B.lienPaiement,{type:"url",ph:"https://www.helloasso.com/…"})}
     ${field("E-mail qui reçoit les commandes (facultatif)","boutique.email",B.email,{type:"email",ph:D0().club.formEmail||D0().club.email})}
     ${field("Recevoir aussi une copie sur (e-mails séparés par des virgules)","boutique.cc",B.cc||"",{full:1,ph:"prenom.nom@gmail.com, tresorier@…"})}</div>
     <h3 style="font-size:24px;margin:24px 0 10px">Fabricant des textiles</h3>
