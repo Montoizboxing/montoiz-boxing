@@ -67,6 +67,11 @@ nav.links a:hover{color:var(--fg)}
 nav.links a.on{color:var(--fg)}
 nav.links a.on::after,nav.links a:hover::after{transform:scaleX(1)}
 .nav-cta{white-space:nowrap}
+.ha-strip{margin:0 0 16px;padding:12px 16px;border:1px solid var(--line);border-radius:12px;background:var(--bg-2);color:var(--muted);font-size:15px}
+.ha-strip b{color:var(--fg)}
+.prod .sizes{margin:6px 0 10px;color:var(--muted);font-size:13px}
+.prod .btn.full{width:100%;justify-content:center}
+.ha-note2{margin:16px 0 22px;color:var(--muted);font-size:13px}
 .ha-box{margin:18px 0 28px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--bg-2)}
 .ha-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
 .ha-top b{display:block;font-size:17px}.ha-top span{color:var(--muted);font-size:14px}
@@ -860,6 +865,21 @@ function shopHTML(D){
   const B=D.boutique||{articles:[]},A=B.articles||[];
   if(!shopOpen(D)) return `<section class="band" id="boutique"><div class="wrap"><div class="empty"><b>Boutique bientôt ouverte</b>Les textiles du club seront bientôt disponibles à la commande.</div></div></section>`;
   const HA=haShop(B);
+  const haLink=a=>{const u=String(a.lien||"").trim();return /^https:\/\/(www\.)?helloasso\.com\//i.test(u)?u:HA};
+  if(HA && A.length) return `<section class="band" id="boutique"><div class="wrap">
+  <div class="sec-head"><div><div class="eyebrow">Textiles officiels</div><h2>Boutique du club</h2></div><p>${esc(B.intro||"")}</p></div>
+  ${!B.actif?`<p class="preview-note">Aperçu réservé au bureau : la boutique n’est pas encore visible du public. Cochez « Boutique ouverte » dans l’Espace bureau.</p>`:""}
+  <p class="ha-strip">🔒 Commande et paiement sécurisés avec <b>HelloAsso</b> · ${esc(B.paiement||"Retrait au club lors des entraînements.")}</p>
+  <div class="shop-grid">${A.map(a=>{const adh=num(a.prixAdh),pub=num(a.prixPub);const T=String(a.tailles||"").split(",").map(s=>s.trim()).filter(Boolean);return `<article class="prod${a.dispo===false?" off":""}">
+    <div class="pimg">${a.photo?`<img src="${esc(imgSrc(a.photo))}" alt="${esc(a.nom)}" loading="lazy">`:`<img class="plogo" src="${IMG.logo}" alt="">`}</div>
+    <div class="pbody"><h3>${esc(a.nom)}</h3>${a.description?`<p>${esc(a.description)}</p>`:""}
+      <div class="pprices">${adh!=null?`<div class="price-tag adh"><small>Adhérent</small><b>${eur(adh)}</b></div>`:""}${pub!=null?`<div class="price-tag"><small>Client</small><b>${eur(pub)}</b></div>`:""}${adh==null&&pub==null?`<div class="price-tag"><small>Prix</small><b>À venir</b></div>`:""}</div>
+      ${T.length?`<p class="sizes">Tailles : ${T.map(esc).join(" · ")}</p>`:""}
+      ${a.dispo===false?`<span class="soldout">Momentanément indisponible</span>`:`<a class="btn full" href="${esc(haLink(a))}" target="_blank" rel="noopener">Commander ↗</a>`}
+    </div></article>`}).join("")}</div>
+  <p class="ha-note2">Le bouton « Commander » ouvre la boutique HelloAsso : choisis l’article, ta taille, puis paie en ligne. Le club reçoit 100 % du prix ; HelloAsso propose une contribution volontaire facultative (tu peux mettre 0 €).</p>
+  ${makerHTML(B.atelier)}
+</div></section>`;
   if(HA) return `<section class="band" id="boutique"><div class="wrap">
   <div class="sec-head"><div><div class="eyebrow">Textiles officiels</div><h2>Boutique du club</h2></div><p>${esc(B.intro||"")}</p></div>
   ${!B.actif?`<p class="preview-note">Aperçu réservé au bureau : la boutique n’est pas encore visible du public. Cochez « Boutique ouverte » dans l’Espace bureau.</p>`:""}
@@ -1241,6 +1261,7 @@ function adminTab(){
       ${field("Prix adhérent (€)",`boutique.articles.${i}.prixAdh`,a.prixAdh,{ph:"15"})}${field("Prix client (€)",`boutique.articles.${i}.prixPub`,a.prixPub,{ph:"20"})}
       ${field("Tailles (séparées par des virgules)",`boutique.articles.${i}.tailles`,a.tailles,{full:1,ph:"S, M, L, XL"})}
       ${field("Description",`boutique.articles.${i}.description`,a.description,{full:1})}
+      ${field("Lien HelloAsso de cet article (facultatif, sinon lien de la boutique)",`boutique.articles.${i}.lien`,a.lien||"",{type:"url",full:1,ph:"https://www.helloasso.com/associations/…"})}
       ${field("Disponible",`boutique.articles.${i}.dispo`,a.dispo!==false,{type:"checkbox",full:1})}
       ${GH.token?photoField("Photo",`boutique.articles.${i}.photo`,a.photo):""}
     </div></div>`).join("")}
