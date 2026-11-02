@@ -223,7 +223,7 @@
     }
   ],
   "boutique": {
-    "actif": false,
+    "actif": true,
     "intro": "Les textiles officiels du club, fabriqués par Atelier Mirabel à Valence. Commandez en ligne et récupérez votre commande à la salle.",
     "paiement": "Paiement en ligne ou à la salle",
     "lienPaiement": "https://www.helloasso.com/associations/allex-thai-khmer-boxing/boutiques/boutique-officielle-montoiz-thai-khmer-boxing",
