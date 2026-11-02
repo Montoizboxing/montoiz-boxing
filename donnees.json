@@ -244,7 +244,7 @@
         "nom": "Débardeur femme",
         "description": "Idéal pour l’entraînement.",
         "photo": "photos/2026-11-02-pgj61cg.jpg",
-        "prixAdh": "15",
+        "prixAdh": "",
         "prixPub": "15",
         "tailles": "Du XS au 3XL",
         "dispo": true
@@ -254,7 +254,7 @@
         "nom": "Survêtement",
         "description": "Sweat à capuche brodé dans le dos et pantalon assorti.",
         "photo": "builtin:hoodie",
-        "prixAdh": "60",
+        "prixAdh": "",
         "prixPub": "60",
         "tailles": "Du XS au 3XL",
         "dispo": true
@@ -264,7 +264,7 @@
         "nom": "Casquette ",
         "description": "Casquette noire, logo brodé.",
         "photo": "photos/2026-11-02-nq8o8fs.jpg",
-        "prixAdh": "20",
+        "prixAdh": "",
         "prixPub": "20",
         "tailles": "Taille unique",
         "dispo": true
