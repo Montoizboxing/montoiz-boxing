@@ -173,6 +173,66 @@ textarea:focus{border-color:var(--gold)}
 .photo-prev{width:96px;aspect-ratio:4/3;flex:none;border-radius:10px;overflow:hidden;background:var(--bg-3);display:grid;place-items:center;font-size:28px}
 .photo-prev img{width:100%;height:100%;object-fit:cover;object-position:center 25%}
 .champ-row.dis{opacity:.6;cursor:not-allowed}
+.tabs button span{color:var(--gold)}
+.chat-wrap{max-width:720px}
+.mod-btn{width:100%;text-align:left;margin:0 0 12px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--bg-2);cursor:pointer;color:var(--muted)}
+.mod-btn.alert{border-color:#6b2a25;background:#3a1512;color:#ffb1aa}
+.rooms{display:grid;gap:8px}
+.room{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg-2);border:1px solid var(--line);border-radius:14px;cursor:pointer;text-align:left;width:100%}
+.room:hover{border-color:var(--gold)}
+.room.muet{opacity:.6}
+.ric{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:var(--bg-3);flex:none}
+.rt{flex:1;min-width:0}.rt b{display:block;font-size:16px}.rt b small{color:var(--muted);font-weight:400;font-size:12px}
+.rt>span{display:block;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rr{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:none}.rr small{color:var(--muted);font-size:11px}
+.nb{font-style:normal;background:var(--gold);color:var(--gold-ink);font:700 12px var(--f-label);border-radius:99px;padding:1px 8px}
+.charte{max-width:600px}.rules{margin:10px 0 16px;padding-left:0;list-style:none;display:grid;gap:8px;font-size:15px}
+.conv{display:flex;flex-direction:column;height:calc(100vh - 170px);min-height:420px;max-width:760px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--bg)}
+@supports (height:100dvh){.conv{height:calc(100dvh - 170px)}}
+.conv-h{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--bg-2)}
+.conv-h b{display:block;font:800 22px/1.1 var(--f-display);text-transform:uppercase}.conv-h small{color:var(--muted);font-size:12px}
+.x-back,.bell{border:0;background:transparent;cursor:pointer;font-size:20px;color:var(--gold);padding:6px 8px;border-radius:8px}
+.bell{margin-left:auto}
+.msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;overscroll-behavior:contain}
+.empty-c{margin:auto;color:var(--muted)}
+.day{align-self:center;font:700 11px var(--f-label);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);background:var(--bg-2);border-radius:99px;padding:3px 10px;margin:6px 0}
+.m{max-width:84%;align-self:flex-start;position:relative}
+.m.me{align-self:flex-end}
+.who{font:700 12px var(--f-label);letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin:0 0 3px 4px}
+.who.coach{color:#9fd3ff}.who.bureau{color:#b9e8bb}
+.rtag{border-radius:4px;padding:0 5px;margin-left:6px;font-size:10px}
+.rtag.coach{background:#1d3550;color:#9fd3ff}.rtag.bur{background:#16301a;color:#b9e8bb}
+.bub{position:relative;background:var(--bg-2);border:1px solid var(--line);border-radius:16px 16px 16px 4px;padding:9px 30px 9px 12px;font-size:15px;overflow-wrap:anywhere}
+.me .bub{background:#3a2c12;border-color:#6b5023;border-radius:16px 16px 4px 16px}
+.bub a{color:var(--gold-2)}
+.bub .h{display:block;color:var(--muted);font-size:10px;text-align:right;margin-top:2px}
+.mention{color:var(--gold-2);font-weight:600}
+.quote{border-left:3px solid var(--gold);padding:2px 8px;margin-bottom:5px;color:var(--muted);font-size:12px;background:#0006;border-radius:4px}
+.dots{position:absolute;top:4px;right:4px;border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:16px;padding:2px 6px;border-radius:6px}
+.dots:hover{background:var(--bg-3);color:var(--fg)}
+.rxs{display:flex;flex-wrap:wrap;gap:4px;margin:3px 0 0 6px}
+.me .rxs{justify-content:flex-end;margin:3px 6px 0 0}
+.rx{background:var(--bg-3);border:1px solid var(--line);border-radius:99px;font-size:12px;padding:1px 8px;cursor:pointer;color:var(--fg)}
+.rx.on{border-color:var(--gold);background:#3a2c12}
+.mmenu{margin-top:6px;background:#241e16;border:1px solid #5a4520;border-radius:12px;padding:6px;display:flex;flex-direction:column;gap:2px;min-width:220px;box-shadow:0 10px 30px #000a}
+.mmenu>button{border:0;background:transparent;color:var(--fg);text-align:left;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:14px}
+.mmenu>button:hover{background:var(--bg-3)}.mmenu>button.r{color:#ff8d84}
+.mmenu .emo{display:flex;gap:2px;padding:2px 2px 6px;border-bottom:1px solid var(--line);margin-bottom:2px}
+.mmenu .emo button{border:0;background:transparent;font-size:20px;cursor:pointer;padding:4px 6px;border-radius:8px}
+.mmenu .emo button:hover{background:var(--bg-3)}
+.mmenu>span{padding:6px 8px;font-size:14px}
+.composer{border-top:1px solid var(--line);background:var(--bg-2);padding:8px 10px}
+.replying{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);padding:4px 4px 8px}
+.replying span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.replying button{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:15px}
+.crow{display:flex;align-items:flex-end;gap:8px}
+.crow textarea{flex:1;min-height:44px;max-height:140px;border-radius:22px;padding:11px 16px;resize:none;line-height:1.35}
+.send{width:44px;height:44px;flex:none;border-radius:50%;border:0;background:var(--gold);color:var(--gold-ink);font-size:18px;cursor:pointer}
+.send[disabled]{opacity:.5}
+.ro{margin:0;padding:12px;text-align:center;color:var(--muted);border-top:1px solid var(--line);background:var(--bg-2);font-size:14px}
+.rep{padding:12px 14px;background:var(--bg-2);border:1px solid #6b2a25;border-radius:12px;margin-bottom:8px}
+.rep small{color:var(--muted)}.rep p{margin:6px 0 10px}
+@media (max-width:640px){.conv{height:calc(100dvh - 150px);border-radius:12px}.m{max-width:90%}}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--gold);color:var(--gold-ink);padding:10px 16px;border-radius:10px;font:700 14px var(--f-label);letter-spacing:.06em;text-transform:uppercase;z-index:60;max-width:calc(100% - 32px);text-align:center}
 .sec{margin:0 0 22px}
 .info{display:flex;gap:12px;align-items:flex-start;padding:14px;background:var(--bg-2);border:1px solid var(--line);border-radius:12px}
@@ -252,7 +312,7 @@ catch(e){ app.innerHTML = `<div class="card login"><h2>Connexion indisponible</h
 
 const S = { user:null, role:null, adh:[], staff:[], avantages:[], pay:[], mots:[], combats:[], infos:[], reg:{}, parts:[], nb:{},
   tab:"adh", q:"", groupe:"", edit:null, confirmDel:false, card:null, relance:null,
-  loginStep:"pw", email:"", busy:false, msg:null, mustSetPw:false, pwView:false, push:"na" };
+  mview:"dossier", loginStep:"pw", email:"", busy:false, msg:null, mustSetPw:false, pwView:false, push:"na" };
 const LS = { get:k=>{try{return localStorage.getItem(k)}catch(e){return null}}, set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}}, del:k=>{try{localStorage.removeItem(k)}catch(e){}} };
 const isB = () => S.role==="bureau";
 const isStaff = () => S.role==="bureau" || S.role==="coach";
@@ -587,7 +647,9 @@ async function load(){
   ]);
   await pushState();
   Object.assign(S,{staff, avantages:av, pay, mots, combats, infos, reg:reg[0]||{}, parts, nb:Object.fromEntries((nb||[]).map(x=>[x.info_id,Number(x.n)]))});
+  if(location.hash.startsWith("#chat-")){ C().pending=decodeURIComponent(location.hash.slice(6)); if(isStaff()) S.tab="chat"; else S.mview="chat"; history.replaceState(null,"",location.pathname); }
   render();
+  if(isStaff() || S.adh.length) setTimeout(chatInit, 300);
 }
 async function refreshAdh(id){
   const { data } = await sb.from("adherents").select("*").eq("id",id).single();
@@ -649,8 +711,10 @@ function viewMember(){
       <br><br><a class="btn sm" href="./#contact">Contacter le club</a></div>`;
     return;
   }
+  const nav = `<div class="tabs"><button data-mview="dossier" class="${S.mview!=="chat"?"on":""}">Mon dossier</button><button data-mview="chat" class="${S.mview==="chat"?"on":""}">💬 Discussion<span data-chatbadge>${C().ready&&totalNonLus()?` (${totalNonLus()})`:""}</span></button></div>`;
+  if(S.mview==="chat"){ app.innerHTML = (C().cur?"":head) + nav + chatHTML(); if(C().cur) scrollBas(); return; }
   const infos = S.infos.length ? `<section class="sec"><div class="eyebrow">Infos du club</div>${infosHTML(false)}</section>` : "";
-  app.innerHTML = head + infos + `<div class="grid">${mine.map(kidHTML).join("")}</div>
+  app.innerHTML = head + nav + infos + `<div class="grid">${mine.map(kidHTML).join("")}</div>
     <p class="note" style="margin-top:18px">Une info est fausse ? <a href="./#contact">Préviens le bureau</a>.</p>`;
 }
 function kidHTML(a){
@@ -694,17 +758,19 @@ function filtered(){
   return S.adh.filter(a => (!S.groupe || a.groupe===S.groupe) &&
     (!q || [a.nom,a.prenom,a.email,a.email2,a.licence_num].some(v=>String(v||"").toLowerCase().includes(q))));
 }
-const TABS = { adh:["Adhérents","Les <em>adhérents</em>"], infos:["Infos","Les <em>infos</em>"], avantages:["Avantages","Les <em>avantages</em>"], equipe:["Équipe","L’<em>équipe</em>"], club:["Réglages","Les <em>réglages</em>"] };
+const TABS = { adh:["Adhérents","Les <em>adhérents</em>"], infos:["Infos","Les <em>infos</em>"], avantages:["Avantages","Les <em>avantages</em>"], equipe:["Équipe","L’<em>équipe</em>"], club:["Réglages","Les <em>réglages</em>"], chat:["💬 Discussion","La <em>discussion</em>"] };
 function viewStaff(){
-  const tabs = isB() ? ["adh","infos","avantages","equipe","club"] : ["adh"];
+  const tabs = isB() ? ["adh","chat","infos","avantages","equipe","club"] : ["adh","chat"];
   if(!tabs.includes(S.tab)) S.tab="adh";
-  const head = `<div class="hello"><div><div class="eyebrow">${isB()?"Espace bureau":"Espace coach"} · ${esc(SAISON)}</div><h1>${TABS[S.tab][1]}</h1>
-    <div class="who">${esc(S.user.email)}</div></div>${compteBtns()}</div>
-    ${tabs.length>1?`<div class="tabs">${tabs.map(k=>`<button data-tab="${k}" class="${S.tab===k?"on":""}">${TABS[k][0]}</button>`).join("")}</div>`:""}`;
+  const hello = `<div class="hello"><div><div class="eyebrow">${isB()?"Espace bureau":"Espace coach"} · ${esc(SAISON)}</div><h1>${TABS[S.tab][1]}</h1>
+    <div class="who">${esc(S.user.email)}</div></div>${compteBtns()}</div>`;
+  const tabsH = `${tabs.length>1?`<div class="tabs">${tabs.map(k=>`<button data-tab="${k}" class="${S.tab===k?"on":""}">${TABS[k][0]}${k==="chat"?`<span data-chatbadge>${C().ready&&totalNonLus()?` (${totalNonLus()})`:""}</span>`:""}</button>`).join("")}</div>`:""}`;
+  const head = hello + tabsH;
   if(S.tab==="equipe"){ app.innerHTML = head + viewTeam(); return; }
   if(S.tab==="avantages"){ app.innerHTML = head + viewAvantages(); return; }
   if(S.tab==="infos"){ app.innerHTML = head + viewInfos(); return; }
   if(S.tab==="club"){ app.innerHTML = head + viewClub(); return; }
+  if(S.tab==="chat"){ app.innerHTML = (C().cur ? tabsH : head) + chatHTML(); if(C().cur) scrollBas(); return; }
 
   const all=S.adh, list=filtered();
   const nLic=all.filter(a=>a.licence_ok).length, nCert=all.filter(a=>certStatus(a)[0]!=="ok").length, nCot=all.filter(a=>["ko","wait"].includes(cotStatus(a)[0])).length;
@@ -1170,6 +1236,301 @@ async function removeStaff(email){
   S.staff = S.staff.filter(s=>s.email!==email); render(); toast("Retiré de l’équipe");
 }
 
+/* ===== Discussion ===== */
+const MSG_COLS = "id,salon,texte,reply_to,auteur_id,auteur_nom,auteur_role,created_at";
+const EMOJIS = ["👍","❤️","😂","🔥","👏","💪"];
+S.chat = { ready:false, loading:false, salons:[], prefs:null, banni:false, lus:{}, recents:[], cur:null, msgs:[], reacts:[], reply:null, menu:null, confirm:null, draft:"", reports:[], bans:[], mod:false, pending:null, chan:null, sending:false };
+const C = () => S.chat;
+const inChat = () => S.user && !S.card && ((isStaff() && S.tab==="chat") || (!isStaff() && S.mview==="chat"));
+const salonOf = id => C().salons.find(s=>s.id===id);
+const peutEcrire = s => s && !C().banni && (s.ecriture==="tous" || isB());
+function nonLus(id){
+  const lu = C().lus[id];
+  return C().recents.filter(m=>m.salon===id && m.auteur_id!==S.user.id && (!lu || m.created_at>lu)).length;
+}
+const totalNonLus = () => C().salons.reduce((n,s)=>n+(C().prefs?.muets?.includes(s.id)?0:nonLus(s.id)),0);
+
+async function chatInit(){
+  const c=C(); if(c.loading) return; c.loading=true;
+  const opt = p => p.then(x=>x.data||[]).catch(()=>[]);
+  const [salons, prefs, bans, lus, recents] = await Promise.all([
+    opt(sb.from("salons").select("*").order("ordre")),
+    opt(sb.from("chat_prefs").select("*").eq("user_id",S.user.id)),
+    opt(sb.from("chat_bans").select("*")),
+    opt(sb.from("chat_lus").select("*")),
+    opt(sb.from("messages").select(MSG_COLS).order("created_at",{ascending:false}).limit(300))
+  ]);
+  Object.assign(c,{ salons, prefs:prefs[0]||null, banni:bans.some(b=>b.user_id===S.user.id), bans: isB()?bans:[],
+    lus:Object.fromEntries(lus.map(l=>[l.salon,l.lu_at])), recents:recents.sort((a,b)=>String(b.created_at).localeCompare(a.created_at)), ready:true, loading:false });
+  if(isB()) await loadReports();
+  if(!c.chan){
+    try{ c.chan = sb.channel("chat-montoiz").on("broadcast",{event:"nouveau"},({payload})=>chatPing(payload)).subscribe(); }catch(e){}
+  }
+  if(c.pending && salonOf(c.pending)){ const p=c.pending; c.pending=null; return openSalon(p); }
+  if(inChat()) render(); else majBadge();
+}
+async function loadReports(){
+  const { data:rep } = await sb.from("signalements").select("message_id,created_at");
+  const ids=[...new Set((rep||[]).map(r=>r.message_id))];
+  let msgs=[]; if(ids.length){ const { data } = await sb.from("messages").select(MSG_COLS).in("id",ids); msgs=data||[]; }
+  C().reports = msgs.map(m=>({ m, n:(rep||[]).filter(r=>r.message_id===m.id).length })).sort((a,b)=>b.n-a.n);
+}
+async function refreshRecents(){
+  const { data } = await sb.from("messages").select(MSG_COLS).order("created_at",{ascending:false}).limit(300);
+  if(data) C().recents = data.sort((a,b)=>String(b.created_at).localeCompare(a.created_at));
+}
+async function loadMsgs(){
+  const c=C(); if(!c.cur) return;
+  const { data } = await sb.from("messages").select(MSG_COLS).eq("salon",c.cur).order("created_at",{ascending:false}).limit(150);
+  c.msgs = (data||[]).sort((a,b)=>String(a.created_at).localeCompare(b.created_at));
+  const ids = c.msgs.map(m=>m.id);
+  if(ids.length){ const r = await sb.from("reactions").select("message_id,user_id,emoji").in("message_id",ids); c.reacts=r.data||[]; } else c.reacts=[];
+}
+async function markRead(id){
+  const t=new Date().toISOString(); C().lus[id]=t;
+  sb.from("chat_lus").upsert({ user_id:S.user.id, salon:id, lu_at:t }).then(()=>{},()=>{});
+}
+async function openSalon(id){
+  const c=C(); c.cur=id; c.mod=false; c.reply=null; c.menu=null; c.confirm=null; c.msgs=[]; c.reacts=[];
+  render(); await loadMsgs(); markRead(id); render(); scrollBas(true);
+}
+async function chatPing(p){
+  if(!S.user || !C().ready) return;
+  await refreshRecents();
+  if(p?.salon && C().cur===p.salon){ await loadMsgs(); if(inChat()){ paintMsgs(); markRead(p.salon); } }
+  else if(inChat() && !C().cur) render();
+  majBadge();
+}
+function majBadge(){ const n=totalNonLus(); document.querySelectorAll("[data-chatbadge]").forEach(el=>{ el.textContent=n?` (${n})`:""; }); }
+setInterval(async()=>{
+  if(!S.user || !C().ready || document.hidden) return;
+  const avant = C().recents[0]?.id;
+  await refreshRecents();
+  if(inChat() && C().cur){ await loadMsgs(); paintMsgs(); markRead(C().cur); }
+  else if(inChat() && !C().cur && C().recents[0]?.id!==avant) render();
+  majBadge();
+}, 20000);
+
+/* ----- Affichage ----- */
+function texteMsg(t){
+  return esc(t)
+    .replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)\]'"])/g, u=>`<a href="${u}" target="_blank" rel="noopener nofollow">${u}</a>`)
+    .replace(/(^|\s)@([\p{L}][\p{L}'\-]*)/gu, (x,a,n)=>`${a}<span class="mention">@${n}</span>`)
+    .replace(/\n/g,"<br>");
+}
+const heure = d => new Date(d).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"});
+function jour(d){
+  const x=new Date(d), t=new Date(), h=new Date(t); h.setDate(t.getDate()-1);
+  if(x.toDateString()===t.toDateString()) return "Aujourd’hui";
+  if(x.toDateString()===h.toDateString()) return "Hier";
+  return x.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long"});
+}
+function quandCourt(d){
+  const x=new Date(d), t=new Date();
+  if(x.toDateString()===t.toDateString()) return heure(d);
+  const diff=(t-x)/86400000; if(diff<6) return x.toLocaleDateString("fr-FR",{weekday:"short"});
+  return x.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit"});
+}
+const roleTag = r => r==="coach"?`<span class="rtag coach">Coach</span>`:r==="bureau"?`<span class="rtag bur">Bureau</span>`:"";
+
+function chatHTML(){
+  const c=C();
+  if(!c.ready){ setTimeout(chatInit,0); return `<div class="loading"><span class="spin"></span></div>`; }
+  if(!c.prefs?.charte_ok) return charteHTML();
+  if(c.mod && isB()) return modHTML();
+  if(c.cur) return convHTML();
+  const nRep = c.reports.length;
+  return `<div class="chat-wrap">
+    ${c.banni?`<p class="msg err">Ton accès à l’écriture a été suspendu par le bureau. Tu peux encore lire les messages.</p>`:""}
+    ${isB()?`<button class="mod-btn ${nRep?"alert":""}" id="chat-mod">🛡️ Modération${nRep?` · <b>${nRep} signalement${nRep>1?"s":""}</b>`:""}</button>`:""}
+    <div class="rooms">${c.salons.map(s=>{
+      const last=c.recents.find(m=>m.salon===s.id), n=nonLus(s.id), muet=c.prefs.muets?.includes(s.id);
+      return `<button class="room ${muet?"muet":""}" data-salon="${esc(s.id)}">
+        <span class="ric">${esc(s.icone)}</span>
+        <span class="rt"><b>${esc(s.nom)}${s.ecriture==="bureau"?` <small>🔒 bureau</small>`:""}${muet?" 🔕":""}</b>
+          <span>${last?`${esc(last.auteur_nom)} : ${esc(last.texte.slice(0,60))}`:"Aucun message pour l’instant"}</span></span>
+        <span class="rr">${last?`<small>${quandCourt(last.created_at)}</small>`:""}${n&&!muet?`<i class="nb">${n>99?"99+":n}</i>`:""}</span>
+      </button>`}).join("")}</div>
+    <p class="note">🛡️ Salons visibles par tous les membres concernés, sans messages privés. Le bureau modère. Ton nom affiché : <b>${esc(c.prefs.nom)}</b> · <a href="#" id="chat-renom">changer</a></p>
+  </div>`;
+}
+function charteHTML(){
+  const nom = C().prefs?.nom || meNom() || "";
+  return `<form class="card charte" id="f-charte">
+    <h2>Bienvenue dans la discussion 👋</h2>
+    <p class="note" style="margin-top:-4px">Un espace d’échange entre membres, parents et coachs du club.</p>
+    <ul class="rules">
+      <li>🤝 Respect et bienveillance envers tout le monde, sans insultes ni moqueries.</li>
+      <li>📵 Pas de photo ni de vidéo d’enfants sans l’accord de leurs parents.</li>
+      <li>🔒 Pas d’infos personnelles (adresse, téléphone…) dans les salons.</li>
+      <li>🚫 Pas de pub, de politique ni de contenu choquant.</li>
+      <li>🛡️ Le bureau peut supprimer un message ou suspendre un membre. Tu peux signaler un message avec ⋯ → Signaler.</li>
+    </ul>
+    <label class="f"><span>Ton prénom affiché (ex : Sarah, ou « Karim, papa de Lina »)</span><input type="text" name="nom" required minlength="2" maxlength="40" value="${esc(nom)}"></label>
+    <label class="check"><input type="checkbox" name="ok" required> J’ai lu et j’accepte la charte de la discussion</label>
+    <button class="btn">Entrer dans la discussion</button><div id="charte-msg"></div>
+  </form>`;
+}
+function convHTML(){
+  const c=C(), s=salonOf(c.cur); if(!s){ c.cur=null; return chatHTML(); }
+  const muet=c.prefs.muets?.includes(s.id), ecr=peutEcrire(s);
+  const rep = c.reply && c.msgs.find(m=>m.id===c.reply);
+  return `<div class="conv">
+    <div class="conv-h"><button class="x-back" id="chat-back" aria-label="Retour aux salons">←</button>
+      <div><b>${esc(s.icone)} ${esc(s.nom)}</b><small>${s.acces==="competition"?"Compétiteurs, parents et coachs":"Tous les membres"}</small></div>
+      <button class="bell" id="chat-mute" title="${muet?"Réactiver les notifications":"Couper les notifications de ce salon"}">${muet?"🔕":"🔔"}</button></div>
+    <div class="msgs" id="chat-msgs">${msgsHTML()}</div>
+    ${ecr?`<form class="composer" id="f-msg">
+      ${rep?`<div class="replying"><span>↩︎ Réponse à <b>${esc(rep.auteur_nom)}</b> : ${esc(rep.texte.slice(0,60))}</span><button type="button" id="reply-x" aria-label="Annuler la réponse">✕</button></div>`:""}
+      <div class="crow"><textarea id="chat-in" rows="1" maxlength="2000" placeholder="Écrire un message…">${esc(c.draft)}</textarea><button class="send" ${c.sending?"disabled":""} aria-label="Envoyer">➤</button></div>
+    </form>`:`<p class="ro">${c.banni?"Écriture suspendue par le bureau.":"🔒 Seul le bureau peut écrire dans ce salon."}</p>`}
+  </div>`;
+}
+function msgsHTML(){
+  const c=C(); if(!c.msgs.length) return `<p class="empty-c">Aucun message. Lance la conversation ! 👋</p>`;
+  let out="", d0="";
+  for(const m of c.msgs){
+    const d=jour(m.created_at); if(d!==d0){ out+=`<div class="day">${esc(d)}</div>`; d0=d; }
+    const mine=m.auteur_id===S.user.id, q=m.reply_to&&c.msgs.find(x=>x.id===m.reply_to);
+    const rs=EMOJIS.map(e=>{ const l=c.reacts.filter(r=>r.message_id===m.id&&r.emoji===e); return l.length?`<button class="rx ${l.some(r=>r.user_id===S.user.id)?"on":""}" data-react="${m.id}|${e}">${e} ${l.length}</button>`:""; }).join("");
+    out+=`<div class="m ${mine?"me":""}" data-mid="${m.id}">
+      ${mine?"":`<div class="who ${m.auteur_role}">${esc(m.auteur_nom)}${roleTag(m.auteur_role)}</div>`}
+      <div class="bub">${q?`<div class="quote">${esc(q.auteur_nom)} : ${esc(q.texte.slice(0,80))}</div>`:m.reply_to?`<div class="quote">Message supprimé</div>`:""}
+        ${texteMsg(m.texte)}<span class="h">${heure(m.created_at)}</span>
+        <button class="dots" data-mmenu="${m.id}" aria-label="Actions sur ce message">⋯</button></div>
+      ${rs?`<div class="rxs">${rs}</div>`:""}
+      ${c.menu===m.id?menuHTML(m,mine):""}
+    </div>`;
+  }
+  return out;
+}
+function menuHTML(m, mine){
+  const c=C(), ecr=peutEcrire(salonOf(c.cur));
+  if(c.confirm===m.id) return `<div class="mmenu"><span>Supprimer ce message ?</span><button class="btn danger sm" data-mdel="${m.id}">Oui, supprimer</button><button class="btn ghost sm" data-mclose>Non</button></div>`;
+  return `<div class="mmenu">
+    <div class="emo">${EMOJIS.map(e=>`<button data-react="${m.id}|${e}">${e}</button>`).join("")}</div>
+    ${ecr?`<button data-mreply="${m.id}">↩︎ Répondre</button>`:""}
+    ${mine?"":`<button class="r" data-mreport="${m.id}">⚑ Signaler au bureau</button>`}
+    ${mine||isB()?`<button class="r" data-mconfirm="${m.id}">🗑 Supprimer</button>`:""}
+    ${isB()&&!mine&&m.auteur_id?`<button class="r" data-mban="${m.id}">⛔ Suspendre ${esc(m.auteur_nom)}</button>`:""}
+  </div>`;
+}
+function modHTML(){
+  const c=C();
+  return `<div class="chat-wrap"><button class="btn ghost sm" id="chat-modx">← Retour aux salons</button>
+    <h2 style="margin:16px 0 8px">🛡️ Signalements</h2>
+    ${c.reports.length?c.reports.map(({m,n})=>`<div class="rep"><small>${esc(salonOf(m.salon)?.nom||m.salon)} · ${esc(m.auteur_nom)} · ${fmtDate(m.created_at)} · <b>${n} signalement${n>1?"s":""}</b></small>
+      <p>${texteMsg(m.texte)}</p><div class="acts" style="justify-content:flex-start">
+      <button class="btn danger sm" data-moddel="${m.id}">🗑 Supprimer le message</button>
+      <button class="btn ghost sm" data-modok="${m.id}">✓ Ignorer</button>
+      ${m.auteur_id?`<button class="btn danger sm" data-modban="${m.id}">⛔ Suspendre l’auteur</button>`:""}</div></div>`).join(""):`<div class="empty">Aucun signalement 👍</div>`}
+    <h2 style="margin:22px 0 8px">⛔ Membres suspendus</h2>
+    ${c.bans.length?c.bans.map(b=>`<div class="staff-row"><div><b>${esc(b.nom||"Membre")}</b><br><small>depuis le ${fmtDate(b.created_at)}</small></div><button class="btn ghost sm" data-unban="${b.user_id}">Réactiver</button></div>`).join(""):`<p class="note">Personne.</p>`}
+  </div>`;
+}
+function paintMsgs(){
+  const el=document.getElementById("chat-msgs"); if(!el) return;
+  const bas = el.scrollHeight-el.scrollTop-el.clientHeight < 120;
+  el.innerHTML = msgsHTML();
+  if(bas) el.scrollTop = el.scrollHeight;
+}
+function scrollBas(){ const el=document.getElementById("chat-msgs"); if(el) el.scrollTop=el.scrollHeight; }
+
+/* ----- Actions ----- */
+async function saveCharte(form){
+  const f=new FormData(form), nom=String(f.get("nom")||"").trim().slice(0,40);
+  if(nom.length<2) return;
+  const row={ user_id:S.user.id, email:S.user.email.toLowerCase(), nom, charte_ok:new Date().toISOString(), muets:C().prefs?.muets||[] };
+  const { data, error } = await sb.from("chat_prefs").upsert(row).select().single();
+  if(error){ document.getElementById("charte-msg").innerHTML=`<p class="msg err">${esc(error.message)}</p>`; return; }
+  C().prefs=data; render(); toast("Bienvenue dans la discussion 👋");
+}
+async function sendMsg(){
+  const c=C(), ta=document.getElementById("chat-in"); const texte=(ta?.value||"").trim();
+  if(!texte || c.sending) return;
+  c.sending=true;
+  const { data, error } = await sb.from("messages").insert({ salon:c.cur, texte, reply_to:c.reply||null }).select(MSG_COLS).single();
+  c.sending=false;
+  if(error){ toast(/row-level|policy/i.test(error.message)?"Tu ne peux pas écrire dans ce salon.":"Message non envoyé : "+error.message); return; }
+  c.msgs.push(data); c.recents.unshift(data); c.draft=""; c.reply=null; markRead(c.cur);
+  render(); scrollBas();
+  try{ c.chan?.send({ type:"broadcast", event:"nouveau", payload:{ salon:data.salon } }); }catch(e){}
+  notifier({ type:"chat", id:data.id }, true);
+  document.getElementById("chat-in")?.focus();
+}
+async function toggleReact(id, emoji){
+  const c=C(), mine=c.reacts.find(r=>r.message_id===id&&r.emoji===emoji&&r.user_id===S.user.id);
+  c.menu=null;
+  if(mine){ c.reacts=c.reacts.filter(r=>r!==mine); paintMsgs(); await sb.from("reactions").delete().match({ message_id:id, user_id:S.user.id, emoji }); }
+  else { c.reacts.push({ message_id:id, user_id:S.user.id, emoji }); paintMsgs(); const { error } = await sb.from("reactions").insert({ message_id:id, emoji }); if(error){ toast("Réaction impossible"); await loadMsgs(); paintMsgs(); } }
+  try{ c.chan?.send({ type:"broadcast", event:"nouveau", payload:{ salon:c.cur } }); }catch(e){}
+}
+async function delMsg(id){
+  const { error } = await sb.from("messages").delete().eq("id",id);
+  if(error) return toast("Suppression impossible : "+error.message);
+  const c=C(); c.msgs=c.msgs.filter(m=>m.id!==id); c.recents=c.recents.filter(m=>m.id!==id); c.reports=c.reports.filter(r=>r.m.id!==id); c.menu=null; c.confirm=null;
+  render(); toast("Message supprimé");
+  try{ c.chan?.send({ type:"broadcast", event:"nouveau", payload:{ salon:c.cur } }); }catch(e){}
+}
+async function reportMsg(id){
+  C().menu=null; paintMsgs();
+  const { error } = await sb.from("signalements").insert({ message_id:id });
+  toast(error && !/duplicate|unique/i.test(error.message) ? "Signalement impossible" : "Merci, le bureau a été prévenu 🛡️");
+}
+async function banAuteur(id){
+  const m = C().msgs.find(x=>x.id===id) || C().reports.find(r=>r.m.id===id)?.m; if(!m?.auteur_id) return;
+  const { data, error } = await sb.from("chat_bans").upsert({ user_id:m.auteur_id, nom:m.auteur_nom }).select().single();
+  if(error) return toast("Erreur : "+error.message);
+  C().bans = C().bans.filter(b=>b.user_id!==data.user_id).concat(data); C().menu=null; render(); toast(`${m.auteur_nom} ne peut plus écrire`);
+}
+async function unban(uid){
+  const { error } = await sb.from("chat_bans").delete().eq("user_id",uid);
+  if(error) return toast("Erreur : "+error.message);
+  C().bans=C().bans.filter(b=>b.user_id!==uid); render(); toast("Membre réactivé");
+}
+async function ignoreReport(id){
+  const { error } = await sb.from("signalements").delete().eq("message_id",id);
+  if(error) return toast("Erreur : "+error.message);
+  C().reports=C().reports.filter(r=>r.m.id!==id); render();
+}
+async function toggleMute(){
+  const c=C(), id=c.cur, l=new Set(c.prefs.muets||[]);
+  l.has(id)?l.delete(id):l.add(id);
+  const { data, error } = await sb.from("chat_prefs").update({ muets:[...l] }).eq("user_id",S.user.id).select().single();
+  if(error) return toast("Erreur : "+error.message);
+  c.prefs=data; render(); toast(l.has(id)?"🔕 Notifications coupées pour ce salon":"🔔 Notifications réactivées");
+}
+async function renommer(){
+  const nom = prompt("Ton prénom affiché dans la discussion :", C().prefs?.nom||"");
+  if(!nom || nom.trim().length<2) return;
+  const { data, error } = await sb.from("chat_prefs").update({ nom:nom.trim().slice(0,40) }).eq("user_id",S.user.id).select().single();
+  if(error) return toast("Erreur : "+error.message);
+  C().prefs=data; render(); toast("Nom mis à jour (pour tes prochains messages)");
+}
+function chatClick(t, e){
+  const d=t.dataset, c=C();
+  if(d.salon){ openSalon(d.salon); return true; }
+  if(t.id==="chat-back"){ c.cur=null; c.menu=null; render(); return true; }
+  if(t.id==="chat-mod"){ c.mod=true; loadReports().then(render); return true; }
+  if(t.id==="chat-modx"){ c.mod=false; render(); return true; }
+  if(t.id==="chat-mute"){ toggleMute(); return true; }
+  if(t.id==="chat-renom"){ e.preventDefault(); renommer(); return true; }
+  if(t.id==="reply-x"){ c.reply=null; render(); return true; }
+  if(d.mmenu){ c.menu = c.menu===d.mmenu ? null : d.mmenu; c.confirm=null; paintMsgs(); return true; }
+  if(d.mclose!==undefined){ c.menu=null; c.confirm=null; paintMsgs(); return true; }
+  if(d.react){ const [id,em]=d.react.split("|"); toggleReact(id,em); return true; }
+  if(d.mreply){ c.reply=d.mreply; c.menu=null; render(); scrollBas(); document.getElementById("chat-in")?.focus(); return true; }
+  if(d.mreport){ reportMsg(d.mreport); return true; }
+  if(d.mconfirm){ c.confirm=d.mconfirm; paintMsgs(); return true; }
+  if(d.mdel){ delMsg(d.mdel); return true; }
+  if(d.mban){ banAuteur(d.mban); return true; }
+  if(d.moddel){ delMsg(d.moddel); return true; }
+  if(d.modok){ ignoreReport(d.modok); return true; }
+  if(d.modban){ banAuteur(d.modban); return true; }
+  if(d.unban){ unban(d.unban); return true; }
+  return false;
+}
+
 /* ===== Rendu & événements ===== */
 function render(){
   if(!S.user) return viewLogin();
@@ -1190,6 +1551,8 @@ document.addEventListener("submit", e=>{
   if(id==="f-pw"){ const m=document.getElementById("mail").value.trim().toLowerCase(); if(!okMail(m)){S.msg=["err","Cette adresse email n’est pas valide."];viewLogin();return} loginPw(m, document.getElementById("pw").value); }
   if(id==="f-otp"){ const m=document.getElementById("mail").value.trim().toLowerCase(); if(!okMail(m)){S.msg=["err","Cette adresse email n’est pas valide."];viewLogin();return} sendCode(m); }
   if(id==="f-setpw") savePw();
+  if(id==="f-charte") saveCharte(F);
+  if(id==="f-msg") sendMsg();
   if(id==="f-code"){ const c=document.getElementById("code").value.replace(/\D/g,""); if(c.length<6){S.msg=["err","Le code fait au moins 6 chiffres."];viewLogin();return} verifyCode(c); }
   if(id==="f-adh") saveAdh(F);
   if(id==="f-staff") addStaff(F);
@@ -1203,6 +1566,8 @@ document.addEventListener("submit", e=>{
 document.addEventListener("click", e=>{
   const t=e.target.closest("button,a"); if(!t) return;
   const d=t.dataset;
+  if(d.mview){ S.mview=d.mview; render(); scrollTo(0,0); return; }
+  if(inChat() && chatClick(t,e)) return;
   if(d.step){ e.preventDefault(); const m=document.getElementById("mail"); if(m&&m.value) S.email=m.value.trim(); S.loginStep=d.step; S.msg=null; viewLogin(); }
   if(d.eye){ const i=document.getElementById(d.eye); i.type = i.type==="password"?"text":"password"; }
   if(t.id==="logout"){ logout(); }
@@ -1241,8 +1606,12 @@ document.addEventListener("click", e=>{
   if(t.id==="rel-copy-msg"){ copy(document.getElementById("rel-sujet").value+"\n\n"+document.getElementById("rel-corps").value, "Message copié"); }
 });
 document.addEventListener("click", e=>{ if(e.target.id==="sheet-bg"){ S.edit=null; render(); } });
-document.addEventListener("keydown", e=>{ if(e.key==="Escape" && S.edit){ S.edit=null; render(); } });
+document.addEventListener("keydown", e=>{
+  if(e.key==="Escape" && S.edit){ S.edit=null; render(); }
+  if(e.target.id==="chat-in" && e.key==="Enter" && !e.shiftKey && !e.isComposing && matchMedia("(pointer:fine)").matches){ e.preventDefault(); sendMsg(); }
+});
 document.addEventListener("input", e=>{
+  if(e.target.id==="chat-in"){ C().draft=e.target.value; e.target.style.height="auto"; e.target.style.height=Math.min(e.target.scrollHeight,140)+"px"; }
   if(e.target.id==="q"){ S.q=e.target.value; document.getElementById("list").innerHTML=listHTML(filtered()); }
   if(e.target.id==="rel-sujet" && S.relance) S.relance.sujet=e.target.value;
   if(e.target.id==="rel-corps" && S.relance) S.relance.corps=e.target.value;
@@ -1266,7 +1635,8 @@ if(sb){
   sb.auth.onAuthStateChange((ev, session)=>{
     const u = session?.user || null;
     if(u && (!S.user || S.user.id!==u.id)){ S.user=u; if(LS.get("mtkb-setpw")) S.mustSetPw=true; if(location.hash.includes("access_token")) history.replaceState(null,"",location.pathname); setTimeout(load,0); }
-    else if(!u && S.user){ Object.assign(S,{card:null,user:null,role:null,adh:[],staff:[],pay:[],mots:[],combats:[],infos:[],parts:[],nb:{},edit:null,relance:null,loginStep:"pw",msg:null,mustSetPw:false,pwView:false}); render(); }
+    else if(!u && S.user){ Object.assign(S.chat,{ready:false,loading:false,cur:null,msgs:[],recents:[],reacts:[],prefs:null,mod:false,reports:[],bans:[],menu:null,draft:""}); S.mview="dossier";
+      Object.assign(S,{card:null,user:null,role:null,adh:[],staff:[],pay:[],mots:[],combats:[],infos:[],parts:[],nb:{},edit:null,relance:null,loginStep:"pw",msg:null,mustSetPw:false,pwView:false}); render(); }
     else if(!u && ev==="INITIAL_SESSION"){ render(); }
   });
 }
