@@ -1,6 +1,6 @@
 {
   "saison": "2026-2027",
-  "maj": "2026-11-04",
+  "maj": "2026-11-17",
   "club": {
     "nom": "Montoiz’ Thaï Khmer Boxing",
     "accroche": "Boxe thaï, boxe khmère et boxes d’Asie du Sud-Est à Montoison, pour les enfants comme pour les adultes.",
@@ -65,7 +65,7 @@
     "Autorisation parentale pour les mineurs",
     "Règlement de la cotisation"
   ],
-  "essai": "Envie d’essayer ? Contactez le club par téléphone, WhatsApp ou e-mail pour convenir d’un cours d’essai.",
+  "essai": "",
   "actus": [
     {
       "id": "actu-affiliation-2026",
